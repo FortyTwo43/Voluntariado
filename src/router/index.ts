@@ -1,12 +1,23 @@
-import { createRouter, createWebHistory,  type RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
+import DashboardLayout from '@/layouts/DashboardLayout.vue'
+import DashboardView from '@/views/DashboardView.vue'
+import ProjectsView from '@/views/ProjectsView.vue'
 
-const routes: RouteRecordRaw[] = [
-  {path: '/', redirect: '/dashboard'},
-];
+const routes = [
+  {
+    path: '/',
+    component: DashboardLayout,
+    children: [
+      { path: '', name: 'dashboard', component: DashboardView },
+      { path: 'proyectos', name: 'projects', component: ProjectsView },
+      // puedes agregar más rutas aquí
+    ]
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
-});
+  routes
+})
 
-export default router;
+export default router
