@@ -242,3 +242,12 @@ input:focus, textarea:focus, select:focus {
   direction: ltr;
   -webkit-font-smoothing: antialiased;
 }
+
+/* Reutilizables para UI pública */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.5rem .9rem; border-radius:8px; font-weight:600; border:1px solid transparent; text-decoration:none; }
+.btn-primary { background: var(--color-primary); color:#fff; border-color: var(--color-primary); }
+.btn-primary:hover { background: var(--color-primary-dark); border-color: var(--color-primary-dark); }
+.btn-secondary { background: #fff; color: var(--color-text); border-color: var(--color-border); }
+.btn-secondary:hover { background: var(--color-background); }
+.btn-ghost { background: transparent; color: var(--color-text); border-color: var(--color-border); }
+.btn-ghost:hover { background: var(--color-background); }

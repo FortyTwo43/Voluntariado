@@ -6,7 +6,7 @@
     </div>
 
     <nav class="sidebar-nav">
-      <RouterLink to="/" class="nav-item nav-item-active">
+  <RouterLink to="/app" class="nav-item nav-item-active">
         <span class="material-symbols-outlined">home</span>
         <span>{{ t.home }}</span>
       </RouterLink>
@@ -21,22 +21,22 @@
           <span class="material-symbols-outlined">{{ openSections.proyectos ? 'expand_less' : 'expand_more' }}</span>
         </button>
         <div v-show="openSections.proyectos" class="submenu">
-          <RouterLink to="/proyectos" class="submenu-item">{{ t.explore }}</RouterLink>
+          <RouterLink to="/app/proyectos" class="submenu-item">{{ t.explore }}</RouterLink>
           <RouterLink to="/postulaciones" class="submenu-item">{{ t.myApplications }}</RouterLink>
         </div>
       </div>
 
-      <RouterLink to="/organizaciones" class="nav-item">
+  <RouterLink to="/app/organizaciones" class="nav-item">
         <span class="material-symbols-outlined">groups</span>
         <span>{{ t.organizations }}</span>
       </RouterLink>
 
-      <RouterLink to="/perfil" class="nav-item">
+  <RouterLink to="/app/perfil" class="nav-item">
         <span class="material-symbols-outlined">person</span>
         <span>{{ t.profile }}</span>
       </RouterLink>
 
-      <RouterLink to="/mensajes" class="nav-item">
+  <RouterLink to="/app/mensajes" class="nav-item">
         <span class="material-symbols-outlined">mail</span>
         <span>{{ t.messages }}</span>
       </RouterLink>
@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <RouterLink to="/configuracion" class="nav-item">
+  <RouterLink to="/app/configuracion" class="nav-item">
         <span class="material-symbols-outlined">settings</span>
         <span>{{ t.settings }}</span>
       </RouterLink>
