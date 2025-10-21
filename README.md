@@ -1,145 +1,163 @@
-# Voluntariado Juvenil
+# Voluntariado Juvenil – Landing pública (Vue 3 + TS)
 
-Plataforma web para gestionar proyectos de voluntariado juvenil. Desarrollado con Vue 3, TypeScript y CSS tradicional.
+Esta rama contiene la landing pública de una plataforma para voluntariado juvenil, diseñada y justificada con la rúbrica de usabilidad provista. El enfoque es simple: cabecera accesible, contenido claro y pie informativo; sin distracciones ni elementos propios de un dashboard.
 
-## 🚀 Características
+Tecnologías: Vue 3, TypeScript, Vite, CSS tradicional (sin frameworks), Material Symbols.
 
-- ✅ Dashboard interactivo con estadísticas
-- ✅ Exploración de proyectos de voluntariado
-- ✅ Sistema de navegación con sidebar colapsable
-- ✅ Header con búsqueda y perfil de usuario
-- ✅ **Sistema de idiomas (ES/EN)** con persistencia
-- ✅ Panel de accesibilidad con opciones de:
-  - Modo oscuro
-  - Ajuste de tamaño de fuente
-  - Alto contraste
-  - Reducción de movimiento
-- ✅ Diseño responsive
-- ✅ **CSS tradicional (sin Tailwind)** para mayor control y facilidad de mantenimiento
+## 🧭 Cómo navegar la vista
 
-## 📁 Estructura del Proyecto
+- Cabecera: `PublicTopBar.vue` con menú principal, submenú “Información”, selector ES/EN y botón de contacto.
+- Cuerpo: `HomeLandingView.vue` con hero y tarjetas de novedades (`HeroBanner.vue`, `NewsCard.vue`).
+- Páginas informativas: `TermsPoliciesView.vue`, `InstitutionalInfoView.vue`, `ContactSupportView.vue`.
+- Pie: `PublicFooter.vue` con enlaces a contacto, información y políticas.
+
+Rutas configuradas en `router/index.ts`:
+
+- `/` (Home)
+- `/politicas`
+- `/informacion`
+- `/contacto`
+
+## 🎨 Identidad visual (color corporativo)
+
+En `src/style.css` se aplicó la paleta primaria en rojo:
+
+```css
+:root {
+   --color-primary: #e53935;      /* rojo corporativo */
+   --color-primary-dark: #c62828; /* rojo oscuro */
+}
+```
+
+Los botones y estados de foco/hover usan esta paleta de forma consistente.
+
+## ✅ Mapeo contra la rúbrica
+
+### 1) Cognitiva
+- Diseño limpio: sin banners rotativos ni animaciones automáticas.
+- Foco visible en enlaces y botones (`:focus-visible`).
+- Mensajería clara: CTA “Soporte/Contacto” visible; textos breves.
+- Skip-link: enlace “Saltar al contenido” para evitar navegación redundante con teclado.
+
+Pruebas sugeridas:
+- Evaluación cualitativa (1–5) de claridad visual y brevedad.
+- Recorrido con Tab desde el skip-link; el foco debe ser siempre visible.
+
+### 2) Responsive
+- Header sticky, grid fluido.
+- Menú móvil “hamburguesa” con dropdown simple.
+
+Prueba y métrica:
+- 320–1440 px sin scroll lateral. Tiempo de carga percibido < 2 s (Lighthouse orientativo).
+
+### 3) Plantilla común de formularios
+- Form de `ContactSupportView.vue` usa estilos globales coherentes (inputs, focus rojo, botones).
+
+Prueba:
+- Checklist visual de consistencia de campos/labels/placeholders. Likert 1–5.
+
+### 4) Cabecera
+- Logo + nombre, selector de idioma ES/EN persistente (`useLanguage.ts`).
+- Búsqueda visible en desktop (UI). 
+- Estado de navegación: enlace activo resaltado en topbar y menú móvil.
+
+Pruebas y métricas:
+- Nº de clics para llegar a políticas/contacto ≤ 3.
+- Cambio de idioma persiste tras recargar (localStorage).
+
+### 5) Menú
+- Ítems con etiquetas claras y submenú “Información”.
+- Apertura por hover y por foco (teclado). Cierra con Esc.
+- Roles/atributos: `aria-haspopup`, `aria-expanded`, `aria-controls` en el toggler.
+
+Pruebas y métricas:
+- Teclado: Tab al botón “Información” → submenú visible; navegar items con Tab/Shift+Tab; Enter para ir. 
+- Tasa de error < 0.5% en 10 intentos (usuarios internos). Evaluación de intuición 1–5.
+
+### 6) Cuerpo
+- Hero de bienvenida y tarjetas de “Novedades y noticias”.
+- Componentización para modularidad y mantenimiento.
+
+Métrica sugerida:
+- Tiempo de lectura y nº de scrolls para ubicar información clave; abandono < 10% (test guiado).
+
+### 7) Pie de página
+- Enlaces operativos: 100% (Contacto, Información, Políticas).
+- Nº de clics ≤ 2 para acceder.
+
+## 🧪 Guía de pruebas (paso a paso)
+
+1) Teclado y accesibilidad
+- Presiona Tab al cargar: aparece “Saltar al contenido”; Enter te lleva al `<main>`.
+- Sigue con Tab: al enfocarte en “Información” el submenú se abre (focus-within).
+- Pulsa Esc: el submenú se cierra.
+- Cambia a EN/ES con los botones; recarga y verifica persistencia.
+
+2) Flujo y eficiencia
+- Tarea A: Ir a Políticas desde Home → ≤ 2 clics.
+- Tarea B: Ir a Contacto → ≤ 2 clics.
+- Tarea C: Regresar a Home → ≤ 2 clics.
+
+3) Responsive rápido
+- Revisa la vista en 320 px y 1440 px; no debe haber scroll horizontal.
+
+4) Consistencia de formularios
+- En Contacto: los inputs tienen el mismo padding, borde y foco rojo; botón principal en rojo.
+
+5) Lighthouse (opcional)
+- Corre Lighthouse y verifica A11y ≥ 90, Best Practices/Performance aceptables.
+
+## 📁 Estructura mínima relevante
 
 ```
 src/
-├── components/
-│   ├── AccessibilityToggle.vue   # Panel de opciones de accesibilidad
-│   ├── HeaderBar.vue              # Barra superior con búsqueda y selector de idioma
-│   ├── ProfileMenu.vue            # Menú desplegable del perfil
-│   └── Sidebar.vue                # Navegación lateral
-├── composables/
-│   └── useLanguage.ts             # Composable para gestión de idiomas (i18n)
-├── layouts/
-│   └── DashboardLayout.vue        # Layout principal con sidebar y header
-├── views/
-│   ├── DashboardView.vue          # Vista principal con estadísticas
-│   └── ProjectsView.vue           # Vista de exploración de proyectos
-├── router/
-│   └── index.ts                   # Configuración de rutas
-├── config/
-│   └── supabase.ts                # Configuración de Supabase
-├── App.vue                        # Componente raíz
-├── main.ts                        # Punto de entrada
-└── style.css                      # Estilos globales CSS tradicional
+├─ components/
+│  ├─ PublicTopBar.vue      # Cabecera con menú accesible y búsqueda desktop
+│  ├─ PublicFooter.vue      # Pie con enlaces informativos
+│  ├─ HeroBanner.vue        # Hero de bienvenida
+│  └─ NewsCard.vue          # Tarjetas de novedades
+├─ views/
+│  ├─ HomeLandingView.vue
+│  ├─ TermsPoliciesView.vue
+│  ├─ InstitutionalInfoView.vue
+│  └─ ContactSupportView.vue
+├─ layouts/
+│  └─ PublicLayout.vue      # Skip-link + layout público
+├─ composables/
+│  └─ useLanguage.ts        # i18n simple (ES/EN) con persistencia
+├─ router/
+│  └─ index.ts              # Rutas públicas
+└─ style.css                # Variables, utilidades y foco rojo
 ```
 
-## 🛠️ Instalación
+## �️ Cómo ejecutar
 
-1. Clona el repositorio
-2. Instala las dependencias:
-   ```bash
-   npm install
-   ```
-
-3. Inicia el servidor de desarrollo:
-   ```bash
-   npm run dev
-   ```
-
-4. Abre tu navegador en `http://localhost:5173`
-
-## 🎨 Estilos CSS Tradicional
-
-El proyecto usa **CSS tradicional** en lugar de frameworks como Tailwind. Los estilos están organizados de la siguiente manera:
-
-- **`src/style.css`**: Variables CSS globales, reset, utilidades básicas
-- **Componentes**: Cada componente Vue tiene sus estilos `scoped`
-- **Variables CSS**: Sistema de colores y tamaño con variables CSS nativas
-
-### Variables CSS disponibles:
-
-```css
---color-primary: #4f46e5
---color-secondary: #f59e0b
---color-background: #f9fafb
---color-surface: #ffffff
---color-text: #111827
---color-text-secondary: #6b7280
---color-border: #e5e7eb
-```
-
-## 📱 Rutas Disponibles
-
-- `/` - Dashboard principal
-- `/proyectos` - Exploración de proyectos
-- `/organizaciones` - Organizaciones (pendiente)
-- `/perfil` - Perfil de usuario (pendiente)
-- `/mensajes` - Mensajes (pendiente)
-- `/configuracion` - Configuración (pendiente)
-
-## ♿ Accesibilidad
-
-El proyecto incluye un panel de accesibilidad flotante (botón en la esquina inferior derecha) con:
-
-- **Modo oscuro**: Cambia el tema de claro a oscuro
-- **Tamaño de fuente**: Ajusta el tamaño del texto (80% - 150%)
-- **Alto contraste**: Mejora la visibilidad del contenido
-- **Reducir movimiento**: Desactiva animaciones para usuarios sensibles
-
-## 🌐 Internacionalización
-
-El proyecto soporta **cambio de idioma en tiempo real** entre:
-- **Español (ES)** - Idioma por defecto
-- **English (EN)**
-
-**Características del sistema i18n:**
-- ✅ Botones de cambio de idioma en el HeaderBar
-- ✅ Persistencia en localStorage
-- ✅ Composable reutilizable `useLanguage()`
-- ✅ Traducciones centralizadas
-- ✅ Reactivo en toda la aplicación
-
-Ver documentación completa en [`docs/IDIOMAS.md`](docs/IDIOMAS.md)
-
-## 🔧 Tecnologías Utilizadas
-
-- **Vue 3** - Framework JavaScript progresivo
-- **TypeScript** - Superset tipado de JavaScript
-- **Vue Router** - Enrutamiento oficial para Vue.js
-- **Vite** - Build tool y dev server
-- **CSS tradicional** - Estilos puros sin frameworks
-- **Material Symbols** - Iconos de Google
-
-## 📝 Scripts Disponibles
+Instala y levanta el proyecto en local.
 
 ```bash
-npm run dev          # Inicia servidor de desarrollo
-npm run build        # Construye para producción
-npm run preview      # Preview de la build de producción
-npm run type-check   # Verifica los tipos de TypeScript
+npm install
+npm run dev
 ```
 
-## 🎯 Próximas Características
+Build de producción (ya verificado en esta rama):
 
-- [ ] Sistema de autenticación con Supabase
-- [ ] CRUD completo de proyectos
-- [ ] Sistema de postulaciones
-- [ ] Mensajería entre usuarios
-- [ ] Perfil de usuario editable
-- [ ] Sistema de notificaciones
-- [ ] Filtros avanzados en proyectos
-- [ ] Calendario de actividades
+```bash
+npm run build
+npm run preview
+```
 
-## 📄 Licencia
+## 📌 Notas y límites
 
-Proyecto educativo para la asignatura de Interfaz Humano-Computador.
+- Esta rama elimina la navegación de dashboard; el foco está en la landing pública y páginas informativas.
+- El campo de búsqueda es UI (no conectado a backend todavía). Si se requiere, puedo enlazarlo a un filtro local o a un servicio.
+
+## 📚 Evidencia de cumplimiento
+
+- Color corporativo rojo aplicado globalmente.
+- Menú accesible (hover + teclado + Esc + aria).
+- Enlace activo visible en navegación.
+- Skip-link para salto directo al contenido.
+- Formulario de contacto coherente con la plantilla de estilos.
+
+Con esta guía y las pruebas propuestas, puedes sustentar cada ítem de la rúbrica de manera objetiva.
 

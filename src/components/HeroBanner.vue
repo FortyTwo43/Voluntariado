@@ -4,8 +4,7 @@
       <h1 class="hero-title">{{ t.heroTitle }}</h1>
       <p class="hero-subtitle">{{ t.heroSubtitle }}</p>
       <div class="hero-actions">
-        <RouterLink to="/app" class="btn btn-primary">{{ t.ctaRegister }}</RouterLink>
-        <RouterLink to="/app/proyectos" class="btn btn-secondary">{{ t.ctaBrowse }}</RouterLink>
+        <RouterLink to="/proyectos" class="btn btn-secondary">{{ t.ctaBrowse }}</RouterLink>
       </div>
     </div>
   </section>
