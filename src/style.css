@@ -6,31 +6,14 @@
 }
 
 :root {
-  /* Colores */
-  --color-primary: #e53935; /* corporate red */
-  --color-primary-dark: #c62828;
-  --color-secondary: #f59e0b;
-  --color-background: #f9fafb;
-  --color-surface: #ffffff;
-  --color-text: #111827;
-  --color-text-secondary: #6b7280;
-  --color-border: #e5e7eb;
-  --color-error: #ef4444;
-  --color-success: #10b981;
-  
-  /* Modo oscuro */
-  --color-dark-background: #111827;
-  --color-dark-surface: #1f2937;
-  --color-dark-text: #f9fafb;
-  --color-dark-text-secondary: #9ca3af;
-  --color-dark-border: #374151;
-  
-  /* Tipografía */
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  
-  /* Optimización */
+
+  color-scheme: light;
+  color: #1f2937;
+  background-color: #ffffff;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -44,12 +27,9 @@ html, body {
 
 body {
   margin: 0;
-  background-color: var(--color-background);
-  color: var(--color-text);
-}
-
-#app {
+  min-width: 320px;
   min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
 /* Modo oscuro */
@@ -124,9 +104,23 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.12);
 }
 
-/* Utilidades */
-.flex {
+#app {
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
 }
 
 .flex-col {
