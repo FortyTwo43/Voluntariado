@@ -94,7 +94,7 @@ const inputType = computed(() => {
 }
 
 .input {
-  width: 100%;
+  width: 96%;
   padding: 0.75rem;
   border: 1px solid #d1d5db;
   border-radius: 0.5rem;

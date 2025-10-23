@@ -5,16 +5,16 @@
       <p class="form-subtitle">Conecta con jóvenes voluntarios y genera impacto social.</p>
     </div>
 
-    <form @submit.prevent="handleSubmit" class="form">
-      <InputField
-        id="nombre"
-        label="Nombre de la Organización"
-        v-model="organizacion.nombre"
-        placeholder="Ingresa el nombre de tu organización"
-        :error="errors.nombre"
-        required
-      />
-
+    <form @submit.prevent="handleSubmit" class="form grid-form three-col">
+        <InputField
+          id="nombre"
+          label="Nombre de la Organización"
+          v-model="organizacion.nombre"
+          placeholder="Ingresa el nombre de tu organización"
+          :error="errors.nombre"
+          required
+          class="full"
+        />
       <div class="form-group">
         <label for="tipo" class="form-label">Tipo de Organización</label>
         <select
@@ -33,7 +33,6 @@
         </select>
         <span v-if="errors.tipo" class="error-message">{{ errors.tipo }}</span>
       </div>
-
       <InputField
         id="direccion"
         label="Dirección"
@@ -73,7 +72,7 @@
         required
       />
 
-      <div class="terms-section">
+      <div class="terms-section full">
         <label class="checkbox-label">
           <input
             type="checkbox"
@@ -95,13 +94,13 @@
         type="submit"
         :disabled="!isFormValid || isSubmitting"
         variant="primary"
-        class="submit-button"
+        class="submit-button full"
       >
         <span v-if="isSubmitting">Creando cuenta...</span>
         <span v-else>Crear cuenta</span>
       </ButtonOrganization>
 
-      <div class="login-section">
+      <div class="login-section full">
         <p class="login-question">¿Ya tienes una cuenta?</p>
         <router-link to="/login" class="login-link">Inicia sesión</router-link>
       </div>
@@ -192,8 +191,13 @@ const validateField = (field: keyof IOrganizacionRegistro, value: string | boole
       if (!value || (typeof value === 'string' && !value.trim())) {
         errors.contrasena = 'La contraseña es requerida';
       } else if (typeof value === 'string') {
-        if (value.length < 8) {
-          errors.contrasena = 'La contraseña debe tener al menos 8 caracteres';
+        const lengthOk = value.length >= 8;
+        const numberOk = /\d/.test(value);
+        const uppercaseOk = /[A-Z]/.test(value);
+        const lowercaseOk = /[a-z]/.test(value);
+        const specialOk = /[^A-Za-z0-9]/.test(value);
+        if (!lengthOk || !numberOk || !uppercaseOk || !lowercaseOk || !specialOk) {
+          errors.contrasena = 'La contraseña debe tener al menos 8 caracteres, incluir 1 número, 1 mayúscula, 1 minúscula y 1 carácter especial';
         } else {
           errors.contrasena = undefined;
         }
@@ -298,39 +302,41 @@ watch(() => organizacion.aceptaTerminos, (value) => {
 <style scoped>
 .organization-register-form {
   background: white;
-  padding: 2rem;
+  padding: 1.25rem;
   border-radius: 1rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 28rem;
+  width: min(96vw, 1100px);
+  max-width: 1100px;
+  box-sizing: border-box;
 }
 
 .form-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .form-title {
-  font-size: 1.875rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #1f2937;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.25rem 0;
 }
 
 .form-subtitle {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #6b7280;
   margin: 0;
 }
 
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem 2rem;
+  align-items: start;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 10;
 }
 
 .form-label {
@@ -363,7 +369,7 @@ watch(() => organizacion.aceptaTerminos, (value) => {
 }
 
 .terms-section {
-  margin: 0.5rem 0;
+  margin: 0.2rem 0;
 }
 
 .checkbox-label {
@@ -433,13 +439,32 @@ watch(() => organizacion.aceptaTerminos, (value) => {
   font-size: 0.75rem;
 }
 
-@media (max-width: 640px) {
-  .organization-register-form {
-    padding: 1.5rem;
-  }
-  
-  .form-title {
-    font-size: 1.5rem;
-  }
+@media (max-width: 1024px) {
+  .form { grid-template-columns: repeat(2, 1fr); }
 }
+
+@media (max-width: 640px) {
+  .organization-register-form { padding: 1rem; }
+  .form { grid-template-columns: 1fr; gap: 0.5rem 0.5rem; }
+  .form-title { font-size: 1.25rem; }
+}
+
+/* When using three columns, some elements should still span 2 cols */
+.three-col .span-2 {
+  grid-column: span 2;
+}
+
+/* Helpers for grid layout */
+.grid-form .full {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.form-select,
+.checkbox-label,
+.submit-button.full,
+.login-section.full {
+  width: 100%;
+}
+
 </style>

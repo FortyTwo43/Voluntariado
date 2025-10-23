@@ -128,8 +128,7 @@
 }
 
 .auth-container {
-  width: 100%;
-  max-width: 28rem;
+  margin: 0 auto;
 }
 
 .auth-footer {
