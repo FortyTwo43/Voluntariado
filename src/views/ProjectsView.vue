@@ -9,93 +9,263 @@
       <div class="filter-group">
         <label>
           <span class="material-symbols-outlined">search</span>
-          <input type="search" placeholder="Buscar proyectos..." class="filter-input" />
+          <input 
+            type="search" 
+            placeholder="Buscar proyectos..." 
+            class="filter-input"
+            v-model="searchQuery"
+            @input="applyFilters"
+          />
         </label>
       </div>
       
       <div class="filter-group">
-        <select class="filter-select">
-          <option>Todas las categorías</option>
-          <option>Educación</option>
-          <option>Medio Ambiente</option>
-          <option>Salud</option>
-          <option>Tecnología</option>
+        <select class="filter-select" v-model="selectedCategoria" @change="applyFilters">
+          <option value="">Todas las categorías</option>
+          <option value="Educación">Educación</option>
+          <option value="Medio Ambiente">Medio Ambiente</option>
+          <option value="Salud">Salud</option>
+          <option value="Tecnología">Tecnología</option>
+          <option value="Social">Social</option>
+          <option value="Cultura">Cultura</option>
         </select>
       </div>
       
       <div class="filter-group">
-        <select class="filter-select">
-          <option>Todas las ubicaciones</option>
-          <option>Madrid</option>
-          <option>Barcelona</option>
-          <option>Valencia</option>
-          <option>Remoto</option>
+        <select class="filter-select" v-model="selectedUbicacion" @change="applyFilters">
+          <option value="">Todas las ubicaciones</option>
+          <option value="Madrid">Madrid</option>
+          <option value="Barcelona">Barcelona</option>
+          <option value="Valencia">Valencia</option>
+          <option value="Sevilla">Sevilla</option>
+          <option value="Remoto">Remoto</option>
         </select>
       </div>
     </div>
 
-    <div class="projects-grid">
-      <article class="project-card" v-for="i in 9" :key="i">
+    <!-- Loading state -->
+    <div v-if="loading" class="loading-state">
+      <span class="material-symbols-outlined loading-icon">progress_activity</span>
+      <p>Cargando proyectos...</p>
+    </div>
+
+    <!-- Error state -->
+    <div v-else-if="error" class="error-state">
+      <span class="material-symbols-outlined error-icon">error</span>
+      <p>{{ error }}</p>
+      <button class="btn-primary" @click="loadProjects">Reintentar</button>
+    </div>
+
+    <!-- Empty state -->
+    <div v-else-if="filteredProjects.length === 0" class="empty-state">
+      <span class="material-symbols-outlined empty-icon">search_off</span>
+      <h3>No se encontraron proyectos</h3>
+      <p>Intenta ajustar los filtros de búsqueda</p>
+    </div>
+
+    <!-- Projects grid -->
+    <div v-else class="projects-grid">
+      <article class="project-card" v-for="project in paginatedProjects" :key="project.id_proyecto">
         <div class="project-header">
           <div class="project-image">
             <span class="material-symbols-outlined">volunteer_activism</span>
           </div>
-          <span class="project-badge">Nuevo</span>
+          <span class="project-badge" v-if="isNewProject(project.fecha_inicio)">Nuevo</span>
         </div>
         
         <div class="project-body">
-          <h3 class="project-title">Proyecto de Voluntariado {{ i }}</h3>
-          <p class="project-organization">
+          <h3 class="project-title">{{ project.nombre }}</h3>
+          <p class="project-organization" v-if="project.organizacion">
             <span class="material-symbols-outlined">groups</span>
-            Organización Ejemplo
+            {{ project.organizacion.nombre }}
           </p>
           
           <p class="project-description">
-            Descripción del proyecto de voluntariado. Aquí se detalla brevemente en qué consiste 
-            el proyecto y qué tipo de actividades se realizan.
+            {{ truncateText(project.descripcion, 120) }}
           </p>
           
-          <div class="project-tags">
-            <span class="tag">Educación</span>
-            <span class="tag">Jóvenes</span>
+          <div class="project-tags" v-if="project.categoria">
+            <span class="tag">{{ project.categoria }}</span>
+            <span class="tag" v-if="project.cupos_disponibles">
+              {{ project.cupos_disponibles }} cupos
+            </span>
           </div>
           
           <div class="project-meta">
-            <div class="meta-item">
+            <div class="meta-item" v-if="project.ubicacion">
               <span class="material-symbols-outlined">location_on</span>
-              <span>Madrid</span>
+              <span>{{ project.ubicacion }}</span>
             </div>
-            <div class="meta-item">
+            <div class="meta-item" v-if="project.fecha_inicio">
               <span class="material-symbols-outlined">calendar_today</span>
-              <span>Flexible</span>
+              <span>{{ formatDate(project.fecha_inicio) }}</span>
             </div>
-            <div class="meta-item">
+            <div class="meta-item" v-if="project.horas_estimadas">
               <span class="material-symbols-outlined">schedule</span>
-              <span>4-6h/semana</span>
+              <span>{{ project.horas_estimadas }}h</span>
             </div>
           </div>
         </div>
         
         <div class="project-footer">
-          <button class="btn-outline">Ver más</button>
-          <button class="btn-primary">Postularme</button>
+          <button class="btn-outline" @click="viewProject(project.id_proyecto)">Ver más</button>
+          <button class="btn-primary" @click="applyToProject(project.id_proyecto)">Postularme</button>
         </div>
       </article>
     </div>
 
-    <div class="pagination">
-      <button class="pagination-btn" disabled>Anterior</button>
+    <div v-if="!loading && filteredProjects.length > 0" class="pagination">
+      <button class="pagination-btn" :disabled="currentPage === 1" @click="prevPage">Anterior</button>
       <div class="pagination-numbers">
-        <button class="pagination-number active">1</button>
-        <button class="pagination-number">2</button>
-        <button class="pagination-number">3</button>
-        <span>...</span>
-        <button class="pagination-number">10</button>
+        <button 
+          v-for="page in visiblePages" 
+          :key="page" 
+          class="pagination-number"
+          :class="{ active: page === currentPage }"
+          @click="goToPage(page)"
+        >
+          {{ page }}
+        </button>
       </div>
-      <button class="pagination-btn">Siguiente</button>
+      <button class="pagination-btn" :disabled="currentPage === totalPages" @click="nextPage">Siguiente</button>
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useProjects } from '@/composables/useProjects'
+
+const { projects, loading, error, fetchProjects } = useProjects()
+
+// Filtros
+const searchQuery = ref('')
+const selectedCategoria = ref('')
+const selectedUbicacion = ref('')
+
+// Paginación
+const currentPage = ref(1)
+const itemsPerPage = 9
+
+// Cargar proyectos al montar
+onMounted(async () => {
+  await loadProjects()
+})
+
+const loadProjects = async () => {
+  await fetchProjects({
+    estado: 'activo',
+    limit: 100 // Cargar más para filtrar localmente
+  })
+}
+
+// Filtrar proyectos
+const filteredProjects = computed(() => {
+  let filtered = projects.value
+
+  // Filtro de búsqueda
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    filtered = filtered.filter(p => 
+      p.nombre.toLowerCase().includes(query) ||
+      p.descripcion?.toLowerCase().includes(query)
+    )
+  }
+
+  // Filtro de categoría
+  if (selectedCategoria.value) {
+    filtered = filtered.filter(p => p.categoria === selectedCategoria.value)
+  }
+
+  // Filtro de ubicación
+  if (selectedUbicacion.value) {
+    filtered = filtered.filter(p => p.ubicacion === selectedUbicacion.value)
+  }
+
+  return filtered
+})
+
+// Proyectos paginados
+const paginatedProjects = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return filteredProjects.value.slice(start, end)
+})
+
+const totalPages = computed(() => 
+  Math.ceil(filteredProjects.value.length / itemsPerPage)
+)
+
+const visiblePages = computed(() => {
+  const pages = []
+  const maxVisible = 5
+  let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2))
+  let end = Math.min(totalPages.value, start + maxVisible - 1)
+  
+  if (end - start < maxVisible - 1) {
+    start = Math.max(1, end - maxVisible + 1)
+  }
+  
+  for (let i = start; i <= end; i++) {
+    pages.push(i)
+  }
+  return pages
+})
+
+const applyFilters = () => {
+  currentPage.value = 1 // Reset a primera página al filtrar
+}
+
+const goToPage = (page: number) => {
+  currentPage.value = page
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+// Utilidades
+const truncateText = (text: string | undefined, maxLength: number) => {
+  if (!text) return ''
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
+}
+
+const formatDate = (dateString: string | undefined) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+const isNewProject = (fechaInicio: string | undefined) => {
+  if (!fechaInicio) return false
+  const fecha = new Date(fechaInicio)
+  const ahora = new Date()
+  const diff = ahora.getTime() - fecha.getTime()
+  const days = diff / (1000 * 3600 * 24)
+  return days <= 30 // Nuevo si tiene menos de 30 días
+}
+
+const viewProject = (id: number) => {
+  // TODO: Navegar a detalle del proyecto
+  console.log('Ver proyecto:', id)
+}
+
+const applyToProject = (id: number) => {
+  // TODO: Aplicar al proyecto
+  console.log('Aplicar a proyecto:', id)
+}
+</script>
 
 <style scoped>
 .projects-view {
@@ -115,6 +285,57 @@
 
 .page-subtitle {
   color: var(--color-text-secondary);
+}
+
+/* Loading, Error & Empty States */
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.loading-icon {
+  font-size: 4rem;
+  color: var(--color-primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.error-icon {
+  font-size: 4rem;
+  color: #ef4444;
+}
+
+.error-state p {
+  color: #991b1b;
+  font-weight: 500;
+  font-size: 1.125rem;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  color: var(--color-text-secondary);
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.empty-state p {
+  color: var(--color-text-secondary);
+  margin: 0;
 }
 
 .filters-section {

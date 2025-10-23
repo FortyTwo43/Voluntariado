@@ -3,16 +3,15 @@
     <!-- Header -->
     <header class="auth-header">
       <div class="header-content">
-        <div class="logo">
+        <router-link to="/" class="logo">
           <div class="logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
+            <img src="@/assets/voluntariado.png" alt="Logo Voluntariado" class="logo-image" />
           </div>
           <span class="logo-text">Plataforma de Voluntariado Juvenil</span>
-        </div>
+        </router-link>
         <nav class="header-nav">
           <router-link to="/login" class="nav-link">Iniciar Sesión</router-link>
+          <router-link to="/registro" class="nav-link nav-link-cta">Registrarse</router-link>
         </nav>
       </div>
     </header>
@@ -65,13 +64,29 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background-image: url('@/assets/fondoHome.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.auth-layout::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.92);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .auth-header {
   padding: 1rem 2rem;
   background: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
 }
 
 .header-content {
@@ -86,17 +101,26 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: scale(1.02);
 }
 
 .logo-icon {
-  width: 2rem;
-  height: 2rem;
-  color: #4f46e5;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.logo-icon svg {
+.logo-image {
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 .logo-text {
@@ -105,18 +129,36 @@
   color: #1f2937;
 }
 
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .nav-link {
-  color: #4f46e5;
+  color: #4b5563;
   text-decoration: none;
   font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
   transition: all 0.2s;
+  font-size: 0.9375rem;
 }
 
 .nav-link:hover {
   background-color: #f3f4f6;
-  color: #4338ca;
+  color: #1f2937;
+}
+
+.nav-link-cta {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.nav-link-cta:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
 }
 
 .auth-main {
@@ -125,6 +167,8 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .auth-container {
@@ -135,6 +179,8 @@
   padding: 1.5rem 2rem;
   background: white;
   border-top: 1px solid #e5e7eb;
+  position: relative;
+  z-index: 1;
 }
 
 .footer-content {

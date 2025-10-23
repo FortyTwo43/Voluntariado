@@ -4,13 +4,27 @@
 
     <div class="news-section">
       <h2 class="section-title">{{ t.newsAndUpdates }}</h2>
-      <div class="news-grid">
+      
+      <!-- Loading state -->
+      <div v-if="loading" class="loading-state">
+        <span class="material-symbols-outlined loading-icon">progress_activity</span>
+        <p>Cargando noticias...</p>
+      </div>
+      
+      <!-- Error state -->
+      <div v-else-if="error" class="error-state">
+        <span class="material-symbols-outlined error-icon">error</span>
+        <p>{{ error }}</p>
+      </div>
+      
+      <!-- News grid -->
+      <div v-else class="news-grid">
         <NewsCard
-          v-for="(item, idx) in news"
-          :key="idx"
-          :title="item.title"
-          :description="item.desc"
-          :image="item.image"
+          v-for="item in news"
+          :key="item.id"
+          :title="item.titulo"
+          :description="item.descripcion"
+          :image="item.imagen_url || ''"
         />
       </div>
     </div>
@@ -18,40 +32,58 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import HeroBanner from '@/components/HeroBanner.vue'
 import NewsCard from '@/components/NewsCard.vue'
 import { useLanguage } from '@/composables/useLanguage'
+import { useNews } from '@/composables/useNews'
 
 const { t } = useLanguage()
+const { news, loading, error, fetchNews } = useNews()
 
-const news = [
-  {
-    title: 'Limpieza de playas en Barcelona',
-    desc: 'Ayudemos a mantener nuestras costas limpias.',
-    image: 'https://images.unsplash.com/photo-1608502253726-8f383ce5cf74?q=80&w=1200&auto=format&fit=crop'
-  },
-  {
-    title: 'Evento de recaudación para protectora de animales',
-    desc: 'Participa en nuestro evento para apoyar una buena causa.',
-    image: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200&auto=format&fit=crop'
-  },
-  {
-    title: 'Reforestación en el parque del Retiro',
-    desc: 'Súmate a la jornada de plantación de árboles.',
-    image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1200&auto=format&fit=crop'
-  },
-  {
-    title: 'Comedor social busca voluntarios',
-    desc: 'Ayuda a preparar y servir comidas calientes.',
-    image: 'https://images.unsplash.com/photo-1549575810-c24fd4e2ed1d?q=80&w=1200&auto=format&fit=crop'
-  }
-]
+// Cargar noticias al montar el componente
+onMounted(async () => {
+  await fetchNews(4) // Cargar 4 noticias
+})
 </script>
 
 <style scoped>
 .landing { max-width: 1200px; margin: 0 auto; display:flex; flex-direction:column; gap: 1.25rem; }
 .news-section { margin-top: .5rem; }
 .section-title { font-size: 1.25rem; font-weight: 700; margin: .5rem 0 .75rem; }
+
+.loading-state,
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem 1rem;
+  color: var(--color-text-secondary);
+}
+
+.loading-icon {
+  font-size: 3rem;
+  color: var(--color-primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: #ef4444;
+}
+
+.error-state p {
+  color: #991b1b;
+  font-weight: 500;
+}
+
 .news-grid { display:grid; grid-template-columns: 1fr; gap: .75rem; }
 @media (min-width: 640px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 992px) { .news-grid { grid-template-columns: repeat(4, 1fr); } }
