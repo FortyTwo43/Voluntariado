@@ -150,19 +150,27 @@ const handleSubmit = async () => {
     if (resultado.success && resultado.user) {
       // Guardar información del usuario en localStorage
       localStorage.setItem('user', JSON.stringify(resultado.user));
-      
+
       // Guardar email en localStorage si se marcó "Recordar usuario"
       if (loginData.rememberUser) {
         localStorage.setItem('rememberedEmail', loginData.email);
       } else {
         localStorage.removeItem('rememberedEmail');
       }
-      
+
+      // Mensaje de éxito genérico
       showSuccess('¡Inicio de sesión exitoso!', `Bienvenido ${resultado.user.nombre}`);
-      
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 2000);
+
+      // Flujo de navegación según tipo de usuario
+      if (resultado.user.tipo === 'organizacion') {
+        // Redirigir a proyectos para organizaciones
+        setTimeout(() => {
+          router.push('/proyectos');
+        }, 800);
+      } else {
+        // Voluntario: mantener en la vista actual (no hay vistas para él todavía)
+        // Opcional: podemos limpiar el formulario o dejar un mensaje.
+      }
     } else {
       showError('Error de autenticación', resultado.message);
     }

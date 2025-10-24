@@ -194,11 +194,11 @@ onMounted(() => {
   font-size: 1.5rem;
   font-weight: 600;
   color: #1a1a1a;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .form-label {
@@ -206,14 +206,14 @@ onMounted(() => {
   font-size: 0.95rem;
   font-weight: 500;
   color: #374151;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 
 .form-input,
 .form-textarea,
 .form-select {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 0.875rem;
   font-size: 1rem;
   color: #1a1a1a;
   background-color: #ffffff;
@@ -226,7 +226,7 @@ onMounted(() => {
 
 .form-textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 80px;
 }
 
 .form-input:focus,
@@ -246,15 +246,15 @@ onMounted(() => {
 }
 
 .helper-text {
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
   font-size: 0.875rem;
   color: #6b7280;
 }
 
 .form-row {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .form-group-half {
@@ -263,7 +263,7 @@ onMounted(() => {
 }
 
 .validation-message {
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
   font-size: 0.875rem;
 }
 

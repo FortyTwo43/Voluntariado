@@ -278,11 +278,11 @@ const handleSubmit = async () => {
   isSubmitting.value = true;
 
   try {
-    // Crear objeto sin aceptaTerminos para el servicio
-    const { aceptaTerminos, ...voluntarioData } = voluntario;
+  // Crear objeto sin aceptaTerminos ni confirmarContrasena para el servicio
+  const { aceptaTerminos, confirmarContrasena, ...voluntarioData } = voluntario;
     
     // Validación completa incluyendo verificación de correo existente
-    const erroresCompletos = await validarCamposCompleto(voluntarioData);
+  const erroresCompletos = await validarCamposCompleto(voluntarioData);
     if (erroresCompletos.length > 0) {
       // Mostrar el primer error encontrado
       alert(erroresCompletos[0]);
@@ -292,9 +292,9 @@ const handleSubmit = async () => {
     const success = await registrarVoluntario(voluntarioData);
     
     if (success) {
-      alert('¡Registro exitoso! Bienvenido a la plataforma de voluntariado.');
-      // Redirigir al dashboard o página de inicio
-      router.push('/dashboard');
+      alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+      // Redirigir a la pantalla de login
+      router.push('/login');
     } else {
       alert('Error al registrar. Por favor, verifica tu conexión e intenta nuevamente.');
     }

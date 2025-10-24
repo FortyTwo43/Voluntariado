@@ -141,16 +141,16 @@ onMounted(() => {
 }
 
 .form-title {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: #4B0082;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .form-group {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .form-label {
@@ -158,14 +158,14 @@ onMounted(() => {
   font-size: 1rem;
   font-weight: 700;
   color: #2E2E2E;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 0.625rem 0.875rem;
   font-size: 1rem;
   color: #2E2E2E;
   background-color: rgba(255, 255, 255, 0.95);
@@ -193,8 +193,8 @@ onMounted(() => {
 }
 
 .validation-message {
-  margin-top: 0.75rem;
-  font-size: 0.9rem;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
 }
 
 .message-success,
@@ -202,7 +202,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0;
+  padding: 0.25rem 0;
   border-radius: 0;
   font-weight: 600;
 }
@@ -227,7 +227,7 @@ onMounted(() => {
 }
 
 .button-container {
-  margin-top: 2.5rem;
+  margin-top: 1rem;
   display: flex;
   justify-content: flex-end;
 }
@@ -237,8 +237,8 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
   font-weight: 700;
   color: white;
   background: #79C99E;

@@ -219,11 +219,11 @@ onMounted(() => {
   font-size: 1.5rem;
   font-weight: 600;
   color: #1a1a1a;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .form-label {
@@ -231,12 +231,12 @@ onMounted(() => {
   font-size: 0.95rem;
   font-weight: 500;
   color: #374151;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 0.875rem;
   font-size: 1rem;
   color: #1a1a1a;
   background-color: #ffffff;
@@ -260,13 +260,13 @@ onMounted(() => {
 }
 
 .helper-text {
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
   font-size: 0.875rem;
   color: #6b7280;
 }
 
 .validation-message {
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
   font-size: 0.875rem;
 }
 
@@ -294,18 +294,18 @@ onMounted(() => {
 
 /* Estilos del resumen */
 .project-summary {
-  margin-top: 2rem;
-  padding: 1.5rem;
+  margin-top: 1rem;
+  padding: 1rem;
   background-color: #f9fafb;
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 .summary-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .summary-title {
@@ -334,14 +334,14 @@ onMounted(() => {
 .summary-content {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .summary-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0.375rem 0;
   border-bottom: 1px solid #e5e7eb;
 }
 
