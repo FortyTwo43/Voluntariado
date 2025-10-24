@@ -4,12 +4,8 @@
     <nav class="navbar">
       <div class="navbar-content">
         <div class="navbar-brand">
-          <div class="logo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </div>
-          <span class="brand-text">Plataforma de Voluntariado</span>
+          <img src="../assets/voluntariado.png" alt="Logo Voluntariado" class="logo" />
+          <span class="brand-text">Plataforma de Voluntariado Juvenil</span>
         </div>
         
         <div class="navbar-nav">
@@ -67,9 +63,9 @@ onMounted(() => {
 .navbar {
   background: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 1rem 2rem;
+  padding: 0.5rem 1rem;
   position: sticky;
-  top: 0;
+  top: 0px;
   z-index: 50;
 }
 
@@ -88,14 +84,11 @@ onMounted(() => {
 }
 
 .logo {
-  width: 2rem;
-  height: 2rem;
-  color: #4f46e5;
-}
-
-.logo svg {
-  width: 100%;
-  height: 100%;
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
+  margin-bottom: -1%;
+  margin-top: -1%;
 }
 
 .brand-text {
@@ -107,6 +100,7 @@ onMounted(() => {
 .navbar-nav {
   display: flex;
   gap: 2rem;
+
 }
 
 .nav-link {
