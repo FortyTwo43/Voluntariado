@@ -6,3 +6,4 @@ export const SUPABASE_HEADERS = {
     "apikey": SUPABASE_API_KEY,
     "Authorization": `Bearer ${SUPABASE_API_KEY}`
 }
+

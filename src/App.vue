@@ -1,11 +1,11 @@
 <script setup lang="ts">
-// App principal con router
+import { RouterView } from 'vue-router'; 
 </script>
 
 <template>
-  <router-view />
+  <RouterView />
 </template>
 
-<style>
-/* Los estilos globales están en src/style.css */
+<style scoped>
+
 </style>
