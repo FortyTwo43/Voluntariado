@@ -4,11 +4,7 @@
     <header class="auth-header">
       <div class="header-content">
         <div class="logo">
-          <div class="logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </div>
+          <img src="../assets/voluntariado.png" alt="Logo Voluntariado" class="logo-icon" />
           <span class="logo-text">Plataforma de Voluntariado Juvenil</span>
         </div>
         <nav class="header-nav">
@@ -86,17 +82,14 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  margin-bottom: -1%;
+  margin-top: -1%;
 }
 
 .logo-icon {
-  width: 2rem;
-  height: 2rem;
-  color: #4f46e5;
-}
-
-.logo-icon svg {
-  width: 100%;
-  height: 100%;
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
 }
 
 .logo-text {

@@ -13,7 +13,7 @@
           placeholder="Ingresa el nombre de tu organización"
           :error="errors.nombre"
           required
-          class="full"
+          class="nombre"
         />
       <div class="form-group">
         <label for="tipo" class="form-label">Tipo de Organización</label>
@@ -337,6 +337,12 @@ watch(() => organizacion.aceptaTerminos, (value) => {
 
 .form-group {
   margin-bottom: 10;
+  width: 103%;
+}
+
+.nombre{
+  width: 103%;
+  grid-column: span 3;
 }
 
 .form-label {
