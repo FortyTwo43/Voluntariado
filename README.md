@@ -1,22 +1,73 @@
-# Voluntariado Juvenil – Landing pública (Vue 3 + TS)
+# Voluntariado Juvenil – Plataforma de Voluntariado en Ecuador (Vue 3 + TS)
 
-Esta rama contiene la landing pública de una plataforma para voluntariado juvenil, diseñada y justificada con la rúbrica de usabilidad provista. El enfoque es simple: cabecera accesible, contenido claro y pie informativo; sin distracciones ni elementos propios de un dashboard.
+Esta plataforma conecta voluntarios con organizaciones sin fines de lucro en Ecuador, facilitando la búsqueda y postulación a proyectos de impacto social. El diseño prioriza la usabilidad según ISO 9241-110 y la accesibilidad WCAG 2.1 AA.
 
-Tecnologías: Vue 3, TypeScript, Vite, CSS tradicional (sin frameworks), Material Symbols.
+**Tecnologías:** Vue 3 (Composition API), TypeScript, Vite, Supabase, NewsData.io API, Material Symbols.
 
-## 🧭 Cómo navegar la vista
+## 🌟 Características principales
 
-- Cabecera: `PublicTopBar.vue` con menú principal, submenú “Información”, selector ES/EN y botón de contacto.
-- Cuerpo: `HomeLandingView.vue` con hero y tarjetas de novedades (`HeroBanner.vue`, `NewsCard.vue`).
-- Páginas informativas: `TermsPoliciesView.vue`, `InstitutionalInfoView.vue`, `ContactSupportView.vue`.
-- Pie: `PublicFooter.vue` con enlaces a contacto, información y políticas.
+- **Landing pública** con hero banner y noticias actualizadas
+- **Búsqueda de proyectos** con filtros por categoría, ubicación y búsqueda por texto
+- **Integración con API de noticias** de voluntariado en Ecuador
+- **Registro unificado** para voluntarios y organizaciones
+- **Base de datos Supabase** para gestión de proyectos y organizaciones
+- **Diseño responsive** con menú dropdown y navegación intuitiva
 
-Rutas configuradas en `router/index.ts`:
+## 🧭 Estructura de navegación
 
-- `/` (Home)
-- `/politicas`
-- `/informacion`
-- `/contacto`
+### Componentes principales
+
+- **PublicLayout.vue**: Layout principal con header sticky, menú dropdown, background image y footer
+- **HomeLandingView.vue**: Vista de inicio con hero banner y grid de noticias
+- **ProjectsView.vue**: Búsqueda y exploración de proyectos con paginación
+- **RegistrationSelectorView.vue**: Selector de tipo de registro (voluntario/organización)
+
+### Rutas públicas
+
+- `/` - Página de inicio
+- `/proyectos` - Búsqueda de proyectos de voluntariado
+- `/registro` - Selector de tipo de registro
+- `/registro-voluntario` - Formulario de registro para voluntarios
+- `/register-organization` - Formulario de registro para organizaciones
+- `/politicas` - Términos y políticas de privacidad
+- `/informacion` - Información institucional
+- `/contacto` - Contacto y soporte
+- `/login` - Inicio de sesión
+
+## 🔌 Integración de APIs
+
+### NewsData.io API
+
+La aplicación consume noticias relacionadas con voluntariado en Ecuador mediante **NewsData.io API**:
+
+- **API Key**: `pub_62982cb22555c8ecea62d2f638ada91fe4c74`
+- **Plan**: Free tier (200 requests/día)
+- **Búsqueda**: Keywords: "voluntariado", "volunteer", "ayuda social", "ONG"
+- **Filtros**: País Ecuador (ec), idioma español (es)
+- **Fallback**: Datos locales de ejemplo si la API no responde
+
+**Composable**: `src/composables/useNews.ts`
+
+```typescript
+// Uso en componentes
+const { news, loading, error, fetchNews } = useNews()
+await fetchNews(4) // Obtiene las 4 noticias más recientes
+```
+
+### Supabase Database
+
+- **URL**: `https://mcgpiwbyveohilfrpgwl.supabase.co`
+- **Tablas**:
+  - `id_proyecto`: Proyectos de voluntariado
+  - `id_organizacion`: Organizaciones registradas
+
+**Composable**: `src/composables/useProjects.ts`
+
+```typescript
+// Uso en componentes
+const { projects, loading, error, fetchProjects } = useProjects()
+await fetchProjects({ categoria: 'Educación', ubicacion: 'Quito' })
+```
 
 ## 🎨 Identidad visual (color corporativo)
 
