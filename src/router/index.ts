@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import PublicLayout from '@/layouts/PublicLayout.vue'
+import ProyectoLayout from '@/layouts/ProyectoLayout.vue'
 import HomeLandingView from '@/views/HomeLandingView.vue'
 import TermsPoliciesView from '@/views/TermsPoliciesView.vue'
 import InstitutionalInfoView from '@/views/InstitutionalInfoView.vue'
@@ -20,36 +21,42 @@ const routes = [
       { path: 'registro', name: 'registration', component: RegistrationSelectorView },
     ]
   },
-  // Rutas de Proyectos (movidas desde router/modules/proyectos.ts)
+  // Rutas de Proyectos con ProyectoLayout
   {
     path: '/proyectos',
-    name: 'proyectos',
-    component: () => import('@/views/proyectos/ListaProyectosView.vue'),
-    meta: { title: 'Proyectos de Voluntariado' },
-  },
-  {
-    path: '/proyectos/crear',
-    name: 'proyectos-crear',
-    component: () => import('@/views/proyectos/CrearProyectoView.vue'),
-    meta: { title: 'Crear Nuevo Proyecto' },
-  },
-  {
-    path: '/proyectos/:id',
-    name: 'proyectos-detalle',
-    component: () => import('@/views/proyectos/DetalleProyectoView.vue'),
-    meta: { title: 'Detalle del Proyecto' },
-  },
-  {
-    path: '/proyectos/:id/asistencia',
-    name: 'proyectos-asistencia',
-    component: () => import('@/views/proyectos/AsistenciaProyectoView.vue'),
-    meta: { title: 'Asistencia del Proyecto' },
-  },
-  {
-    path: '/proyectos/horas',
-    name: 'proyectos-horas',
-    component: () => import('@/views/proyectos/HorasVoluntariosView.vue'),
-    meta: { title: 'Registro de Horas de Voluntarios' },
+    component: ProyectoLayout,
+    children: [
+      {
+        path: '',
+        name: 'proyectos',
+        component: () => import('@/views/proyectos/ListaProyectosView.vue'),
+        meta: { title: 'Proyectos de Voluntariado' },
+      },
+      {
+        path: 'crear',
+        name: 'proyectos-crear',
+        component: () => import('@/views/proyectos/CrearProyectoView.vue'),
+        meta: { title: 'Crear Nuevo Proyecto' },
+      },
+      {
+        path: ':id',
+        name: 'proyectos-detalle',
+        component: () => import('@/views/proyectos/DetalleProyectoView.vue'),
+        meta: { title: 'Detalle del Proyecto' },
+      },
+      {
+        path: ':id/asistencia',
+        name: 'proyectos-asistencia',
+        component: () => import('@/views/proyectos/AsistenciaProyectoView.vue'),
+        meta: { title: 'Asistencia del Proyecto' },
+      },
+      {
+        path: 'horas',
+        name: 'proyectos-horas',
+        component: () => import('@/views/proyectos/HorasVoluntariosView.vue'),
+        meta: { title: 'Registro de Horas de Voluntarios' },
+      },
+    ],
   },
   {
     path: '/login',
