@@ -2,9 +2,9 @@
   <section class="registration-selector">
     <!-- Header -->
     <div class="selector-header">
-      <h1 class="page-title">Únete a Nuestra Comunidad</h1>
+      <h1 class="page-title">{{ t.joinCommunity }}</h1>
       <p class="page-subtitle">
-        Elige el tipo de cuenta que mejor se adapte a ti y empieza a generar un impacto positivo
+        {{ t.chooseAccountType }}
       </p>
     </div>
 
@@ -23,31 +23,31 @@
           <span class="material-symbols-outlined">volunteer_activism</span>
         </div>
         <div class="card-content">
-          <h2 class="card-title">Voluntario</h2>
+          <h2 class="card-title">{{ t.volunteer }}</h2>
           <p class="card-description">
-            Dona tu tiempo y habilidades para ayudar a organizaciones y proyectos sociales
+            {{ t.volunteerDesc }}
           </p>
           <ul class="card-benefits">
             <li>
               <span class="material-symbols-outlined">check_circle</span>
-              Encuentra proyectos que te apasionen
+              {{ t.findProjects }}
             </li>
             <li>
               <span class="material-symbols-outlined">check_circle</span>
-              Desarrolla nuevas habilidades
+              {{ t.developSkills }}
             </li>
             <li>
               <span class="material-symbols-outlined">check_circle</span>
-              Conecta con tu comunidad
+              {{ t.connectCommunity }}
             </li>
             <li>
               <span class="material-symbols-outlined">check_circle</span>
-              Obtén certificados
+              {{ t.getCertificates }}
             </li>
           </ul>
         </div>
         <button class="card-button btn-volunteer">
-          Registrarme como Voluntario
+          {{ t.registerAsVolunteerBtn }}
           <span class="material-symbols-outlined">arrow_forward</span>
         </button>
       </article>
@@ -65,31 +65,31 @@
           <span class="material-symbols-outlined">business</span>
         </div>
         <div class="card-content">
-          <h2 class="card-title">Organización</h2>
+          <h2 class="card-title">{{ t.organizationTitle }}</h2>
           <p class="card-description">
-            Busca voluntarios comprometidos para tus proyectos e iniciativas sociales
+            {{ t.organizationDesc }}
           </p>
           <ul class="card-benefits">
             <li>
               <span class="material-symbols-outlined">check_circle</span>
-              Publica y gestiona proyectos
+              {{ t.publishProjects }}
             </li>
             <li>
               <span class="material-symbols-outlined">check_circle</span>
-              Encuentra voluntarios
+              {{ t.findVolunteers }}
             </li>
             <li>
               <span class="material-symbols-outlined">check_circle</span>
-              Amplía tu impacto social
+              {{ t.expandImpact }}
             </li>
             <li>
               <span class="material-symbols-outlined">check_circle</span>
-              Herramientas de gestión
+              {{ t.managementTools }}
             </li>
           </ul>
         </div>
         <button class="card-button btn-organization">
-          Registrarme como Organización
+          {{ t.registerAsOrgBtn }}
           <span class="material-symbols-outlined">arrow_forward</span>
         </button>
       </article>
@@ -97,9 +97,9 @@
 
     <!-- Login redirect -->
     <div class="login-redirect">
-      <p>¿Ya tienes una cuenta?</p>
+      <p>{{ t.alreadyAccount }}</p>
       <router-link to="/login" class="login-link">
-        Inicia sesión aquí
+        {{ t.signInHere }}
         <span class="material-symbols-outlined">login</span>
       </router-link>
     </div>
@@ -108,8 +108,8 @@
     <div class="help-section">
       <span class="material-symbols-outlined">info</span>
       <p>
-        ¿No estás seguro qué tipo de cuenta elegir? 
-        <router-link to="/contacto" class="help-link">Contáctanos</router-link> y te ayudaremos.
+        {{ t.notSure }} 
+        <router-link to="/contacto" class="help-link">{{ t.contactUs }}</router-link> {{ t.weWillHelp }}.
       </p>
     </div>
   </section>
@@ -117,8 +117,10 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { useLanguage } from '@/composables/useLanguage'
 
 const router = useRouter()
+const { t } = useLanguage()
 
 const goToVolunteerRegister = () => {
   router.push('/registro-voluntario')

@@ -1,27 +1,27 @@
 <template>
   <div class="login-form">
     <div class="form-header">
-      <h1 class="form-title">Bienvenido de vuelta</h1>
-      <p class="form-subtitle">Accede a tu panel de voluntario u organización.</p>
+      <h1 class="form-title">{{ t.welcomeBack }}</h1>
+      <p class="form-subtitle">{{ t.loginSubtitle }}</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="form">
       <InputField
         id="email"
-        label="Correo Electrónico"
+        :label="t.emailLabel"
         type="email"
         v-model="loginData.email"
-        placeholder="tu@email.com"
+        :placeholder="t.emailPlaceholder"
         :error="errors.email"
         required
       />
 
       <InputField
         id="password"
-        label="Contraseña"
+        :label="t.passwordLabel"
         type="password"
         v-model="loginData.password"
-        placeholder="Introduce tu contraseña"
+        :placeholder="t.passwordPlaceholder"
         :error="errors.password"
         required
       />
@@ -33,10 +33,10 @@
             v-model="loginData.rememberUser"
             class="checkbox"
           />
-          <span class="checkbox-text">Recordar usuario</span>
+          <span class="checkbox-text">{{ t.rememberMe }}</span>
         </label>
         <router-link to="/forgot-password" class="forgot-password-link">
-          ¿Olvidaste tu contraseña?
+          {{ t.forgotPassword }}
         </router-link>
       </div>
 
@@ -46,14 +46,14 @@
         variant="primary"
         class="submit-button"
       >
-        <span v-if="isSubmitting">Iniciando sesión...</span>
-        <span v-else>Iniciar Sesión</span>
+        <span v-if="isSubmitting">{{ t.loggingIn }}</span>
+        <span v-else>{{ t.loginButton }}</span>
       </ButtonPrimary>
 
       <div class="register-section">
-        <p class="register-question">¿No tienes una cuenta?</p>
+        <p class="register-question">{{ t.noAccount }}</p>
         <router-link to="/registro-voluntario" class="register-link">
-          Regístrate aquí.
+          {{ t.registerHere }}
         </router-link>
       </div>
     </form>
@@ -64,12 +64,14 @@
 import { reactive, ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAlert } from '../../composables/useAlert';
+import { useLanguage } from '../../composables/useLanguage';
 import { autenticarUsuario, type LoginCredentials } from '../../services/authService';
 import InputField from '../ui/InputField.vue';
 import ButtonPrimary from '../ui/ButtonPrimary.vue';
 
 const router = useRouter();
 const { showSuccess, showError } = useAlert();
+const { t } = useLanguage();
 
 // Estado del formulario
 const loginData = reactive({
@@ -98,11 +100,11 @@ const validateField = (field: keyof typeof loginData, value: string | boolean) =
   switch (field) {
     case 'email':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.email = 'El correo electrónico es requerido';
+        errors.email = t.value.fieldRequired;
       } else if (typeof value === 'string') {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value.trim())) {
-          errors.email = 'Correo inválido';
+          errors.email = t.value.invalidEmail;
         } else {
           errors.email = undefined;
         }
@@ -112,10 +114,10 @@ const validateField = (field: keyof typeof loginData, value: string | boolean) =
       break;
     case 'password':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.password = 'La contraseña es requerida';
+        errors.password = t.value.fieldRequired;
       } else if (typeof value === 'string') {
         if (value.length < 8) {
-          errors.password = 'La contraseña debe tener al menos 8 caracteres';
+          errors.password = t.value.passwordTooShort;
         } else {
           errors.password = undefined;
         }
@@ -150,19 +152,27 @@ const handleSubmit = async () => {
     if (resultado.success && resultado.user) {
       // Guardar información del usuario en localStorage
       localStorage.setItem('user', JSON.stringify(resultado.user));
-      
+
       // Guardar email en localStorage si se marcó "Recordar usuario"
       if (loginData.rememberUser) {
         localStorage.setItem('rememberedEmail', loginData.email);
       } else {
         localStorage.removeItem('rememberedEmail');
       }
-      
-      showSuccess('¡Inicio de sesión exitoso!', `Bienvenido ${resultado.user.nombre}`);
-      
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 2000);
+
+      // Mensaje de éxito genérico
+      showSuccess(t.value.loginSuccess, `${t.value.welcome} ${resultado.user.nombre}`);
+
+      // Flujo de navegación según tipo de usuario
+      if (resultado.user.tipo === 'organizacion') {
+        // Redirigir a proyectos para organizaciones
+        setTimeout(() => {
+          router.push('/proyectos');
+        }, 800);
+      } else {
+        // Voluntario: mantener en la vista actual (no hay vistas para él todavía)
+        // Opcional: podemos limpiar el formulario o dejar un mensaje.
+      }
     } else {
       showError('Error de autenticación', resultado.message);
     }

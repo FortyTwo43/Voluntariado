@@ -12,7 +12,7 @@
           <span class="logo-text">Plataforma de Voluntariado Juvenil</span>
         </router-link>
         <nav class="header-nav">
-          <router-link to="/proyectos" class="nav-link">Explorar Proyectos</router-link>
+          <router-link to="/proyectos" class="nav-link">{{ t.ctaBrowse }}</router-link>
           
           <!-- Dropdown menu con hover -->
           <div class="nav-item has-dropdown" 
@@ -24,24 +24,32 @@
                     aria-haspopup="menu"
                     :aria-expanded="infoDropdownOpen"
                     @click="toggleInfoDropdown">
-              Información institucional
+              {{ t.institutionalInfo }}
               <span class="material-symbols-outlined dropdown-icon">expand_more</span>
             </button>
             <div v-show="infoDropdownOpen" class="nav-dropdown" role="menu">
               <router-link to="/informacion" class="dropdown-item" role="menuitem" @click="closeInfoDropdown">
-                Información institucional
+                {{ t.institutionalInfo }}
               </router-link>
               <router-link to="/politicas" class="dropdown-item" role="menuitem" @click="closeInfoDropdown">
-                Política/Términos de uso
+                {{ t.terms }}
               </router-link>
               <router-link to="/contacto" class="dropdown-item" role="menuitem" @click="closeInfoDropdown">
-                Soporte/Contacto
+                {{ t.support }}
               </router-link>
             </div>
           </div>
           
-          <router-link to="/login" class="nav-link nav-link-primary">Iniciar Sesión</router-link>
-          <router-link to="/registro" class="nav-link nav-link-cta">Registrarse</router-link>
+          <!-- Language Toggle Button -->
+          <button @click="toggleLanguage" class="language-toggle-btn" :title="currentLanguage === 'es' ? 'Switch to English' : 'Cambiar a Español'">
+            <svg class="language-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+            </svg>
+            <span class="language-text">{{ currentLanguage.toUpperCase() }}</span>
+          </button>
+          
+          <router-link to="/login" class="nav-link nav-link-primary">{{ t.signIn }}</router-link>
+          <router-link to="/registro" class="nav-link nav-link-cta">{{ t.ctaRegister }}</router-link>
         </nav>
       </div>
     </header>
@@ -85,6 +93,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { t, currentLanguage, changeLanguage } = useLanguage()
 
 // Dropdown state
 const infoDropdownOpen = ref(false)
@@ -99,6 +110,12 @@ const closeInfoDropdown = () => {
 
 const toggleInfoDropdown = () => {
   infoDropdownOpen.value = !infoDropdownOpen.value
+}
+
+// Language toggle
+const toggleLanguage = () => {
+  const newLang = currentLanguage.value === 'es' ? 'en' : 'es'
+  changeLanguage(newLang)
 }
 </script>
 
@@ -306,6 +323,37 @@ const toggleInfoDropdown = () => {
   background-color: var(--color-primary-dark);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+/* Language Toggle Button */
+.language-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  background: rgba(79, 70, 229, 0.1);
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  border-radius: 0.375rem;
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.language-toggle-btn:hover {
+  background: rgba(79, 70, 229, 0.15);
+  border-color: rgba(79, 70, 229, 0.3);
+  transform: translateY(-1px);
+}
+
+.language-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.language-text {
+  font-weight: 600;
 }
 
 /* Main Content */

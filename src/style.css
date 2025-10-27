@@ -18,6 +18,57 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Paleta de colores personalizada - acogedora y profesional */
+  --color-purple: #4B0082;
+  --color-purple-dark: #3a0066;
+  --color-mint: #79C99E;
+  --color-mint-dark: #5fb386;
+  --color-text: #2E2E2E;
+  
+  /* Colores principales */
+  --color-primary: #4B0082;
+  --color-primary-dark: #3a0066;
+  --color-secondary: #79C99E;
+  --color-accent: #5fb386;
+  
+  /* Colores de fondo */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #F7F5F0;
+  --color-bg-tertiary: #e8e8e8;
+  --color-bg-dark: #2E2E2E;
+  --color-bg-purple-light: #f3eeff;
+  --color-bg-mint-light: #e8f5ed;
+  --color-text-primary: #2E2E2E;
+  --color-text-secondary: #5a5a5a;
+  --color-text-muted: #141414;
+  --color-text-light: #ffffff;
+  
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #D6D4A7;
+  --color-bg-tertiary: #e8e8e8;
+  --color-bg-dark: #141414;
+  --color-bg-purple-light: #f0e6ff;
+  --color-turquoise: #2D9B96;
+  --color-cyan: #00aae4;
+  --color-beige: #D6D4A7;
+  
+  --color-border: #320064;
+  --color-border-light: #e0e0e0;
+  
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
 }
 
 html, body {
@@ -108,6 +159,73 @@ input:focus, textarea:focus, select:focus {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Estilos para los wizard forms */
+* {
+  box-sizing: border-box;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* Animaciones útiles */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-base);
+}
+
+.slide-in {
+  animation: slideIn var(--transition-base);
 }
 
 @media (prefers-color-scheme: light) {
