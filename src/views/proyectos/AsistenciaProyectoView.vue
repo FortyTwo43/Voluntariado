@@ -1,8 +1,8 @@
 <template>
   <div class="asistencia-view">
-    <!-- Header -->
-    <header class="view-header">
-      <div class="header-content">
+    <!-- Contenedor principal -->
+    <div class="container">
+      <div class="page-header">
         <div class="header-left">
           <button 
             type="button" 
@@ -14,7 +14,10 @@
             </svg>
             Volver
           </button>
-          <h1 class="view-title">Asistencia de Voluntarios</h1>
+          <div>
+            <h1 class="view-title">Asistencia de Voluntarios</h1>
+            <p class="subtitulo">Registra y gestiona la asistencia de voluntarios para tus proyectos.</p>
+          </div>
         </div>
         
         <button 
@@ -28,11 +31,6 @@
           Ver Registro de Horas
         </button>
       </div>
-    </header>
-
-    <!-- Contenedor principal -->
-    <div class="container">
-      <p class="subtitulo">Registra y gestiona la asistencia de voluntarios para tus proyectos.</p>
 
       <!-- Panel de selección -->
       <div class="panel-seleccion">
@@ -277,30 +275,32 @@ if (route.params.id) {
 
 <style scoped>
 .asistencia-view {
-  min-height: 100vh;
   background: #F7F5F0;
+  min-height: calc(100vh - 200px);
 }
 
-.view-header {
-  background: linear-gradient(135deg, #3a0066 0%, #4B0082 100%);
-  border-bottom: 3px solid #79C99E;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.header-content {
+.container {
   max-width: 1400px;
   margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #79C99E;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .btn-volver {
@@ -363,22 +363,16 @@ if (route.params.id) {
 .view-title {
   font-size: 1.75rem;
   font-weight: 800;
-  color: #ffffff;
-  margin: 0;
+  color: #4B0082;
+  margin: 0 0 0.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
 }
 
 .subtitulo {
   font-size: 1rem;
   color: #5a5a5a;
-  margin: 0 0 2rem;
+  margin: 0;
 }
 
 /* Panel de selección */

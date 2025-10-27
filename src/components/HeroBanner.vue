@@ -5,34 +5,34 @@
       <p class="hero-subtitle">{{ t.heroSubtitle }}</p>
       
       <div class="benefits-section">
-        <h2 class="benefits-title">¿Por qué ser voluntario?</h2>
+        <h2 class="benefits-title">{{ t.whyVolunteer }}</h2>
         <div class="benefits-grid">
           <div class="benefit-item">
             <span class="material-symbols-outlined benefit-icon">favorite</span>
             <div class="benefit-text">
-              <h3>Impacto Social</h3>
-              <p>Contribuye al desarrollo de tu comunidad</p>
+              <h3>{{ t.socialImpact }}</h3>
+              <p>{{ t.socialImpactDesc }}</p>
             </div>
           </div>
           <div class="benefit-item">
             <span class="material-symbols-outlined benefit-icon">psychology</span>
             <div class="benefit-text">
-              <h3>Desarrollo Personal</h3>
-              <p>Adquiere nuevas habilidades y experiencia</p>
+              <h3>{{ t.personalDevelopment }}</h3>
+              <p>{{ t.personalDevelopmentDesc }}</p>
             </div>
           </div>
           <div class="benefit-item">
             <span class="material-symbols-outlined benefit-icon">groups</span>
             <div class="benefit-text">
-              <h3>Networking</h3>
-              <p>Conoce personas con tus mismos valores</p>
+              <h3>{{ t.networking }}</h3>
+              <p>{{ t.networkingDesc }}</p>
             </div>
           </div>
           <div class="benefit-item">
             <span class="material-symbols-outlined benefit-icon">workspace_premium</span>
             <div class="benefit-text">
-              <h3>Certificación</h3>
-              <p>Obtén reconocimiento por tu labor</p>
+              <h3>{{ t.certification }}</h3>
+              <p>{{ t.certificationDesc }}</p>
             </div>
           </div>
         </div>
@@ -40,14 +40,15 @@
 
       <div class="hero-actions">
         <RouterLink to="/registro" class="btn btn-primary">{{ t.ctaRegister }}</RouterLink>
-        <RouterLink to="/proyectos" class="btn btn-secondary">{{ t.ctaBrowse }}</RouterLink>
+        <RouterLink to="/proyectos-view" class="btn btn-secondary">{{ t.ctaBrowse }}</RouterLink>
       </div>
     </div>
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useLanguage } from '@/composables/useLanguage'
+
 const { t } = useLanguage()
 </script>
 

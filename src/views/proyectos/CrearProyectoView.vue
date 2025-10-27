@@ -1,14 +1,14 @@
 <template>
   <div class="crear-proyecto-view">
-    <!-- Header con título y botones de navegación -->
-    <header class="view-header">
-      <div class="header-content">
+    <!-- Contenedor del asistente -->
+    <div class="wizard-container">
+      <div class="page-header">
         <div class="header-title-container">
           <button 
             type="button" 
             class="btn-back"
             @click="volverALista"
-            title="Volver a la lista"
+            :title="t.backToList"
           >
             <svg viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
@@ -17,7 +17,7 @@
           <svg class="icon-project" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <h1 class="view-title">Creación de Proyecto</h1>
+          <h1 class="view-title">{{ t.createProject }}</h1>
         </div>
         
         <button 
@@ -26,16 +26,13 @@
           class="save-draft-button"
           @click="guardarBorrador"
         >
-          Guardar Borrador
+          {{ t.saveDraft }}
         </button>
       </div>
-    </header>
 
-    <!-- Contenedor del asistente -->
-    <div class="wizard-container">
       <div class="wizard-card">
         <!-- Título principal -->
-        <h2 class="wizard-title">Crear un Nuevo Proyecto</h2>
+        <h2 class="wizard-title">{{ t.createNewProject }}</h2>
         
         <!-- Barra de progreso mejorada -->
         <BarraProgresoProyecto 
@@ -86,7 +83,7 @@
             <svg class="icon-arrow-left" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
             </svg>
-            Paso Anterior
+            {{ t.previousStep }}
           </button>
 
           <button
@@ -96,7 +93,7 @@
             :disabled="!esPasoValido"
             @click="pasoSiguiente"
           >
-            Siguiente Paso
+            {{ t.nextStep }}
             <svg class="icon-arrow-right" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
             </svg>
@@ -113,7 +110,7 @@
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
             <span v-if="enviando" class="spinner"></span>
-            {{ enviando ? 'Creando...' : 'Confirmar y Crear Proyecto' }}
+            {{ enviando ? t.creating : t.confirmCreate }}
           </button>
         </div>
 
@@ -132,6 +129,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useLanguage } from '../../composables/useLanguage';
 import FormPaso1 from '../../components/proyectos/FormPaso1.vue';
 import FormPaso2 from '../../components/proyectos/FormPaso2.vue';
 import FormPaso3 from '../../components/proyectos/FormPaso3.vue';
@@ -140,6 +138,7 @@ import ProyectosService from '../../services/proyectos.service';
 import type { ProyectoNuevo, CategoriaProyecto, BorradorProyecto } from '../../types/proyecto';
 
 const router = useRouter();
+const { t } = useLanguage();
 
 // Estado del formulario
 const pasoActual = ref(1);
@@ -225,7 +224,7 @@ const irAPaso = (paso: number) => {
 // Navegación
 const volverALista = () => {
   if (pasoActual.value > 1 || formData.nombre) {
-    if (confirm('¿Deseas salir? Los cambios no guardados se perderán.')) {
+    if (confirm(t.value.confirmExit)) {
       router.push('/proyectos');
     }
   } else {
@@ -245,10 +244,10 @@ const guardarBorrador = () => {
   
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(borrador));
-    alert('Borrador guardado exitosamente');
+    alert(t.value.draftSaved);
   } catch (error) {
     console.error('Error al guardar borrador:', error);
-    alert('No se pudo guardar el borrador');
+    alert(t.value.draftSaveError);
   }
 };
 
@@ -266,7 +265,7 @@ const cargarBorrador = () => {
       return;
     }
 
-    if (confirm('Se encontró un borrador guardado. ¿Deseas continuar desde donde lo dejaste?')) {
+    if (confirm(t.value.draftFound)) {
       Object.assign(formData, borrador.datos);
       pasoActual.value = borrador.paso;
     }
@@ -293,7 +292,7 @@ const confirmarCreacion = async () => {
   try {
     // Validar que la categoría no esté vacía
     if (!formData.categoria) {
-      throw new Error('Debe seleccionar una categoría');
+      throw new Error(t.value.fieldRequired);
     }
 
     await ProyectosService.crearProyecto(formData);
@@ -302,7 +301,7 @@ const confirmarCreacion = async () => {
     eliminarBorrador();
     
     // Mostrar mensaje de éxito
-    alert('¡Proyecto creado exitosamente!');
+    alert(t.value.projectCreated);
     
     // Redirigir a la lista de proyectos o al detalle
     router.push({ name: 'proyectos' });
@@ -310,7 +309,7 @@ const confirmarCreacion = async () => {
     console.error('Error al crear proyecto:', error);
     mensajeError.value = error instanceof Error 
       ? error.message 
-      : 'Ocurrió un error al crear el proyecto. Por favor, intenta nuevamente.';
+      : t.value.projectCreateError;
   } finally {
     enviando.value = false;
   }
@@ -324,25 +323,26 @@ onMounted(() => {
 
 <style scoped>
 .crear-proyecto-view {
-  min-height: 100vh;
   background: #F7F5F0;
-  padding: 0;
+  min-height: calc(100vh - 200px);
 }
 
-.view-header {
-  background: linear-gradient(135deg, #3a0066 0%, #4B0082 100%);
-  border-bottom: 3px solid #79C99E;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-}
-
-.header-content {
-  max-width: 1200px;
+.wizard-container {
+  max-width: 950px;
   margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #79C99E;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .header-title-container {
@@ -357,17 +357,18 @@ onMounted(() => {
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: #79C99E;
+  border: 2px solid #79C99E;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s ease;
   color: #ffffff;
+  flex-shrink: 0;
 }
 
 .btn-back:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: #5fb386;
+  border-color: #5fb386;
   transform: translateX(-2px);
 }
 
@@ -379,14 +380,14 @@ onMounted(() => {
 .icon-project {
   width: 2.5rem;
   height: 2.5rem;
-  color: #ffffff;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  color: #4B0082;
+  flex-shrink: 0;
 }
 
 .view-title {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #4B0082;
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -399,12 +400,13 @@ onMounted(() => {
   color: #ffffff;
   background: #79C99E;
   border: 2px solid #79C99E;
-  border-radius: 0;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
 .save-draft-button:hover {
@@ -412,12 +414,6 @@ onMounted(() => {
   border-color: #5fb386;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.wizard-container {
-  max-width: 950px;
-  margin: 0 auto;
-  padding: 0 1rem 3rem;
 }
 
 .wizard-card {

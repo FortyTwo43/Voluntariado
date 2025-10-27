@@ -5,6 +5,7 @@ import TermsPoliciesView from '@/views/TermsPoliciesView.vue'
 import InstitutionalInfoView from '@/views/InstitutionalInfoView.vue'
 import ContactSupportView from '@/views/ContactSupportView.vue'
 import RegistrationSelectorView from '@/views/RegistrationSelectorView.vue'
+import ProjectsView from '@/views/ProjectsView.vue'
 
 const routes = [
   {
@@ -15,7 +16,7 @@ const routes = [
       { path: 'politicas', name: 'policies', component: TermsPoliciesView },
       { path: 'informacion', name: 'institutional', component: InstitutionalInfoView },
       { path: 'contacto', name: 'contact', component: ContactSupportView },
-      
+      { path: 'proyectos-view', name: 'projects', component: ProjectsView },
       { path: 'registro', name: 'registration', component: RegistrationSelectorView },
     ]
   },

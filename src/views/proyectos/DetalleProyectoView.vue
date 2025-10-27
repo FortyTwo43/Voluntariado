@@ -1,8 +1,8 @@
 <template>
   <div class="detalle-proyecto-view">
-    <!-- Header -->
-    <header class="view-header">
-      <div class="header-content">
+    <!-- Contenedor principal -->
+    <div class="container">
+      <div class="page-header">
         <button 
           type="button" 
           class="btn-volver"
@@ -15,10 +15,6 @@
         </button>
         <h1 class="view-title">Detalle del Proyecto</h1>
       </div>
-    </header>
-
-    <!-- Contenedor principal -->
-    <div class="container">
       <!-- Estado: Cargando -->
       <div v-if="cargando" class="estado-carga">
         <div class="spinner-grande"></div>
@@ -249,23 +245,26 @@ onMounted(() => {
 
 <style scoped>
 .detalle-proyecto-view {
-  min-height: 100vh;
   background: #F7F5F0;
+  min-height: calc(100vh - 200px);
 }
 
-.view-header {
-  background: linear-gradient(135deg, #3a0066 0%, #4B0082 100%);
-  border-bottom: 3px solid #79C99E;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.header-content {
+.container {
   max-width: 1000px;
   margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #79C99E;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .btn-volver {
@@ -275,19 +274,22 @@ onMounted(() => {
   padding: 0.75rem 1.25rem;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #4B0082;
-  background: transparent;
+  color: #ffffff;
+  background: #79C99E;
   border: 2px solid #79C99E;
-  border-radius: 0;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
 .btn-volver:hover {
-  background: #79C99E;
-  color: #ffffff;
+  background: #5fb386;
+  border-color: #5fb386;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(121, 201, 158, 0.3);
 }
 
 .icon-arrow-left {
@@ -298,16 +300,10 @@ onMounted(() => {
 .view-title {
   font-size: 1.75rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #4B0082;
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem;
 }
 
 .estado-carga,

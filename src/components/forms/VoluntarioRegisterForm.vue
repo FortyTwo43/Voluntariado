@@ -1,25 +1,25 @@
 <template>
   <div class="register-form">
     <div class="form-header">
-      <h1 class="form-title">Crea tu Cuenta de Voluntario</h1>
-      <p class="form-subtitle">Empieza a generar un impacto en tu comunidad.</p>
+      <h1 class="form-title">{{ t.createVolunteerAccount }}</h1>
+      <p class="form-subtitle">{{ t.registerSubtitle }}</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="form grid-form three-col">
       <InputField
         id="nombre"
-        label="Nombre"
+        :label="t.firstName"
         v-model="voluntario.nombre"
-        placeholder="Ingresa tu nombre"
+        :placeholder="t.firstNamePlaceholder"
         :error="errors.nombre"
         required
         class="span-1"
       />
       <InputField
         id="apellido"
-        label="Apellido"
+        :label="t.lastName"
         v-model="voluntario.apellido"
-        placeholder="Ingresa tu apellido"
+        :placeholder="t.lastNamePlaceholder"
         :error="errors.apellido"
         required
         class="span-1"
@@ -27,10 +27,10 @@
 
       <InputField
         id="correo"
-        label="Correo Electrónico"
+        :label="t.emailLabel"
         type="email"
         v-model="voluntario.email"
-        placeholder="ejemplo@correo.com"
+        :placeholder="t.emailPlaceholder"
         :error="errors.email"
         required
         class="span-1"
@@ -38,39 +38,39 @@
 
       <InputField
         id="telefono"
-        label="Teléfono"
+        :label="t.phone"
         type="tel"
         v-model="voluntario.telefono"
-        placeholder="+57 300 123 4567"
+        :placeholder="t.phonePlaceholder"
         :error="errors.telefono"
         required
       />
 
       <InputField
         id="institucion"
-        label="Institución Educativa"
+        :label="t.institution"
         v-model="voluntario.institucion_educativa"
-        placeholder="Universidad, Colegio, etc."
+        :placeholder="t.institutionPlaceholder"
         :error="errors.institucion_educativa"
         required
       />
 
       <InputField
         id="contrasena"
-        label="Contraseña"
+        :label="t.password"
         type="password"
         v-model="voluntario.contrasena"
-        placeholder="Mínimo 8 caracteres"
+        :placeholder="t.passwordMin"
         :error="errors.contrasena"
         required
       />
 
       <InputField
         id="confirmarContrasena"
-        label="Confirmar Contraseña"
+        :label="t.confirmPassword"
         type="password"
         v-model="voluntario.confirmarContrasena"
-        placeholder="Confirma tu contraseña"
+        :placeholder="t.confirmPasswordPlaceholder"
         :error="errors.confirmarContrasena"
         required
       />
@@ -84,13 +84,13 @@
             required
           />
           <span class="checkbox-text">
-            Al registrarte, aceptas nuestros
-            <a href="#" class="terms-link">Términos de Servicio</a>
-            y
-            <a href="#" class="terms-link">Política de Privacidad</a>.
+            {{ t.acceptTerms }}
+            <a href="#" class="terms-link">{{ t.termsOfService }}</a>
+            {{ t.and }}
+            <a href="#" class="terms-link">{{ t.privacyPolicy }}</a>.
           </span>
         </label>
-        <span v-if="errors.aceptaTerminos" class="error-message">{{ errors.aceptaTerminos }}</span>
+        <span v-if="errors.aceptaTerminos" class="error-message">{{ t.mustAcceptTerms }}</span>
       </div>
 
       <ButtonPrimary
@@ -99,23 +99,23 @@
         variant="primary"
         class="submit-button full"
       >
-        <span v-if="isSubmitting">Registrando...</span>
-        <span v-else>Registrarse</span>
+        <span v-if="isSubmitting">{{ t.registering }}</span>
+        <span v-else>{{ t.registerButton }}</span>
       </ButtonPrimary>
 
       <div class="login-section full">
-        <p class="login-question">¿Ya tienes una cuenta?</p>
-        <router-link to="/login" class="login-link">Inicia sesión</router-link>
+        <p class="login-question">{{ t.alreadyHaveAccount }}</p>
+        <router-link to="/login" class="login-link">{{ t.signInLink }}</router-link>
       </div>
 
       <div class="organization-section full">
-        <p class="organization-question">¿Eres una organización?</p>
+        <p class="organization-question">{{ t.areYouOrganization }}</p>
         <ButtonPrimary
           type="button"
           variant="secondary"
           @click="goToOrganizationRegister"
         >
-          Registrarse como Organización
+          {{ t.registerAsOrganization }}
         </ButtonPrimary>
       </div>
     </form>
@@ -125,12 +125,14 @@
 <script setup lang="ts">
 import { reactive, ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useLanguage } from '../../composables/useLanguage';
 import type { IVoluntarioRegistro } from '../../types/IVoluntario';
 import { registrarVoluntario, validarCamposCompleto, validarEmail } from '../../services/authService';
 import InputField from '../../components/ui/InputField.vue';
 import ButtonPrimary from '../../components/ui/ButtonPrimary.vue';
 
 const router = useRouter();
+const { t } = useLanguage();
 
 // Estado del formulario
 const voluntario = reactive<IVoluntarioRegistro>({
@@ -167,24 +169,24 @@ const validateField = (field: keyof IVoluntarioRegistro, value: string | boolean
   switch (field) {
     case 'nombre':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.nombre = 'El nombre es requerido';
+        errors.nombre = t.value.fieldRequired;
       } else {
         errors.nombre = undefined;
       }
       break;
     case 'apellido':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.apellido = 'El apellido es requerido';
+        errors.apellido = t.value.fieldRequired;
       } else {
         errors.apellido = undefined;
       }
       break;
     case 'email':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.email = 'El correo electrónico es requerido';
+        errors.email = t.value.fieldRequired;
       } else if (typeof value === 'string') {
         if (!validarEmail(value.trim())) {
-          errors.email = 'El formato del correo electrónico no es válido';
+          errors.email = t.value.invalidEmail;
         } else {
           errors.email = undefined;
         }
@@ -194,21 +196,21 @@ const validateField = (field: keyof IVoluntarioRegistro, value: string | boolean
       break;
     case 'telefono':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.telefono = 'El teléfono es requerido';
+        errors.telefono = t.value.fieldRequired;
       } else {
         errors.telefono = undefined;
       }
       break;
     case 'institucion_educativa':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.institucion_educativa = 'La institución educativa es requerida';
+        errors.institucion_educativa = t.value.fieldRequired;
       } else {
         errors.institucion_educativa = undefined;
       }
       break;
     case 'contrasena':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.contrasena = 'La contraseña es requerida';
+        errors.contrasena = t.value.fieldRequired;
       } else if (typeof value === 'string') {
         const lengthOk = value.length >= 8;
         const numberOk = /\d/.test(value);
@@ -216,7 +218,7 @@ const validateField = (field: keyof IVoluntarioRegistro, value: string | boolean
         const lowercaseOk = /[a-z]/.test(value);
         const specialOk = /[^A-Za-z0-9]/.test(value);
         if (!lengthOk || !numberOk || !uppercaseOk || !lowercaseOk || !specialOk) {
-          errors.contrasena = 'La contraseña debe tener al menos 8 caracteres, incluir 1 número, 1 mayúscula, 1 minúscula y 1 carácter especial';
+          errors.contrasena = t.value.passwordRequirements;
         } else {
           errors.contrasena = undefined;
         }
@@ -230,10 +232,10 @@ const validateField = (field: keyof IVoluntarioRegistro, value: string | boolean
       break;
     case 'confirmarContrasena':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.confirmarContrasena = 'Debe confirmar la contraseña';
+        errors.confirmarContrasena = t.value.fieldRequired;
       } else if (typeof value === 'string') {
         if (voluntario.contrasena !== value) {
-          errors.confirmarContrasena = 'Las contraseñas no coinciden';
+          errors.confirmarContrasena = t.value.passwordsMismatch;
         } else {
           errors.confirmarContrasena = undefined;
         }
@@ -292,11 +294,11 @@ const handleSubmit = async () => {
     const success = await registrarVoluntario(voluntarioData);
     
     if (success) {
-      alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+      alert(t.value.registerSuccess);
       // Redirigir a la pantalla de login
       router.push('/login');
     } else {
-      alert('Error al registrar. Por favor, verifica tu conexión e intenta nuevamente.');
+      alert(t.value.projectCreateError);
     }
   } catch (error) {
     console.error('Error en el registro:', error);

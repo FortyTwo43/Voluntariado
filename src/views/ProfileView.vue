@@ -2,7 +2,7 @@
   <MainLayout>
     <div class="profile-page">
       <div class="profile-container">
-        <h1 class="page-title">Mi Perfil</h1>
+        <h1 class="page-title">{{ t.myProfileTitle }}</h1>
         
         <div class="profile-card">
           <ProfileHeader 
@@ -29,11 +29,13 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { useAlert } from '../composables/useAlert';
+import { useLanguage } from '../composables/useLanguage';
 import MainLayout from '../layouts/MainLayout.vue';
 import ProfileHeader from '../components/profile/ProfileHeader.vue';
 import ProfileForm from '../components/profile/ProfileForm.vue';
 
 const { showSuccess, showError } = useAlert();
+const { t, currentLanguage } = useLanguage();
 
 // Estado del usuario
 const userData = reactive<any>({
@@ -66,7 +68,7 @@ const loadUserData = () => {
 // Manejar edición de foto
 const handleEditPhoto = () => {
   // Implementar lógica de cambio de foto
-  showSuccess('Función en desarrollo', 'La edición de foto estará disponible próximamente');
+  showSuccess(t.value.infoTitle, currentLanguage.value === 'es' ? 'La edición de foto estará disponible próximamente' : 'Photo editing will be available soon');
 };
 
 // Actualizar datos del usuario
@@ -107,9 +109,9 @@ const handleSaveChanges = async () => {
     localStorage.setItem('user', JSON.stringify(userData));
     
     isEditing.value = false;
-    showSuccess('Perfil actualizado', 'Tus datos se han guardado correctamente');
+    showSuccess(t.value.successTitle, t.value.profileUpdated);
   } catch (error) {
-    showError('Error al guardar', 'No se pudieron guardar los cambios. Intenta nuevamente.');
+    showError(t.value.errorTitle, t.value.profileUpdateError);
   }
 };
 

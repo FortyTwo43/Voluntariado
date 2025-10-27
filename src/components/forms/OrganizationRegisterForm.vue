@@ -1,22 +1,22 @@
 <template>
   <div class="organization-register-form">
     <div class="form-header">
-      <h1 class="form-title">Crea tu Cuenta de Organización</h1>
-      <p class="form-subtitle">Conecta con jóvenes voluntarios y genera impacto social.</p>
+      <h1 class="form-title">{{ t.createOrgAccount }}</h1>
+      <p class="form-subtitle">{{ t.orgSubtitle }}</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="form grid-form three-col">
         <InputField
           id="nombre"
-          label="Nombre de la Organización"
+          :label="t.orgName"
           v-model="organizacion.nombre"
-          placeholder="Ingresa el nombre de tu organización"
+          :placeholder="t.orgNamePlaceholder"
           :error="errors.nombre"
           required
           class="nombre"
         />
       <div class="form-group">
-        <label for="tipo" class="form-label">Tipo de Organización</label>
+        <label for="tipo" class="form-label">{{ t.orgType }}</label>
         <select
           id="tipo"
           v-model="organizacion.tipo"
@@ -24,50 +24,50 @@
           :class="{ 'error': errors.tipo }"
           required
         >
-          <option value="">Selecciona el tipo</option>
-          <option value="ONG">ONG</option>
-          <option value="Fundación">Fundación</option>
-          <option value="Empresa">Empresa</option>
-          <option value="Comunidad">Comunidad</option>
-          <option value="Otro">Otro</option>
+          <option value="">{{ t.orgTypePlaceholder }}</option>
+          <option value="ONG">{{ t.ngo }}</option>
+          <option value="Fundación">{{ t.foundation }}</option>
+          <option value="Empresa">{{ currentLanguage === 'es' ? 'Empresa' : 'Company' }}</option>
+          <option value="Comunidad">{{ currentLanguage === 'es' ? 'Comunidad' : 'Community' }}</option>
+          <option value="Otro">{{ t.other }}</option>
         </select>
         <span v-if="errors.tipo" class="error-message">{{ errors.tipo }}</span>
       </div>
       <InputField
         id="direccion"
-        label="Dirección"
+        :label="t.address"
         v-model="organizacion.direccion"
-        placeholder="Ingresa la dirección de tu organización"
+        :placeholder="t.addressPlaceholder"
         :error="errors.direccion"
         required
       />
 
       <InputField
         id="email"
-        label="Correo Electrónico"
+        :label="t.emailLabel"
         type="email"
         v-model="organizacion.email"
-        placeholder="contacto@organizacion.com"
+        :placeholder="t.representativeEmailPlaceholder"
         :error="errors.email"
         required
       />
 
       <InputField
         id="contrasena"
-        label="Contraseña"
+        :label="t.password"
         type="password"
         v-model="organizacion.contrasena"
-        placeholder="Mínimo 8 caracteres"
+        :placeholder="t.passwordMin"
         :error="errors.contrasena"
         required
       />
 
       <InputField
         id="confirmarContrasena"
-        label="Confirmar Contraseña"
+        :label="t.confirmPassword"
         type="password"
         v-model="organizacion.confirmarContrasena"
-        placeholder="Confirma tu contraseña"
+        :placeholder="t.confirmPasswordPlaceholder"
         :error="errors.confirmarContrasena"
         required
       />
@@ -81,13 +81,13 @@
             required
           />
           <span class="checkbox-text">
-            Acepto los
-            <a href="#" class="terms-link">Términos de Servicio</a>
-            y la
-            <a href="#" class="terms-link">Política de Privacidad</a>.
+            {{ t.acceptTerms }}
+            <a href="#" class="terms-link">{{ t.termsOfService }}</a>
+            {{ t.and }}
+            <a href="#" class="terms-link">{{ t.privacyPolicy }}</a>.
           </span>
         </label>
-        <span v-if="errors.aceptaTerminos" class="error-message">{{ errors.aceptaTerminos }}</span>
+        <span v-if="errors.aceptaTerminos" class="error-message">{{ t.mustAcceptTerms }}</span>
       </div>
 
       <ButtonOrganization
@@ -96,13 +96,13 @@
         variant="primary"
         class="submit-button full"
       >
-        <span v-if="isSubmitting">Creando cuenta...</span>
-        <span v-else>Crear cuenta</span>
+        <span v-if="isSubmitting">{{ t.creating }}</span>
+        <span v-else>{{ t.create }}</span>
       </ButtonOrganization>
 
       <div class="login-section full">
-        <p class="login-question">¿Ya tienes una cuenta?</p>
-        <router-link to="/login" class="login-link">Inicia sesión</router-link>
+        <p class="login-question">{{ t.alreadyHaveAccount }}</p>
+        <router-link to="/login" class="login-link">{{ t.signInLink }}</router-link>
       </div>
     </form>
   </div>
@@ -111,6 +111,7 @@
 <script setup lang="ts">
 import { reactive, ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useLanguage } from '../../composables/useLanguage';
 import type { IOrganizacionRegistro } from '../../types/IOrganizacion';
 import { registrarOrganizacion, validarCamposCompleto } from '../../services/organizationService';
 import { useAlert } from '../../composables/useAlert';
@@ -120,6 +121,7 @@ import type { IOrganizacion } from '../../types/IOrganizacion';
 
 const router = useRouter();
 const { showSuccess, showError } = useAlert();
+const { t, currentLanguage } = useLanguage();
 
 // Estado del formulario
 const organizacion = reactive<IOrganizacionRegistro>({

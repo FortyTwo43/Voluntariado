@@ -1,13 +1,16 @@
 <template>
   <div class="lista-proyectos-view">
-    <!-- Header -->
-    <header class="view-header">
-      <div class="header-content">
+    <!-- Contenedor principal -->
+    <div class="container">
+      <div class="page-header">
         <div class="header-title-container">
           <svg class="icon-projects" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
           </svg>
-          <h1 class="view-title">Proyectos de Voluntariado</h1>
+          <div>
+            <h1 class="view-title">Proyectos de Voluntariado</h1>
+            <p class="subtitulo">Gestiona los proyectos de voluntariado de tu organización.</p>
+          </div>
         </div>
         
         <button 
@@ -21,11 +24,6 @@
           Crear Nuevo Proyecto
         </button>
       </div>
-    </header>
-
-    <!-- Contenedor principal -->
-    <div class="container">
-      <p class="subtitulo">Gestiona los proyectos de voluntariado de tu organización.</p>
 
       <!-- Barra de búsqueda y filtros -->
       <div class="barra-controles">
@@ -269,45 +267,54 @@ onMounted(() => {
 
 <style scoped>
 .lista-proyectos-view {
-  min-height: 100vh;
   background: #F7F5F0;
+  min-height: calc(100vh - 200px);
 }
 
-.view-header {
-  background: linear-gradient(135deg, #3a0066 0%, #4B0082 100%);
-  border-bottom: 3px solid #79C99E;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.header-content {
+.container {
   max-width: 1400px;
   margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #79C99E;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .header-title-container {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .icon-projects {
-  width: 2.5rem;
-  height: 2.5rem;
-  color: #ffffff;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  width: 3rem;
+  height: 3rem;
+  color: #4B0082;
+  flex-shrink: 0;
 }
 
 .view-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #ffffff;
-  margin: 0;
+  color: #4B0082;
+  margin: 0 0 0.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.subtitulo {
+  font-size: 1rem;
+  color: #5a5a5a;
+  margin: 0;
 }
 
 .btn-crear-proyecto {
@@ -326,6 +333,7 @@ onMounted(() => {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
 .btn-crear-proyecto:hover {
@@ -337,18 +345,6 @@ onMounted(() => {
 .icon-plus {
   width: 1.25rem;
   height: 1.25rem;
-}
-
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.subtitulo {
-  font-size: 1rem;
-  color: #5a5a5a;
-  margin: 0 0 2rem;
 }
 
 /* Barra de controles */
