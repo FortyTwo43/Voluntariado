@@ -12,7 +12,7 @@
           <span class="logo-text">Plataforma de Voluntariado Juvenil</span>
         </router-link>
         <nav class="header-nav">
-          <router-link to="/proyectos" class="nav-link">{{ t.ctaBrowse }}</router-link>
+          <router-link to="/proyectos-view" class="nav-link">{{ t.ctaBrowse }}</router-link>
           
           <!-- Dropdown menu con hover -->
           <div class="nav-item has-dropdown" 

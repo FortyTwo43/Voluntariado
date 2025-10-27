@@ -267,7 +267,7 @@ onMounted(() => {
 
 <style scoped>
 .lista-proyectos-view {
-  background: #F7F5F0;
+  
   min-height: calc(100vh - 200px);
 }
 
