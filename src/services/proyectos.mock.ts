@@ -16,7 +16,6 @@ export const proyectosEjemplo: Proyecto[] = [
     cupo_maximo: 25,
     id_organizacion: 'org-001',
     estado: 'activo',
-    created_at: '2025-10-15T10:00:00Z',
   },
   {
     id: '2',
@@ -28,7 +27,6 @@ export const proyectosEjemplo: Proyecto[] = [
     cupo_maximo: 15,
     id_organizacion: 'org-001',
     estado: 'activo',
-    created_at: '2025-10-10T14:30:00Z',
   },
   {
     id: '3',
@@ -40,7 +38,6 @@ export const proyectosEjemplo: Proyecto[] = [
     cupo_maximo: 30,
     id_organizacion: 'org-001',
     estado: 'activo',
-    created_at: '2025-10-12T09:15:00Z',
   },
   {
     id: '4',
@@ -52,7 +49,6 @@ export const proyectosEjemplo: Proyecto[] = [
     cupo_maximo: 50,
     id_organizacion: 'org-001',
     estado: 'activo',
-    created_at: '2025-10-18T11:00:00Z',
   },
   {
     id: '5',
@@ -64,7 +60,6 @@ export const proyectosEjemplo: Proyecto[] = [
     cupo_maximo: 20,
     id_organizacion: 'org-001',
     estado: 'activo',
-    created_at: '2025-10-20T16:45:00Z',
   },
   {
     id: '6',
@@ -76,7 +71,6 @@ export const proyectosEjemplo: Proyecto[] = [
     cupo_maximo: 40,
     id_organizacion: 'org-001',
     estado: 'activo',
-    created_at: '2025-10-08T08:30:00Z',
   },
 ];
 

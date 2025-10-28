@@ -10,8 +10,6 @@ export interface Proyecto {
   cupo_maximo: number;
   id_organizacion: string;
   estado?: 'activo' | 'inactivo' | 'completado';
-  created_at?: string;
-  updated_at?: string;
 }
 
 export interface ProyectoNuevo {

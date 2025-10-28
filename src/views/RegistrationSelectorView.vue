@@ -282,11 +282,12 @@ const goToOrganizationRegister = () => {
 }
 
 .btn-organization {
-  background-color: var(--color-success);
+  /* Usar color sólido para evitar variables no definidas que la hagan invisible */
+  background-color: #10b981; /* emerald-500 */
 }
 
 .btn-organization:hover {
-  background-color: #047857;
+  background-color: #059669; /* emerald-600 */
 }
 
 .card-button .material-symbols-outlined {

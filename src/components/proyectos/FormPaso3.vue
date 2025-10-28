@@ -22,40 +22,7 @@
       </p>
     </div>
 
-    <!-- Organization ID -->
-    <div class="form-group">
-      <label for="id-organizacion" class="form-label">
-        ID de la Organización
-      </label>
-      <input
-        id="id-organizacion"
-        v-model="datosLocales.id_organizacion"
-        type="text"
-        class="form-input"
-        :class="{ 
-          'input-valid': idOrganizacionValido,
-          'input-invalid': !idOrganizacionValido && datosLocales.id_organizacion.length > 0
-        }"
-        placeholder="ORG-12345"
-        @input="validarIdOrganizacion"
-      />
-      
-      <!-- Validación de Organization ID -->
-      <div v-if="datosLocales.id_organizacion.length > 0" class="validation-message">
-        <div v-if="idOrganizacionValido" class="message-success">
-          <svg class="icon-check" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-          </svg>
-          <span>El ID de la organización es válido.</span>
-        </div>
-        <div v-else class="message-error">
-          <svg class="icon-error" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
-          <span>Por favor, ingresa un ID de organización válido.</span>
-        </div>
-      </div>
-    </div>
+    
 
     <!-- Resumen del Proyecto -->
     <div class="project-summary">
@@ -96,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from 'vue';
+import { reactive, watch, onMounted } from 'vue';
 import type { CategoriaProyecto } from '../../types/proyecto';
 
 // Props
@@ -126,33 +93,12 @@ const datosLocales = reactive({
   id_organizacion: props.modelValue.id_organizacion || '',
 });
 
-const idOrganizacionValido = ref(false);
-
-/**
- * Valida el formato del ID de organización
- */
-const validarIdOrganizacion = () => {
-  const id = datosLocales.id_organizacion.trim();
-  
-  if (id.length === 0) {
-    idOrganizacionValido.value = false;
-    validarFormulario();
-    return;
-  }
-  
-  // Validación simple: debe tener al menos 3 caracteres
-  idOrganizacionValido.value = id.length >= 3;
-  validarFormulario();
-};
-
 /**
  * Valida todo el formulario del paso 3
  */
 const validarFormulario = () => {
-  const esValido = 
-    datosLocales.cupo_maximo > 0 &&
-    datosLocales.id_organizacion.trim().length >= 3 &&
-    idOrganizacionValido.value;
+  const tieneOrgId = !!datosLocales.id_organizacion && datosLocales.id_organizacion.trim().length > 0;
+  const esValido = datosLocales.cupo_maximo > 0 && tieneOrgId;
   
   emit('validacion-cambio', esValido);
 };
@@ -164,7 +110,7 @@ const getCategoriaLabel = (categoria: string): string => {
   const labels: Record<string, string> = {
     social: 'Social',
     educativo: 'Educativo',
-    ambiental: 'Environmental',
+    ambiental: 'Ambiental',
   };
   return labels[categoria] || categoria;
 };
@@ -196,14 +142,23 @@ watch(datosLocales, (newValue) => {
 watch(() => props.modelValue, (newValue) => {
   datosLocales.cupo_maximo = newValue.cupo_maximo;
   datosLocales.id_organizacion = newValue.id_organizacion;
-  validarIdOrganizacion();
+  validarFormulario();
 }, { deep: true });
 
 // Validar al montar
 onMounted(() => {
-  if (datosLocales.id_organizacion) {
-    validarIdOrganizacion();
-  }
+  // Asignar ID de organización automáticamente desde la sesión (localStorage)
+  try {
+    if (!datosLocales.id_organizacion) {
+      const raw = localStorage.getItem('user');
+      if (raw) {
+        const user = JSON.parse(raw);
+        if (user?.tipo === 'organizacion' && user?.id) {
+          datosLocales.id_organizacion = String(user.id);
+        }
+      }
+    }
+  } catch {}
   validarFormulario();
 });
 </script>

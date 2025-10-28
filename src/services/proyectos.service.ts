@@ -17,7 +17,11 @@ export class ProyectosService {
     try {
       const response = await fetch(this.BASE_URL, {
         method: 'POST',
-        headers: SUPABASE_HEADERS,
+        headers: {
+          ...SUPABASE_HEADERS,
+          // Pedir que nos devuelva la fila creada
+          Prefer: 'return=representation'
+        },
         body: JSON.stringify(data),
       });
 
@@ -26,11 +30,24 @@ export class ProyectosService {
         throw new Error(errorData.message || 'Error al crear el proyecto');
       }
 
-      const [proyecto] = await response.json() as Proyecto[];
+      // La respuesta devuelve columnas de BD (incluye id_proyecto), las mapeamos al tipo Proyecto
+  const [row] = await response.json() as any[];
       
-      if (!proyecto) {
+      if (!row) {
         throw new Error('No se pudo crear el proyecto');
       }
+      
+      const proyecto: Proyecto = {
+        id: row.id_proyecto ?? row.id ?? '',
+        nombre: row.nombre,
+        descripcion: row.descripcion ?? undefined,
+        categoria: row.categoria,
+        fecha_inicio: row.fecha_inicio,
+        fecha_fin: row.fecha_fin,
+        cupo_maximo: row.cupo_maximo,
+        id_organizacion: row.id_organizacion,
+        estado: row.estado ?? undefined,
+      };
       
       return proyecto;
     } catch (error) {
@@ -50,7 +67,8 @@ export class ProyectosService {
    */
   static async obtenerProyectos(): Promise<Proyecto[]> {
     try {
-      const response = await fetch(this.BASE_URL, {
+  const select = 'id:id_proyecto,nombre,descripcion,categoria,fecha_inicio,fecha_fin,cupo_maximo,id_organizacion';
+      const response = await fetch(`${this.BASE_URL}?select=${encodeURIComponent(select)}`, {
         method: 'GET',
         headers: SUPABASE_HEADERS,
       });
@@ -73,6 +91,34 @@ export class ProyectosService {
   }
 
   /**
+   * Obtiene los proyectos pertenecientes a una organización específica
+   */
+  static async obtenerProyectosDeOrganizacion(idOrganizacion: string): Promise<Proyecto[]> {
+    try {
+  const select = 'id:id_proyecto,nombre,descripcion,categoria,fecha_inicio,fecha_fin,cupo_maximo,id_organizacion';
+      const response = await fetch(`${this.BASE_URL}?id_organizacion=eq.${idOrganizacion}&select=${encodeURIComponent(select)}`, {
+        method: 'GET',
+        headers: SUPABASE_HEADERS,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al obtener proyectos de la organización');
+      }
+
+      const proyectos = await response.json() as Proyecto[];
+      return proyectos;
+    } catch (error) {
+      console.error('Error en obtenerProyectosDeOrganizacion:', error);
+      throw new Error(
+        error instanceof Error 
+          ? error.message 
+          : 'No se pudieron cargar los proyectos. Intenta nuevamente.'
+      );
+    }
+  }
+
+  /**
    * Obtiene un proyecto específico por ID
    * @param id - ID del proyecto
    * @returns Promesa con el proyecto encontrado
@@ -80,7 +126,8 @@ export class ProyectosService {
    */
   static async obtenerProyectoPorId(id: string): Promise<Proyecto> {
     try {
-      const response = await fetch(`${this.BASE_URL}?id=eq.${id}`, {
+  const select = 'id:id_proyecto,nombre,descripcion,categoria,fecha_inicio,fecha_fin,cupo_maximo,id_organizacion';
+      const response = await fetch(`${this.BASE_URL}?id_proyecto=eq.${id}&select=${encodeURIComponent(select)}`, {
         method: 'GET',
         headers: SUPABASE_HEADERS,
       });
@@ -116,9 +163,13 @@ export class ProyectosService {
    */
   static async actualizarProyecto(id: string, data: Partial<ProyectoNuevo>): Promise<Proyecto> {
     try {
-      const response = await fetch(`${this.BASE_URL}?id=eq.${id}`, {
+  const select = 'id:id_proyecto,nombre,descripcion,categoria,fecha_inicio,fecha_fin,cupo_maximo,id_organizacion';
+      const response = await fetch(`${this.BASE_URL}?id_proyecto=eq.${id}&select=${encodeURIComponent(select)}`, {
         method: 'PATCH',
-        headers: SUPABASE_HEADERS,
+        headers: {
+          ...SUPABASE_HEADERS,
+          Prefer: 'return=representation'
+        },
         body: JSON.stringify(data),
       });
 
@@ -151,7 +202,7 @@ export class ProyectosService {
    */
   static async eliminarProyecto(id: string): Promise<void> {
     try {
-      const response = await fetch(`${this.BASE_URL}?id=eq.${id}`, {
+      const response = await fetch(`${this.BASE_URL}?id_proyecto=eq.${id}`, {
         method: 'DELETE',
         headers: SUPABASE_HEADERS,
       });

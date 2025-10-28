@@ -182,8 +182,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import type { Proyecto } from '../../types/proyecto';
-// TEMPORALMENTE usando datos de ejemplo para visualización
-import { proyectosEjemplo } from '../../services/proyectos.mock';
+import { ProyectosService } from '../../services/proyectos.service';
 
 const router = useRouter();
 
@@ -200,18 +199,30 @@ const ordenamiento = ref('');
 /**
  * Carga los proyectos desde el servicio
  */
+const getLoggedOrganizationId = (): string | null => {
+  try {
+    const raw = localStorage.getItem('user');
+    if (!raw) return null;
+    const user = JSON.parse(raw);
+    if (user?.tipo === 'organizacion') {
+      return user.id || user.id_organizacion || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
 const cargarProyectos = async () => {
   cargando.value = true;
   error.value = '';
 
   try {
-    // TEMPORALMENTE usando datos de ejemplo
-    // Para usar Supabase, descomenta la siguiente línea:
-    // proyectos.value = await ProyectosService.obtenerProyectos();
-    
-    // Simulando delay de carga
-    await new Promise(resolve => setTimeout(resolve, 500));
-    proyectos.value = proyectosEjemplo;
+    const orgId = getLoggedOrganizationId();
+    if (!orgId) {
+      throw new Error('Debes iniciar sesión como organización para ver tus proyectos');
+    }
+    proyectos.value = await ProyectosService.obtenerProyectosDeOrganizacion(orgId);
   } catch (err) {
     console.error('Error al cargar proyectos:', err);
     error.value = err instanceof Error 

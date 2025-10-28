@@ -1,4 +1,4 @@
-<template>
+  <template>
   <section class="hero">
     <div class="hero-content">
       <h1 class="hero-title">{{ t.heroTitle }}</h1>

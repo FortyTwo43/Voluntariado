@@ -165,52 +165,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { proyectosEjemplo } from '../../services/proyectos.mock';
+import type { Proyecto } from '../../types/proyecto';
+import { ProyectosService } from '../../services/proyectos.service';
+import { HorariosService } from '../../services/horarios.service';
+import { HorasService } from '../../services/horas.service';
+import { InscripcionesService } from '../../services/inscripciones.service';
+import { VoluntariosService, type VoluntarioMin } from '../../services/voluntarios.service';
+import { AsistenciasService } from '../../services/asistencias.service';
+import type { IHora } from '../../types/IHora';
 
 const router = useRouter();
 const route = useRoute();
 
 // Estado
-const proyectos = ref(proyectosEjemplo);
+const proyectos = ref<Proyecto[]>([]);
 const proyectoSeleccionado = ref('');
 const fechaSeleccionada = ref('');
 
-// Fechas de ejemplo
-const fechasProgramadas = ref([
-  '2023-10-26',
-  '2023-10-28',
-  '2023-11-02'
-]);
+// Fechas programadas calculadas a partir de horas
+const fechasProgramadas = ref<string[]>([]);
 
-// Voluntarios de ejemplo
-const voluntarios = ref([
-  {
-    id: '1',
-    nombre: 'Jane Doe',
-    estado: 'presente',
-    observaciones: ''
-  },
-  {
-    id: '2',
-    nombre: 'John Smith',
-    estado: 'ausente',
-    observaciones: 'Called in sick'
-  },
-  {
-    id: '3',
-    nombre: 'Samantha Lee',
-    estado: 'presente',
-    observaciones: ''
-  }
-]);
+// Mapa de día -> lista de horas
+const horasPorDia = ref<Record<string, IHora[]>>({});
+
+// ID de la hora seleccionada (según fecha)
+const idHoraSeleccionada = ref<string>('');
+
+// Voluntarios cargados para la fecha seleccionada
+const voluntarios = ref<Array<{ id: string; nombre: string; estado: 'presente'|'ausente'; observaciones: string }>>([]);
 
 // Computed
 const nombreProyectoActual = computed(() => {
   const proyecto = proyectos.value.find(p => p.id === proyectoSeleccionado.value);
   return proyecto ? proyecto.nombre : '';
 });
+
+const proyectoActual = computed(() => proyectos.value.find(p => p.id === proyectoSeleccionado.value) || null);
 
 /**
  * Vuelve a la lista de proyectos
@@ -262,15 +254,141 @@ const cancelar = () => {
  * Guarda la asistencia
  */
 const guardarAsistencia = () => {
-  // TODO: Implementar guardado en Supabase
-  alert('Asistencia guardada correctamente');
-  console.log('Asistencia:', voluntarios.value);
+  if (!idHoraSeleccionada.value) {
+    alert('No hay una hora configurada para la fecha seleccionada');
+    return;
+  }
+  const lote = voluntarios.value.map(v => ({
+    id_hora: idHoraSeleccionada.value,
+    id_voluntario: v.id,
+    presencia: v.estado === 'presente',
+    actividad_realizada: v.observaciones || undefined,
+  }));
+  AsistenciasService.guardarAsistencias(lote)
+    .then(() => alert('Asistencia guardada correctamente'))
+    .catch((e) => {
+      console.error('Error guardando asistencia', e);
+      alert('No se pudo guardar la asistencia');
+    });
 };
 
 // Si viene un ID de proyecto en la URL, pre-seleccionarlo
 if (route.params.id) {
   proyectoSeleccionado.value = route.params.id as string;
 }
+
+// Cargar proyectos reales para el selector
+const getLoggedOrganizationId = (): string | null => {
+  try {
+    const raw = localStorage.getItem('user');
+    if (!raw) return null;
+    const user = JSON.parse(raw);
+    if (user?.tipo === 'organizacion') {
+      return user.id || user.id_organizacion || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
+onMounted(async () => {
+  try {
+    const orgId = getLoggedOrganizationId();
+    if (!orgId) {
+      console.warn('Vista de asistencia: usuario no es organización o no ha iniciado sesión');
+      proyectos.value = [];
+      return;
+    }
+    proyectos.value = await ProyectosService.obtenerProyectosDeOrganizacion(orgId);
+  } catch (e) {
+    console.error('No se pudieron cargar proyectos para asistencia:', e);
+  }
+});
+
+// Helpers
+const dateToDiaSemana = (dateStr: string): string => {
+  const date = new Date(dateStr + 'T00:00:00');
+  const dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  return dias[date.getDay()] || '';
+};
+
+const generarFechasPorDias = (inicio: string, fin: string, diasSemana: Set<string>, maxResultados = 30): string[] => {
+  const res: string[] = [];
+  const start = new Date(inicio + 'T00:00:00');
+  const end = new Date(fin + 'T00:00:00');
+  const cursor = new Date(start);
+  while (cursor <= end && res.length < maxResultados) {
+    const diaNombre = dateToDiaSemana(cursor.toISOString().slice(0,10));
+    if (diasSemana.has(diaNombre)) {
+      res.push(cursor.toISOString().slice(0,10));
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return res;
+};
+
+// Reacciones a cambios de proyecto / fecha
+watch(proyectoSeleccionado, async (nuevo) => {
+  fechaSeleccionada.value = '';
+  idHoraSeleccionada.value = '';
+  fechasProgramadas.value = [];
+  horasPorDia.value = {};
+
+  const proyecto = proyectos.value.find(p => p.id === nuevo);
+  if (!proyecto) return;
+
+  try {
+    const horarios = await HorariosService.obtenerHorariosPorProyecto(proyecto.id);
+    const idsHorarios = horarios.map(h => h.id_horario);
+    const horas = await HorasService.obtenerHorasPorHorarios(idsHorarios);
+    const mapa: Record<string, IHora[]> = {};
+    for (const h of horas) {
+      const arr = mapa[h.dia] ?? (mapa[h.dia] = []);
+      arr.push(h);
+    }
+    horasPorDia.value = mapa;
+    const diasSemana = new Set(Object.keys(mapa));
+    fechasProgramadas.value = generarFechasPorDias(proyecto.fecha_inicio, proyecto.fecha_fin, diasSemana);
+    if (fechasProgramadas.value.length > 0) {
+      fechaSeleccionada.value = (fechasProgramadas.value[0] as string);
+    }
+  } catch (e) {
+    console.error('Error cargando horarios/horas del proyecto', e);
+  }
+});
+
+watch(fechaSeleccionada, async (nueva) => {
+  voluntarios.value = [];
+  idHoraSeleccionada.value = '';
+  const proyecto = proyectoActual.value;
+  if (!nueva || !proyecto) return;
+  const dia = dateToDiaSemana(nueva);
+  const horasDia = horasPorDia.value[dia] || [];
+  if (horasDia.length === 0) return;
+  // Seleccionar la primera hora del día por ahora
+  idHoraSeleccionada.value = (horasDia[0]!.id_hora);
+
+  try {
+    const inscripciones = await InscripcionesService.obtenerInscripcionesPorProyecto(proyecto.id);
+    const idsVol = inscripciones.map(i => i.id_voluntario);
+    const infoVoluntarios = await VoluntariosService.obtenerVoluntariosPorIds(idsVol);
+    const asistencias = await AsistenciasService.obtenerAsistencias(idHoraSeleccionada.value, idsVol);
+    const asistenciaPorVol = new Map(asistencias.map(a => [a.id_voluntario, a]));
+    voluntarios.value = infoVoluntarios.map((v: VoluntarioMin) => {
+      const a = asistenciaPorVol.get(v.id);
+      const nombre = [v.nombre, v.apellido].filter(Boolean).join(' ');
+      return {
+        id: v.id,
+        nombre: nombre || v.nombre,
+        estado: a?.presencia ? 'presente' : 'ausente',
+        observaciones: a?.actividad_realizada || ''
+      };
+    });
+  } catch (e) {
+    console.error('Error cargando voluntarios/asistencias', e);
+  }
+});
 </script>
 
 <style scoped>

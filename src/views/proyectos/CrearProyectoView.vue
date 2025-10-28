@@ -318,6 +318,19 @@ const confirmarCreacion = async () => {
 // Cargar borrador al montar
 onMounted(() => {
   cargarBorrador();
+  // Prefijar el id de organización desde el usuario logueado
+  try {
+    const raw = localStorage.getItem('user');
+    if (raw) {
+      const user = JSON.parse(raw);
+      if (user?.tipo === 'organizacion') {
+        const orgId = user.id || user.id_organizacion;
+        if (orgId) {
+          formData.id_organizacion = orgId;
+        }
+      }
+    }
+  } catch {}
 });
 </script>
 

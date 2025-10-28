@@ -133,8 +133,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import type { Proyecto } from '../../types/proyecto';
-// TEMPORALMENTE usando datos de ejemplo para visualización
-import { obtenerProyectoEjemplo } from '../../services/proyectos.mock';
+import { ProyectosService } from '../../services/proyectos.service';
 
 const router = useRouter();
 const route = useRoute();
@@ -143,6 +142,7 @@ const route = useRoute();
 const proyecto = ref<Proyecto | null>(null);
 const cargando = ref(true);
 const error = ref('');
+let orgId: string | null = null;
 
 // Estado de horas y asistencia (datos de ejemplo)
 const horasRegistradas = ref(12);
@@ -159,19 +159,22 @@ const cargarProyecto = async () => {
 
   try {
     const id = route.params.id as string;
-    
-    // TEMPORALMENTE usando datos de ejemplo
-    // Para usar Supabase, descomenta la siguiente línea:
-    // proyecto.value = await ProyectosService.obtenerProyectoPorId(id);
-    
-    // Simulando delay de carga
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const proyectoEncontrado = obtenerProyectoEjemplo(id);
-    
-    if (!proyectoEncontrado) {
-      error.value = 'Proyecto no encontrado';
-    } else {
-      proyecto.value = proyectoEncontrado;
+    // Obtener organización logueada
+    try {
+      const raw = localStorage.getItem('user');
+      if (raw) {
+        const user = JSON.parse(raw);
+        if (user?.tipo === 'organizacion') {
+          orgId = user.id || user.id_organizacion || null;
+        }
+      }
+    } catch {}
+
+    proyecto.value = await ProyectosService.obtenerProyectoPorId(id);
+
+    // Verificar que el proyecto pertenezca a la organización
+    if (orgId && proyecto.value.id_organizacion !== orgId) {
+      throw new Error('No estás autorizado para ver este proyecto');
     }
   } catch (err) {
     console.error('Error al cargar proyecto:', err);

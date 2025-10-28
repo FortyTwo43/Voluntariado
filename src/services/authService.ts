@@ -182,7 +182,8 @@ export interface LoginResponse {
 // Función para autenticar voluntarios
 export async function autenticarVoluntario(credentials: LoginCredentials): Promise<LoginResponse> {
   try {
-    const url = `${SUPABASE_URL}/rest/v1/voluntarios?email=eq.${encodeURIComponent(credentials.email)}&select=*`;
+    const select = 'id:id_voluntario,nombre,apellido,email,contrasena';
+    const url = `${SUPABASE_URL}/rest/v1/voluntarios?email=eq.${encodeURIComponent(credentials.email)}&select=${encodeURIComponent(select)}`;
     
     const response = await fetch(url, {
       method: 'GET',
@@ -202,7 +203,7 @@ export async function autenticarVoluntario(credentials: LoginCredentials): Promi
       };
     }
 
-    const voluntario = data[0];
+  const voluntario = data[0];
     
     // Verificar contraseña (en un caso real, esto sería con hash)
     if (voluntario.contrasena !== credentials.password) {
@@ -235,7 +236,8 @@ export async function autenticarVoluntario(credentials: LoginCredentials): Promi
 // Función para autenticar organizaciones
 export async function autenticarOrganizacion(credentials: LoginCredentials): Promise<LoginResponse> {
   try {
-    const url = `${SUPABASE_URL}/rest/v1/organizaciones?email=eq.${encodeURIComponent(credentials.email)}&select=*`;
+    const select = 'id:id_organizacion,nombre,email,contrasena';
+    const url = `${SUPABASE_URL}/rest/v1/organizaciones?email=eq.${encodeURIComponent(credentials.email)}&select=${encodeURIComponent(select)}`;
     
     const response = await fetch(url, {
       method: 'GET',
@@ -255,7 +257,7 @@ export async function autenticarOrganizacion(credentials: LoginCredentials): Pro
       };
     }
 
-    const organizacion = data[0];
+  const organizacion = data[0];
     
     // Verificar contraseña (en un caso real, esto sería con hash)
     if (organizacion.contrasena !== credentials.password) {
