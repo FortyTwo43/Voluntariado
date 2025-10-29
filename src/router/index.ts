@@ -20,6 +20,8 @@ const routes = [
       { path: 'contacto', name: 'contact', component: ContactSupportView },
       { path: 'proyectos-view', name: 'projects', component: ProjectsView },
       { path: 'registro', name: 'registration', component: RegistrationSelectorView },
+      { path: 'recuperar', name: 'password-forgot', component: () => import('@/views/Auth/PasswordForgotView.vue') },
+      { path: 'restablecer', name: 'password-reset-otp', component: () => import('@/views/Auth/PasswordResetOtpView.vue') },
     ]
   },
   // Rutas de Proyectos con ProyectoLayout

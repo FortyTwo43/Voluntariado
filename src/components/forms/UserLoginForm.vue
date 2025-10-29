@@ -37,7 +37,7 @@
           />
           <span class="checkbox-text">{{ t.rememberMe }}</span>
         </label>
-        <router-link to="/forgot-password" class="forgot-password-link">
+        <router-link to="/recuperar" class="forgot-password-link">
           {{ t.forgotPassword }}
         </router-link>
       </div>
