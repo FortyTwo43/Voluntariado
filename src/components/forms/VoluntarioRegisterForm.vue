@@ -41,9 +41,10 @@
         :label="t.phone"
         type="tel"
         v-model="voluntario.telefono"
-        :placeholder="t.phonePlaceholder"
+        placeholder="0987654321"
         :error="errors.telefono"
         required
+        @input="handleTelefonoInput"
       />
 
       <InputField
@@ -197,6 +198,18 @@ const validateField = (field: keyof IVoluntarioRegistro, value: string | boolean
     case 'telefono':
       if (!value || (typeof value === 'string' && !value.trim())) {
         errors.telefono = t.value.fieldRequired;
+      } else if (typeof value === 'string') {
+        const telefonoLimpio = value.trim();
+        // Validar que solo contenga números
+        if (!/^\d+$/.test(telefonoLimpio)) {
+          errors.telefono = 'El teléfono debe contener solo números';
+        } 
+        // Validar que tenga al menos 10 dígitos
+        else if (telefonoLimpio.length < 10) {
+          errors.telefono = 'El teléfono debe tener al menos 10 dígitos';
+        } else {
+          errors.telefono = undefined;
+        }
       } else {
         errors.telefono = undefined;
       }
@@ -311,6 +324,13 @@ const handleSubmit = async () => {
 // Redirigir al registro de organización
 const goToOrganizationRegister = () => {
   router.push('/register-organization');
+};
+
+// Manejar input de teléfono para permitir solo números
+const handleTelefonoInput = (value: string) => {
+  // Filtrar solo números
+  const soloNumeros = value.replace(/\D/g, '');
+  voluntario.telefono = soloNumeros;
 };
 
 // Watchers para validación en tiempo real

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { loadUserSession } from '@/services/authService'
 import PublicLayout from '@/layouts/PublicLayout.vue'
 import ProyectoLayout from '@/layouts/ProyectoLayout.vue'
 import HomeLandingView from '@/views/HomeLandingView.vue'
@@ -23,6 +24,18 @@ const routes = [
   },
   // Rutas de Proyectos con ProyectoLayout
   {
+    path: '/explorar-proyectos',
+    component: ProyectoLayout,
+    children: [
+      {
+        path: '',
+        name: 'explorar-proyectos',
+        component: () => import('@/views/voluntarios/ExplorarProyectosView.vue'),
+        meta: { title: 'Explorar Proyectos de Voluntariado', requiresAuth: true },
+      },
+    ],
+  },
+  {
     path: '/proyectos',
     component: ProyectoLayout,
     children: [
@@ -30,31 +43,31 @@ const routes = [
         path: '',
         name: 'proyectos',
         component: () => import('@/views/proyectos/ListaProyectosView.vue'),
-        meta: { title: 'Proyectos de Voluntariado' },
+        meta: { title: 'Proyectos de Voluntariado', requiresAuth: true },
       },
       {
         path: 'crear',
         name: 'proyectos-crear',
         component: () => import('@/views/proyectos/CrearProyectoView.vue'),
-        meta: { title: 'Crear Nuevo Proyecto' },
+        meta: { title: 'Crear Nuevo Proyecto', requiresAuth: true },
       },
       {
         path: ':id',
         name: 'proyectos-detalle',
         component: () => import('@/views/proyectos/DetalleProyectoView.vue'),
-        meta: { title: 'Detalle del Proyecto' },
+        meta: { title: 'Detalle del Proyecto', requiresAuth: true },
       },
       {
         path: ':id/asistencia',
         name: 'proyectos-asistencia',
         component: () => import('@/views/proyectos/AsistenciaProyectoView.vue'),
-        meta: { title: 'Asistencia del Proyecto' },
+        meta: { title: 'Asistencia del Proyecto', requiresAuth: true },
       },
       {
         path: 'horas',
         name: 'proyectos-horas',
         component: () => import('@/views/proyectos/HorasVoluntariosView.vue'),
-        meta: { title: 'Registro de Horas de Voluntarios' },
+        meta: { title: 'Registro de Horas de Voluntarios', requiresAuth: true },
       },
     ],
   },
@@ -73,11 +86,28 @@ const routes = [
     name: 'RegisterOrganization',
     component: () => import('@/views/organizations/RegisterOrganizationView.vue'),
   },
+  {
+    path: "/profile",
+    name: "UserProfile",
+    component: () => import('@/views/ProfileView.vue'),
+    meta: { requiresAuth: true },
+  }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+// Guard global para rutas protegidas
+router.beforeEach((to, _from, next) => {
+  const requiresAuth = Boolean(to.meta && (to.meta as any).requiresAuth);
+  if (!requiresAuth) return next();
+  const user = loadUserSession();
+  if (!user) {
+    return next({ name: 'UserLogin', query: { redirect: to.fullPath } });
+  }
+  return next();
+});
 
 export default router

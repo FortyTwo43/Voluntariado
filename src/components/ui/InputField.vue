@@ -40,7 +40,7 @@ import { ref, computed } from 'vue';
 interface Props {
   id: string;
   label?: string;
-  type?: 'text' | 'email' | 'password' | 'tel';
+  type?: 'text' | 'email' | 'password' | 'tel' | 'number';
   placeholder?: string;
   modelValue: string;
   required?: boolean;
