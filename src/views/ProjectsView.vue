@@ -63,55 +63,14 @@
       <p>Intenta ajustar los filtros de búsqueda</p>
     </div>
 
-    <!-- Projects grid -->
+    <!-- Projects grid (using unified card in non-interactive mode) -->
     <div v-else class="projects-grid">
-      <article class="project-card" v-for="project in paginatedProjects" :key="project.id_proyecto">
-        <div class="project-header">
-          <div class="project-image">
-            <span class="material-symbols-outlined">volunteer_activism</span>
-          </div>
-          <span class="project-badge" v-if="isNewProject(project.fecha_inicio)">Nuevo</span>
-        </div>
-        
-        <div class="project-body">
-          <h3 class="project-title">{{ project.nombre }}</h3>
-          <p class="project-organization" v-if="project.organizacion">
-            <span class="material-symbols-outlined">groups</span>
-            {{ project.organizacion.nombre }}
-          </p>
-          
-          <p class="project-description">
-            {{ truncateText(project.descripcion, 120) }}
-          </p>
-          
-          <div class="project-tags" v-if="project.categoria">
-            <span class="tag">{{ project.categoria }}</span>
-            <span class="tag" v-if="project.cupos_disponibles">
-              {{ project.cupos_disponibles }} cupos
-            </span>
-          </div>
-          
-          <div class="project-meta">
-            <div class="meta-item" v-if="project.ubicacion">
-              <span class="material-symbols-outlined">location_on</span>
-              <span>{{ project.ubicacion }}</span>
-            </div>
-            <div class="meta-item" v-if="project.fecha_inicio">
-              <span class="material-symbols-outlined">calendar_today</span>
-              <span>{{ formatDate(project.fecha_inicio) }}</span>
-            </div>
-            <div class="meta-item" v-if="project.horas_estimadas">
-              <span class="material-symbols-outlined">schedule</span>
-              <span>{{ project.horas_estimadas }}h</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="project-footer">
-          <button class="btn-outline" @click="viewProject(project.id_proyecto)">Ver más</button>
-          <button class="btn-primary" @click="applyToProject(project.id_proyecto)">Postularme</button>
-        </div>
-      </article>
+      <ProyectoCard
+        v-for="ap in paginatedAdapted"
+        :key="ap.id"
+        :proyecto="ap"
+        :show-actions="false"
+      />
     </div>
 
     <div v-if="!loading && filteredProjects.length > 0" class="pagination">
@@ -135,6 +94,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useProjects } from '@/composables/useProjects'
+import ProyectoCard from '@/components/proyectos/ProyectoCard.vue'
+import type { Proyecto as ProyectoCardType, CategoriaProyecto } from '@/types/proyecto'
 
 const { projects, loading, error, fetchProjects } = useProjects()
 
@@ -185,11 +146,31 @@ const filteredProjects = computed(() => {
   return filtered
 })
 
-// Proyectos paginados
-const paginatedProjects = computed(() => {
+// Adaptador: mapear proyecto del listado a tipo requerido por la card pública
+const mapCategoria = (c?: string): CategoriaProyecto => {
+  const raw = (c || '').toLowerCase()
+  if (raw.includes('medio') || raw.includes('ambient')) return 'ambiental'
+  if (raw.includes('educ')) return 'educativo'
+  return 'social'
+}
+
+const adaptProject = (p: any): ProyectoCardType => ({
+  id: String(p.id ?? p.id_proyecto ?? ''),
+  nombre: p.nombre ?? '',
+  descripcion: p.descripcion ?? '',
+  categoria: mapCategoria(p.categoria),
+  fecha_inicio: p.fecha_inicio ?? new Date().toISOString(),
+  fecha_fin: p.fecha_fin ?? p.fecha_inicio ?? new Date().toISOString(),
+  cupo_maximo: Number(p.cupos_disponibles ?? p.cupo_maximo ?? 0),
+  id_organizacion: String((p.id_organizacion && (p.id_organizacion.id ?? p.id_organizacion)) ?? ''),
+  estado: (p.estado === 'activo' || p.estado === 'inactivo' || p.estado === 'completado') ? p.estado : undefined,
+})
+
+// Proyectos paginados adaptados para la card
+const paginatedAdapted = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage
   const end = start + itemsPerPage
-  return filteredProjects.value.slice(start, end)
+  return filteredProjects.value.slice(start, end).map(adaptProject)
 })
 
 const totalPages = computed(() => 
@@ -256,15 +237,7 @@ const isNewProject = (fechaInicio: string | undefined) => {
   return days <= 30 // Nuevo si tiene menos de 30 días
 }
 
-const viewProject = (id: number) => {
-  // TODO: Navegar a detalle del proyecto
-  console.log('Ver proyecto:', id)
-}
-
-const applyToProject = (id: number) => {
-  // TODO: Aplicar al proyecto
-  console.log('Aplicar a proyecto:', id)
-}
+// Nota: esta vista pública es solo informativa; se eliminan acciones
 </script>
 
 <style scoped>

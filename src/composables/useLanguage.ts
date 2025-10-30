@@ -365,6 +365,33 @@ const translations = {
     weWillHelp: 'y te ayudaremos',
     allRightsReserved: 'Todos los derechos reservados',
     
+    // Sidebar expandible
+    mainMenu: 'Principal',
+    quickActions: 'Atajos Rápidos',
+    accessibilityMenu: 'Accesibilidad',
+    supportMenu: 'Soporte',
+    currentPage: 'Estás en',
+    openMenu: 'Abrir menú lateral',
+    closeMenu: 'Cerrar menú lateral',
+    increaseText: 'Aumentar texto',
+    decreaseText: 'Reducir texto',
+    highContrastMode: 'Alto contraste',
+    screenReader: 'Lector de pantalla',
+    emailSupport: 'Email soporte',
+    callUs: 'Llamar',
+    policies: 'Políticas',
+    termsOfUse: 'Términos',
+    
+    // Footer mejorado
+    supportAndContact: 'Soporte y Contacto',
+    policiesAndTerms: 'Políticas y Términos',
+    followUs: 'Síguenos',
+    contactForm: 'Contáctanos',
+    helpCenter: 'Centro de Ayuda',
+    privacyPolicies: 'Políticas de Privacidad',
+    cookiePolicy: 'Política de Cookies',
+    dataSecurity: 'Seguridad de Datos',
+    
     // Common
     yes: 'Sí',
     no: 'No',
@@ -764,6 +791,33 @@ const translations = {
     contactUs: 'Contact us',
     weWillHelp: 'and we will help you',
     allRightsReserved: 'All rights reserved',
+    
+    // Sidebar expandible
+    mainMenu: 'Main',
+    quickActions: 'Quick Actions',
+    accessibilityMenu: 'Accessibility',
+    supportMenu: 'Support',
+    currentPage: 'You are in',
+    openMenu: 'Open side menu',
+    closeMenu: 'Close side menu',
+    increaseText: 'Increase text',
+    decreaseText: 'Decrease text',
+    highContrastMode: 'High contrast',
+    screenReader: 'Screen reader',
+    emailSupport: 'Email support',
+    callUs: 'Call us',
+    policies: 'Policies',
+    termsOfUse: 'Terms',
+    
+    // Footer mejorado
+    supportAndContact: 'Support and Contact',
+    policiesAndTerms: 'Policies and Terms',
+    followUs: 'Follow Us',
+    contactForm: 'Contact Us',
+    helpCenter: 'Help Center',
+    privacyPolicies: 'Privacy Policies',
+    cookiePolicy: 'Cookie Policy',
+    dataSecurity: 'Data Security',
     
     // Common
     yes: 'Yes',

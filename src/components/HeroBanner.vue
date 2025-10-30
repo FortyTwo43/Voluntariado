@@ -40,7 +40,7 @@
 
       <div class="hero-actions">
         <RouterLink to="/registro" class="btn btn-primary">{{ t.ctaRegister }}</RouterLink>
-        <RouterLink to="/proyectos-view" class="btn btn-secondary">{{ t.ctaBrowse }}</RouterLink>
+        <RouterLink to="/informacion" class="btn btn-info">Conoce la plataforma</RouterLink>
       </div>
     </div>
   </section>
@@ -166,6 +166,18 @@ const { t } = useLanguage()
   background: rgba(255,255,255,.3);
   border-color: rgba(255,255,255,.6);
   transform: translateY(-2px);
+}
+
+.btn-info {
+  background: #0ea5e9; /* sky-500 */
+  color: white;
+  border: 2px solid rgba(255,255,255,.0);
+}
+
+.btn-info:hover {
+  background: #0284c7; /* sky-600 */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(14,165,233,.35);
 }
 
 @media (min-width: 768px) { 

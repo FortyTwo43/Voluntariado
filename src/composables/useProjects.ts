@@ -35,8 +35,8 @@ export function useProjects() {
     error.value = null
 
     try {
-      // Construir query params
-      let query = `${SUPABASE_URL}/rest/v1/id_proyecto?select=*,id_organizacion(nombre,logo_url)`
+  // Construir query params (tabla correcta: proyectos)
+  let query = `${SUPABASE_URL}/rest/v1/proyectos?select=*`
       
       // Aplicar filtros
       if (filters?.categoria) {
@@ -47,23 +47,21 @@ export function useProjects() {
       }
       if (filters?.estado) {
         query += `&estado=eq.${filters.estado}`
-      } else {
-        // Por defecto solo proyectos activos
-        query += `&estado=eq.activo`
       }
       
-      // Ordenar por fecha de creación descendente
-      query += `&order=fecha_inicio.desc`
+  // Orden opcional: omitir para maximizar compatibilidad con esquemas variados
       
       // Limitar resultados
       if (filters?.limit) {
         query += `&limit=${filters.limit}`
       }
 
+      console.log('[useProjects] GET', query)
       const response = await fetch(query, {
         method: 'GET',
         headers: SUPABASE_HEADERS
       })
+      console.log('[useProjects] status', response.status)
 
       if (!response.ok) {
         throw new Error(`Error al cargar proyectos: ${response.statusText}`)
@@ -71,11 +69,8 @@ export function useProjects() {
 
       const data = await response.json()
       
-      // Transformar datos si hay organizacion anidada
-      projects.value = data.map((proyecto: any) => ({
-        ...proyecto,
-        organizacion: proyecto.id_organizacion || null
-      }))
+      // Asignar datos tal cual; la vista pública adapta los campos para su card
+      projects.value = data
       
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Error desconocido'
@@ -90,13 +85,16 @@ export function useProjects() {
     error.value = null
 
     try {
+      const url = `${SUPABASE_URL}/rest/v1/proyectos?id_proyecto=eq.${id}&select=*`
+      console.log('[useProjects] GET by id', url)
       const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/id_proyecto?id_proyecto=eq.${id}&select=*,id_organizacion(nombre,logo_url,descripcion)`,
+        url,
         {
           method: 'GET',
           headers: SUPABASE_HEADERS
         }
       )
+      console.log('[useProjects] status (by id)', response.status)
 
       if (!response.ok) {
         throw new Error(`Error al cargar proyecto: ${response.statusText}`)
