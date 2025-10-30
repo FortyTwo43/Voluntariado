@@ -1,13 +1,15 @@
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 
 export interface AlertOptions {
   type?: 'success' | 'error' | 'warning' | 'info';
   title: string;
   message?: string;
   duration?: number;
+  id?: number;
 }
 
 const alerts = ref<AlertOptions[]>([]);
+let alertIdCounter = 0;
 
 export function useAlert() {
   const showAlert = (options: AlertOptions) => {
@@ -15,6 +17,7 @@ export function useAlert() {
       type: 'info' as const,
       duration: 5000,
       ...options,
+      id: alertIdCounter++,
     };
     
     alerts.value.push(alert);
@@ -28,7 +31,7 @@ export function useAlert() {
   };
 
   const removeAlert = (alertToRemove: AlertOptions) => {
-    const index = alerts.value.findIndex(alert => alert === alertToRemove);
+    const index = alerts.value.findIndex(alert => alert.id === alertToRemove.id);
     if (index > -1) {
       alerts.value.splice(index, 1);
     }
@@ -51,7 +54,7 @@ export function useAlert() {
   };
 
   return {
-    alerts: alerts.value,
+    alerts,
     showAlert,
     removeAlert,
     showSuccess,

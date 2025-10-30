@@ -22,6 +22,32 @@ export async function registrarVoluntario(voluntario: IVoluntario): Promise<bool
   }
 }
 
+export async function actualizarVoluntario(id: string, datos: Partial<IVoluntario>): Promise<boolean> {
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/voluntarios?id_voluntario=eq.${id}`;
+    
+    // Remover campos que no deben actualizarse o que son undefined
+    const { contrasena, ...datosActualizar } = datos;
+    
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: SUPABASE_HEADERS,
+      body: JSON.stringify(datosActualizar),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
+      throw new Error('Error al actualizar el voluntario');
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error al actualizar voluntario:', error);
+    throw error;
+  }
+}
+
 export async function verificarCorreoExistente(email: string): Promise<boolean> {
   try {
     const url = `${SUPABASE_URL}/rest/v1/voluntarios?email=eq.${encodeURIComponent(email)}&select=email`;
@@ -175,6 +201,8 @@ export interface LoginResponse {
     email: string;
     nombre: string;
     apellido?: string;
+    telefono?: string;
+    institucion_educativa?: string;
     tipo: 'voluntario' | 'organizacion';
   };
 }
@@ -182,7 +210,7 @@ export interface LoginResponse {
 // Función para autenticar voluntarios
 export async function autenticarVoluntario(credentials: LoginCredentials): Promise<LoginResponse> {
   try {
-    const select = 'id:id_voluntario,nombre,apellido,email,contrasena';
+    const select = 'id:id_voluntario,nombre,apellido,email,telefono,institucion_educativa,contrasena';
     const url = `${SUPABASE_URL}/rest/v1/voluntarios?email=eq.${encodeURIComponent(credentials.email)}&select=${encodeURIComponent(select)}`;
     
     const response = await fetch(url, {
@@ -221,6 +249,8 @@ export async function autenticarVoluntario(credentials: LoginCredentials): Promi
         email: voluntario.email,
         nombre: voluntario.nombre,
         apellido: voluntario.apellido,
+        telefono: voluntario.telefono,
+        institucion_educativa: voluntario.institucion_educativa,
         tipo: 'voluntario'
       }
     };
@@ -305,4 +335,91 @@ export async function autenticarUsuario(credentials: LoginCredentials): Promise<
     success: false,
     message: 'Credenciales incorrectas'
   };
+}
+
+// =============================
+// Persistencia de sesión (Recordarme)
+// =============================
+
+// Tipo base para usuario en sesión
+export type BasicUser = {
+  id: string;
+  email: string;
+  nombre: string;
+  apellido?: string;
+  telefono?: string;
+  institucion_educativa?: string;
+  tipo: 'voluntario' | 'organizacion';
+};
+
+const SESSION_STORAGE_KEY = 'user_session';
+
+type StoredSession = {
+  user: BasicUser;
+  expiresAt: number; // epoch ms
+};
+
+export function persistUserSession(user: BasicUser, remember: boolean) {
+  // TTL: 7 días si recuerda, 2 horas si no
+  const ttlMs = remember ? 1000 * 60 * 60 * 24 * 7 : 1000 * 60 * 60 * 2;
+  const payload: StoredSession = { user, expiresAt: Date.now() + ttlMs };
+
+  // Limpiar anteriores en ambos almacenes
+  try {
+    localStorage.removeItem(SESSION_STORAGE_KEY);
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+  } catch (_) {
+    // ignorar
+  }
+
+  const storage = remember ? localStorage : sessionStorage;
+  try {
+    storage.setItem(SESSION_STORAGE_KEY, JSON.stringify(payload));
+  } catch (_) {
+    // ignorar problemas de cuota
+  }
+
+  // Compatibilidad: mantener 'user' para código existente
+  try {
+    localStorage.setItem('user', JSON.stringify(user));
+  } catch (_) {
+    // ignorar
+  }
+}
+
+export function loadUserSession(): BasicUser | null {
+  const raw =
+    sessionStorage.getItem(SESSION_STORAGE_KEY) ??
+    localStorage.getItem(SESSION_STORAGE_KEY);
+  if (!raw) return null;
+  try {
+    const data = JSON.parse(raw) as StoredSession;
+    if (!data?.user || !data?.expiresAt) return null;
+    if (Date.now() > data.expiresAt) {
+      // expiró: limpiar ambas y también la clave legacy
+      try {
+        sessionStorage.removeItem(SESSION_STORAGE_KEY);
+        localStorage.removeItem(SESSION_STORAGE_KEY);
+        localStorage.removeItem('user');
+      } catch (_) {}
+      return null;
+    }
+    return data.user;
+  } catch {
+    try {
+      sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      localStorage.removeItem(SESSION_STORAGE_KEY);
+    } catch (_) {}
+    return null;
+  }
+}
+
+export function clearUserSession() {
+  try {
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    localStorage.removeItem(SESSION_STORAGE_KEY);
+    localStorage.removeItem('user');
+  } catch (_) {
+    // ignorar
+  }
 }

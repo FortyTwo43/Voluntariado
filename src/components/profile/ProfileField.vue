@@ -13,7 +13,7 @@
         @blur="handleBlur"
       />
       <div v-else class="field-display">
-        {{ value || 'No especificado' }}
+        {{ value || t.noData }}
       </div>
     </div>
     <span v-if="error" class="error-message">{{ error }}</span>
@@ -21,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLanguage } from '@/composables/useLanguage';
 interface Props {
   label: string;
   value: string;
@@ -40,9 +41,19 @@ const emit = defineEmits<{
   update: [value: string];
 }>();
 
+const { t } = useLanguage();
+
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  emit('update', target.value);
+  let value = target.value;
+  
+  // Si es un campo de teléfono, filtrar solo números
+  if (props.fieldType === 'tel') {
+    value = value.replace(/\D/g, '');
+    target.value = value;
+  }
+  
+  emit('update', value);
 };
 
 const handleBlur = () => {

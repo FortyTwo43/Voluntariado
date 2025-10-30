@@ -41,9 +41,10 @@
         :label="t.phone"
         type="tel"
         v-model="voluntario.telefono"
-        :placeholder="t.phonePlaceholder"
+        placeholder="0987654321"
         :error="errors.telefono"
         required
+        @input="handleTelefonoInput"
       />
 
       <InputField
@@ -146,9 +147,26 @@ const voluntario = reactive<IVoluntarioRegistro>({
   aceptaTerminos: false,
 });
 
-// Estado de validación
-const errors = reactive<Partial<IVoluntarioRegistro>>({});
+// Estado de validación (almacena claves de traducción)
+const errorKeys = reactive<Record<string, string | boolean | undefined>>({});
 const isSubmitting = ref(false);
+
+// Computed que traduce las claves de error dinámicamente
+const errors = computed(() => {
+  const translated: Record<string, string | undefined> = {};
+  for (const key in errorKeys) {
+    const errorKey = errorKeys[key];
+    if (typeof errorKey === 'string') {
+      translated[key] = (t.value as any)[errorKey];
+    } else if (typeof errorKey === 'boolean') {
+      // Para campos boolean como aceptaTerminos, no mostramos texto
+      translated[key] = undefined;
+    } else {
+      translated[key] = errorKey;
+    }
+  }
+  return translated;
+});
 
 // Validación del formulario
 const isFormValid = computed(() => {
@@ -160,57 +178,69 @@ const isFormValid = computed(() => {
          voluntario.contrasena.trim() &&
          voluntario.confirmarContrasena.trim() &&
          voluntario.aceptaTerminos &&
-         Object.values(errors).every(error => !error);
+         Object.values(errorKeys).every(error => !error);
 });
 
 
-// Validar campos individuales
+// Validar campos individuales (almacena claves, no textos)
 const validateField = (field: keyof IVoluntarioRegistro, value: string | boolean) => {
   switch (field) {
     case 'nombre':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.nombre = t.value.fieldRequired;
+        errorKeys.nombre = 'fieldRequired';
       } else {
-        errors.nombre = undefined;
+        errorKeys.nombre = undefined;
       }
       break;
     case 'apellido':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.apellido = t.value.fieldRequired;
+        errorKeys.apellido = 'fieldRequired';
       } else {
-        errors.apellido = undefined;
+        errorKeys.apellido = undefined;
       }
       break;
     case 'email':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.email = t.value.fieldRequired;
+        errorKeys.email = 'fieldRequired';
       } else if (typeof value === 'string') {
         if (!validarEmail(value.trim())) {
-          errors.email = t.value.invalidEmail;
+          errorKeys.email = 'invalidEmail';
         } else {
-          errors.email = undefined;
+          errorKeys.email = undefined;
         }
       } else {
-        errors.email = undefined;
+        errorKeys.email = undefined;
       }
       break;
     case 'telefono':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.telefono = t.value.fieldRequired;
+        errorKeys.telefono = 'fieldRequired';
+      } else if (typeof value === 'string') {
+        const telefonoLimpio = value.trim();
+        // Validar que solo contenga números
+        if (!/^\d+$/.test(telefonoLimpio)) {
+          errorKeys.telefono = 'phoneDigitsOnly';
+        } 
+        // Validar que tenga al menos 10 dígitos
+        else if (telefonoLimpio.length < 10) {
+          errorKeys.telefono = 'phoneExact10';
+        } else {
+          errorKeys.telefono = undefined;
+        }
       } else {
-        errors.telefono = undefined;
+        errorKeys.telefono = undefined;
       }
       break;
     case 'institucion_educativa':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.institucion_educativa = t.value.fieldRequired;
+        errorKeys.institucion_educativa = 'fieldRequired';
       } else {
-        errors.institucion_educativa = undefined;
+        errorKeys.institucion_educativa = undefined;
       }
       break;
     case 'contrasena':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.contrasena = t.value.fieldRequired;
+        errorKeys.contrasena = 'fieldRequired';
       } else if (typeof value === 'string') {
         const lengthOk = value.length >= 8;
         const numberOk = /\d/.test(value);
@@ -218,12 +248,12 @@ const validateField = (field: keyof IVoluntarioRegistro, value: string | boolean
         const lowercaseOk = /[a-z]/.test(value);
         const specialOk = /[^A-Za-z0-9]/.test(value);
         if (!lengthOk || !numberOk || !uppercaseOk || !lowercaseOk || !specialOk) {
-          errors.contrasena = t.value.passwordRequirements;
+          errorKeys.contrasena = 'passwordRequirements';
         } else {
-          errors.contrasena = undefined;
+          errorKeys.contrasena = undefined;
         }
       } else {
-        errors.contrasena = undefined;
+        errorKeys.contrasena = undefined;
       }
       // También validar confirmación cuando cambia la contraseña
       if (voluntario.confirmarContrasena) {
@@ -232,32 +262,32 @@ const validateField = (field: keyof IVoluntarioRegistro, value: string | boolean
       break;
     case 'confirmarContrasena':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.confirmarContrasena = t.value.fieldRequired;
+        errorKeys.confirmarContrasena = 'fieldRequired';
       } else if (typeof value === 'string') {
         if (voluntario.contrasena !== value) {
-          errors.confirmarContrasena = t.value.passwordsMismatch;
+          errorKeys.confirmarContrasena = 'passwordsMismatch';
         } else {
-          errors.confirmarContrasena = undefined;
+          errorKeys.confirmarContrasena = undefined;
         }
       } else {
-        errors.confirmarContrasena = undefined;
+        errorKeys.confirmarContrasena = undefined;
       }
       break;
     case 'aceptaTerminos':
       if (!value) {
-        errors.aceptaTerminos = true;
+        errorKeys.aceptaTerminos = true;
       } else {
-        errors.aceptaTerminos = undefined;
+        errorKeys.aceptaTerminos = undefined;
       }
       break;
   }
-};6
+};
 
 // Validar todo el formulario
 const validateForm = (): boolean => {
   // Limpiar errores anteriores
-  Object.keys(errors).forEach(key => {
-    errors[key as keyof IVoluntarioRegistro] = undefined;
+  Object.keys(errorKeys).forEach(key => {
+    errorKeys[key] = undefined;
   });
 
   // Validar cada campo
@@ -267,7 +297,7 @@ const validateForm = (): boolean => {
   });
 
   // Verificar si hay errores
-  return !Object.values(errors).some(error => error !== undefined);
+  return !Object.values(errorKeys).some(error => error !== undefined);
 };
 
 // Manejar envío del formulario
@@ -311,6 +341,13 @@ const handleSubmit = async () => {
 // Redirigir al registro de organización
 const goToOrganizationRegister = () => {
   router.push('/register-organization');
+};
+
+// Manejar input de teléfono para permitir solo números
+const handleTelefonoInput = (value: string) => {
+  // Filtrar solo números
+  const soloNumeros = value.replace(/\D/g, '');
+  voluntario.telefono = soloNumeros;
 };
 
 // Watchers para validación en tiempo real

@@ -79,10 +79,10 @@ onMounted(() => {
 
 <style scoped>
 .alert-notification {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 1000;
+  position: relative;
+  top: 0;
+  right: 0;
+  z-index: auto;
   max-width: 24rem;
   border-radius: 0.5rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -176,9 +176,6 @@ onMounted(() => {
 
 @media (max-width: 640px) {
   .alert-notification {
-    top: 0.5rem;
-    right: 0.5rem;
-    left: 0.5rem;
     max-width: none;
   }
 }

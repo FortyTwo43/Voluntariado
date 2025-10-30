@@ -30,12 +30,13 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useAlert } from '../composables/useAlert';
 import { useLanguage } from '../composables/useLanguage';
+import { actualizarVoluntario } from '../services/authService';
 import MainLayout from '../layouts/MainLayout.vue';
 import ProfileHeader from '../components/profile/ProfileHeader.vue';
 import ProfileForm from '../components/profile/ProfileForm.vue';
 
 const { showSuccess, showError } = useAlert();
-const { t, currentLanguage } = useLanguage();
+const { t } = useLanguage();
 
 // Estado del usuario
 const userData = reactive<any>({
@@ -61,23 +62,41 @@ const loadUserData = () => {
   const storedUser = localStorage.getItem('user');
   if (storedUser) {
     const user = JSON.parse(storedUser);
-    Object.assign(userData, user);
+    
+    // Asignar todos los campos disponibles
+    userData.nombre = user.nombre || '';
+    userData.apellido = user.apellido || '';
+    userData.email = user.email || user.correo || '';
+    userData.telefono = user.telefono || '';
+    userData.institucion_educativa = user.institucion_educativa || '';
+    userData.contrasena = user.contrasena || '';
+    
+    // Mantener otros campos que puedan existir
+    Object.keys(user).forEach(key => {
+      if (!(key in userData)) {
+        (userData as any)[key] = user[key];
+      }
+    });
   }
 };
 
 // Manejar edición de foto
 const handleEditPhoto = () => {
   // Implementar lógica de cambio de foto
-  showSuccess(t.value.infoTitle, currentLanguage.value === 'es' ? 'La edición de foto estará disponible próximamente' : 'Photo editing will be available soon');
+  showSuccess(t.value.infoTitle, t.value.photoEditSoon);
 };
 
 // Actualizar datos del usuario
 const handleUpdateUser = (field: string, value: string) => {
-  (userData as any)[field] = value;
-  // Limpiar error del campo si existe
-  if (errors[field]) {
-    errors[field] = '';
+  // Si es teléfono, filtrar solo números
+  if (field === 'telefono') {
+    value = value.replace(/\D/g, '');
   }
+  
+  (userData as any)[field] = value;
+  
+  // Validar el campo en tiempo real
+  validateField(field, value);
 };
 
 // Alternar modo de edición
@@ -96,21 +115,46 @@ const handleSaveChanges = async () => {
   // Validar campos
   const validationErrors = validateUserData();
   if (Object.keys(validationErrors).length > 0) {
-    Object.assign(errors, validationErrors);
+    // Los errores ya están en el objeto reactive 'errors'
     return;
   }
 
   try {
-    // Aquí iría la lógica para guardar en la base de datos
-    // Por ahora simulamos el guardado
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const storedUser = localStorage.getItem('user');
+    if (!storedUser) {
+  showError(t.value.errorTitle, t.value.noUserInfoFound);
+      return;
+    }
+
+    const user = JSON.parse(storedUser);
     
-    // Actualizar localStorage
-    localStorage.setItem('user', JSON.stringify(userData));
+    // Preparar datos para actualizar (sin incluir contraseña ni tipo)
+    const datosActualizar = {
+      nombre: userData.nombre,
+      apellido: userData.apellido,
+      email: userData.email,
+      telefono: userData.telefono,
+      institucion_educativa: userData.institucion_educativa
+    };
+
+    // Actualizar en la base de datos
+    const success = await actualizarVoluntario(user.id, datosActualizar);
     
-    isEditing.value = false;
-    showSuccess(t.value.successTitle, t.value.profileUpdated);
+    if (success) {
+      // Actualizar localStorage con los nuevos datos
+      const updatedUser = {
+        ...user,
+        ...datosActualizar
+      };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      isEditing.value = false;
+      showSuccess(t.value.successTitle, t.value.profileUpdated);
+    } else {
+      showError(t.value.errorTitle, t.value.profileUpdateError);
+    }
   } catch (error) {
+    console.error('Error al guardar cambios:', error);
     showError(t.value.errorTitle, t.value.profileUpdateError);
   }
 };
@@ -125,31 +169,73 @@ const handleCancelEdit = () => {
   });
 };
 
+// Validar campo individual en tiempo real
+const validateField = (field: string, value: string) => {
+  switch (field) {
+    case 'nombre':
+      if (!value || !value.trim()) {
+        errors.nombre = t.value.fieldRequired;
+      } else {
+        errors.nombre = '';
+      }
+      break;
+      
+    case 'apellido':
+      if (!value || !value.trim()) {
+        errors.apellido = t.value.fieldRequired;
+      } else {
+        errors.apellido = '';
+      }
+      break;
+      
+    case 'email':
+      if (!value || !value.trim()) {
+        errors.email = t.value.fieldRequired;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) {
+        errors.email = t.value.invalidEmail;
+      } else {
+        errors.email = '';
+      }
+      break;
+      
+    case 'telefono':
+      if (!value || !value.trim()) {
+        errors.telefono = t.value.fieldRequired;
+      } else if (!/^\d+$/.test(value.trim())) {
+        errors.telefono = t.value.phoneDigitsOnly;
+      } else if (value.trim().length !== 10) {
+        errors.telefono = t.value.phoneExact10;
+      } else {
+        errors.telefono = '';
+      }
+      break;
+      
+    case 'institucion_educativa':
+      if (!value || !value.trim()) {
+        errors.institucion_educativa = t.value.fieldRequired;
+      } else {
+        errors.institucion_educativa = '';
+      }
+      break;
+  }
+};
+
 // Validar datos del usuario
 const validateUserData = (): Record<string, string> => {
+  // Validar todos los campos
+  validateField('nombre', userData.nombre);
+  validateField('apellido', userData.apellido);
+  validateField('email', userData.email);
+  validateField('telefono', userData.telefono);
+  validateField('institucion_educativa', userData.institucion_educativa);
+  
+  // Retornar solo los errores que no estén vacíos
   const validationErrors: Record<string, string> = {};
-  
-  if (!userData.nombre.trim()) {
-    validationErrors.nombre = 'El nombre es requerido';
-  }
-  
-  if (!userData.apellido.trim()) {
-    validationErrors.apellido = 'El apellido es requerido';
-  }
-  
-  if (!userData.email.trim()) {
-    validationErrors.email = 'El correo electrónico es requerido';
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email)) {
-    validationErrors.email = 'El formato del correo no es válido';
-  }
-  
-  if (!userData.telefono.trim()) {
-    validationErrors.telefono = 'El teléfono es requerido';
-  }
-  
-  if (!userData.institucion_educativa.trim()) {
-    validationErrors.institucion_educativa = 'La institución educativa es requerida';
-  }
+  Object.keys(errors).forEach(key => {
+    if (errors[key]) {
+      validationErrors[key] = errors[key];
+    }
+  });
   
   return validationErrors;
 };

@@ -5,7 +5,7 @@
         <img 
           v-if="(user as any).foto_perfil" 
           :src="(user as any).foto_perfil" 
-          :alt="`Foto de ${user.nombre} ${(user as any).apellido || ''}`"
+          :alt="`${t.photoOf} ${user.nombre} ${(user as any).apellido || ''}`"
           class="profile-image"
         />
         <div v-else class="profile-placeholder">
@@ -18,7 +18,7 @@
           v-if="isEditing"
           class="edit-photo-btn"
           @click="$emit('edit-photo')"
-          aria-label="Cambiar foto de perfil"
+          :aria-label="t.editPhoto"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -30,12 +30,13 @@
     
     <div class="profile-info">
       <h2 class="profile-name">{{ user.nombre }} {{ (user as any).apellido || '' }}</h2>
-      <p class="profile-role">{{ (user as any).rol || 'Usuario' }}</p>
+      <p class="profile-role">{{ (user as any).rol || t.defaultRole }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useLanguage } from '@/composables/useLanguage';
 interface Props {
   user: any;
   isEditing: boolean;
@@ -46,6 +47,8 @@ defineProps<Props>();
 defineEmits<{
   'edit-photo': [];
 }>();
+
+const { t } = useLanguage();
 </script>
 
 <style scoped>
