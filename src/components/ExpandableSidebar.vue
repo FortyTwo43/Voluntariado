@@ -41,11 +41,6 @@
             <span v-if="isExpanded" class="menu-text">{{ t.home }}</span>
           </router-link>
 
-          <router-link to="/proyectos" class="menu-item" @click="closeSidebarOnMobile">
-            <span class="material-symbols-outlined">volunteer_activism</span>
-            <span v-if="isExpanded" class="menu-text">{{ t.projects }}</span>
-          </router-link>
-
           <router-link to="/informacion" class="menu-item" @click="closeSidebarOnMobile">
             <span class="material-symbols-outlined">info</span>
             <span v-if="isExpanded" class="menu-text">{{ t.institutionalInfo }}</span>

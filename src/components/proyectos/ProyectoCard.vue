@@ -1,5 +1,5 @@
 <template>
-  <article class="proyecto-card">
+  <article class="proyecto-card" :class="{ 'solo-visual': !showActions }">
     <!-- Imagen/Header del proyecto -->
     <div class="card-header">
       <div 
@@ -53,7 +53,7 @@
     </div>
 
     <!-- Footer con acciones -->
-    <div class="card-footer">
+    <div v-if="showActions" class="card-footer">
       <button 
         class="btn-secundario"
         @click="verDetalles"
@@ -78,6 +78,7 @@ import { SUPABASE_URL, SUPABASE_HEADERS } from '../../config/supabase';
 // Props
 const props = defineProps<{
   proyecto: Proyecto;
+  showActions?: boolean;
 }>();
 
 // Emits
@@ -361,6 +362,11 @@ const inscribirse = () => {
   height: 1rem;
   flex-shrink: 0;
   color: #9ca3af;
+}
+
+/* Modo solo visual: sin acciones y sin interacción */
+.solo-visual {
+  pointer-events: none;
 }
 
 /* Footer */

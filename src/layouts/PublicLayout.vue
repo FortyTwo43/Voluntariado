@@ -18,8 +18,6 @@
           </div>
         </router-link>
         <nav class="header-nav">
-          <router-link to="/proyectos-view" class="nav-link">{{ t.ctaBrowse }}</router-link>
-          
           <!-- Language Toggle Button -->
           <button @click="toggleLanguage" class="language-toggle-btn" :title="currentLanguage === 'es' ? 'Switch to English' : 'Cambiar a Español'">
             <svg class="language-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
