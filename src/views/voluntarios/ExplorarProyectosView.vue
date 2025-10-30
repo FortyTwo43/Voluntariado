@@ -9,7 +9,7 @@
     <!-- Estado de carga -->
     <div v-if="cargando" class="estado-carga">
       <div class="spinner"></div>
-      <p>Cargando proyectos...</p>
+      <p>{{ t.loadingProjects }}</p>
     </div>
 
     <!-- Estado de error -->
@@ -17,8 +17,8 @@
       <svg class="icon-error" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
       </svg>
-      <p>{{ error }}</p>
-      <button class="btn-reintentar" @click="cargarProyectos">Reintentar</button>
+      <p>{{ error || t.projectsLoadError }}</p>
+      <button class="btn-reintentar" @click="cargarProyectos">{{ t.retry }}</button>
     </div>
 
     <!-- Sin resultados -->
@@ -26,8 +26,8 @@
       <svg class="icon-vacio" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
       </svg>
-      <h3>No se encontraron proyectos</h3>
-      <p>Intenta ajustar los filtros de búsqueda para ver más resultados.</p>
+      <h3>{{ t.noProjectsFound }}</h3>
+      <p>{{ t.adjustFilters }}</p>
     </div>
 
     <!-- Grid de proyectos -->
@@ -52,8 +52,10 @@ import { ProyectosService } from '../../services/proyectos.service';
 import type { Proyecto } from '../../types/proyecto';
 import BarraBusquedaProyecto from '../../components/proyectos/BarraBusquedaProyecto.vue';
 import ProyectoCard from '../../components/proyectos/ProyectoCard.vue';
+import { useLanguage } from '@/composables/useLanguage';
 
 const router = useRouter();
+const { t } = useLanguage();
 
 // Estado
 const proyectos = ref<Proyecto[]>([]);
@@ -84,7 +86,7 @@ const cargarProyectos = async () => {
     proyectos.value = todosLosProyectos.filter(p => !p.estado || p.estado === 'activo');
   } catch (e) {
     console.error('Error al cargar proyectos:', e);
-    error.value = 'No se pudieron cargar los proyectos. Por favor, intenta nuevamente.';
+    error.value = t.value.projectsLoadError;
   } finally {
     cargando.value = false;
   }
@@ -218,7 +220,7 @@ const verDetalles = (id: string) => {
  */
 const inscribirse = (id: string) => {
   // TODO: Implementar lógica de inscripción
-  alert(`Te has inscrito al proyecto con ID: ${id}`);
+  alert(`${t.value.apply}: ${id}`);
 };
 
 // Cargar proyectos al montar el componente

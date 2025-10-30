@@ -134,9 +134,26 @@ const organizacion = reactive<IOrganizacionRegistro>({
   aceptaTerminos: false,
 });
 
-// Estado de validación
-const errors = reactive<Partial<IOrganizacionRegistro>>({});
+// Estado de validación (almacena claves de traducción)
+const errorKeys = reactive<Record<string, string | boolean | undefined>>({});
 const isSubmitting = ref(false);
+
+// Computed que traduce las claves de error dinámicamente
+const errors = computed(() => {
+  const translated: Record<string, string | undefined> = {};
+  for (const key in errorKeys) {
+    const errorKey = errorKeys[key];
+    if (typeof errorKey === 'string') {
+      translated[key] = (t.value as any)[errorKey];
+    } else if (typeof errorKey === 'boolean') {
+      // Para campos boolean como aceptaTerminos, no mostramos texto
+      translated[key] = undefined;
+    } else {
+      translated[key] = errorKey;
+    }
+  }
+  return translated;
+});
 
 // Validación del formulario
 const isFormValid = computed(() => {
@@ -147,51 +164,51 @@ const isFormValid = computed(() => {
          organizacion.contrasena.trim() &&
          organizacion.confirmarContrasena.trim() &&
          organizacion.aceptaTerminos &&
-         Object.values(errors).every(error => !error);
+         Object.values(errorKeys).every(error => !error);
 });
 
 
-// Validar campos individuales
+// Validar campos individuales (almacena claves, no textos)
 const validateField = (field: keyof IOrganizacionRegistro, value: string | boolean) => {
   switch (field) {
     case 'nombre':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.nombre = 'El nombre de la organización es requerido';
+        errorKeys.nombre = 'fieldRequired';
       } else {
-        errors.nombre = undefined;
+        errorKeys.nombre = undefined;
       }
       break;
     case 'tipo':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.tipo = 'El tipo de organización es requerido';
+        errorKeys.tipo = 'fieldRequired';
       } else {
-        errors.tipo = undefined;
+        errorKeys.tipo = undefined;
       }
       break;
     case 'direccion':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.direccion = 'La dirección es requerida';
+        errorKeys.direccion = 'fieldRequired';
       } else {
-        errors.direccion = undefined;
+        errorKeys.direccion = undefined;
       }
       break;
     case 'email':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.email = 'El correo electrónico es requerido';
+        errorKeys.email = 'fieldRequired';
       } else if (typeof value === 'string') {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value.trim())) {
-          errors.email = 'El formato del correo electrónico no es válido';
+          errorKeys.email = 'invalidEmail';
         } else {
-          errors.email = undefined;
+          errorKeys.email = undefined;
         }
       } else {
-        errors.email = undefined;
+        errorKeys.email = undefined;
       }
       break;
     case 'contrasena':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.contrasena = 'La contraseña es requerida';
+        errorKeys.contrasena = 'fieldRequired';
       } else if (typeof value === 'string') {
         const lengthOk = value.length >= 8;
         const numberOk = /\d/.test(value);
@@ -199,12 +216,12 @@ const validateField = (field: keyof IOrganizacionRegistro, value: string | boole
         const lowercaseOk = /[a-z]/.test(value);
         const specialOk = /[^A-Za-z0-9]/.test(value);
         if (!lengthOk || !numberOk || !uppercaseOk || !lowercaseOk || !specialOk) {
-          errors.contrasena = 'La contraseña debe tener al menos 8 caracteres, incluir 1 número, 1 mayúscula, 1 minúscula y 1 carácter especial';
+          errorKeys.contrasena = 'passwordRequirements';
         } else {
-          errors.contrasena = undefined;
+          errorKeys.contrasena = undefined;
         }
       } else {
-        errors.contrasena = undefined;
+        errorKeys.contrasena = undefined;
       }
       // También validar confirmación cuando cambia la contraseña
       if (organizacion.confirmarContrasena) {
@@ -213,22 +230,22 @@ const validateField = (field: keyof IOrganizacionRegistro, value: string | boole
       break;
     case 'confirmarContrasena':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.confirmarContrasena = 'Debe confirmar la contraseña';
+        errorKeys.confirmarContrasena = 'fieldRequired';
       } else if (typeof value === 'string') {
         if (organizacion.contrasena !== value) {
-          errors.confirmarContrasena = 'Las contraseñas no coinciden';
+          errorKeys.confirmarContrasena = 'passwordsMismatch';
         } else {
-          errors.confirmarContrasena = undefined;
+          errorKeys.confirmarContrasena = undefined;
         }
       } else {
-        errors.confirmarContrasena = undefined;
+        errorKeys.confirmarContrasena = undefined;
       }
       break;
     case 'aceptaTerminos':
       if (!value) {
-        errors.aceptaTerminos = true;
+        errorKeys.aceptaTerminos = true;
       } else {
-        errors.aceptaTerminos = undefined;
+        errorKeys.aceptaTerminos = undefined;
       }
       break;
   }

@@ -13,7 +13,7 @@
         @blur="handleBlur"
       />
       <div v-else class="field-display">
-        {{ value || 'No especificado' }}
+        {{ value || t.noData }}
       </div>
     </div>
     <span v-if="error" class="error-message">{{ error }}</span>
@@ -21,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+import { useLanguage } from '@/composables/useLanguage';
 interface Props {
   label: string;
   value: string;
@@ -39,6 +40,8 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   update: [value: string];
 }>();
+
+const { t } = useLanguage();
 
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;

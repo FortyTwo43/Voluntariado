@@ -21,7 +21,7 @@
         variant="primary"
         class="edit-button"
       >
-        Editar Perfil
+        {{ t.edit }}
       </ButtonPrimary>
       
       <div v-else class="edit-actions">
@@ -30,7 +30,7 @@
           variant="primary"
           class="save-button"
         >
-          Guardar Cambios
+          {{ t.save }}
         </ButtonPrimary>
         
         <ButtonSecondary
@@ -38,7 +38,7 @@
           variant="secondary"
           class="cancel-button"
         >
-          Cancelar
+          {{ t.cancel }}
         </ButtonSecondary>
       </div>
     </div>
@@ -50,6 +50,7 @@ import { computed } from 'vue';
 import ProfileField from '../profile/ProfileField.vue';
 import ButtonPrimary from '../ui/ButtonPrimary.vue';
 import ButtonSecondary from '../ui/ButtonSecondary.vue';
+import { useLanguage } from '@/composables/useLanguage';
 
 interface Props {
   user: any;
@@ -66,37 +67,39 @@ const emit = defineEmits<{
   'cancel-edit': [];
 }>();
 
+const { t } = useLanguage();
+
 // Configuración de campos del formulario
 const fields = computed(() => [
   {
     key: 'nombre',
-    label: 'Nombre',
+    label: t.value.firstName,
     type: 'text',
-    placeholder: 'Ingresa tu nombre'
+    placeholder: t.value.firstNamePlaceholder
   },
   {
     key: 'apellido',
-    label: 'Apellido',
+    label: t.value.lastName,
     type: 'text',
-    placeholder: 'Ingresa tu apellido'
+    placeholder: t.value.lastNamePlaceholder
   },
   {
     key: 'email',
-    label: 'Correo Electrónico',
+    label: t.value.emailAddress,
     type: 'email',
-    placeholder: 'tu@email.com'
+    placeholder: t.value.emailPlaceholder
   },
   {
     key: 'telefono',
-    label: 'Teléfono',
+    label: t.value.phoneNumber,
     type: 'tel',
-    placeholder: '0987654321'
+    placeholder: t.value.phonePlaceholder
   },
   {
     key: 'institucion_educativa',
-    label: 'Institución Educativa',
+    label: t.value.educationalInstitution,
     type: 'text',
-    placeholder: 'Universidad, Colegio, etc.'
+    placeholder: t.value.institutionPlaceholder
   }
 ]);
 

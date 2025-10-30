@@ -3,16 +3,16 @@
     <div class="auth-container">
       <div class="auth-card">
         <div class="auth-header">
-          <h1 class="auth-title">Restablecer contraseña</h1>
+          <h1 class="auth-title">{{ t.resetTitle }}</h1>
           <p class="auth-subtitle">
-            Ingresa el código de 6 dígitos que enviamos a tu correo y tu nueva contraseña.
+            {{ t.resetSubtitle }}
           </p>
         </div>
 
         <form @submit.prevent="handleSubmit" class="auth-form">
           <InputField
             id="email"
-            label="Correo electrónico"
+            :label="t.emailAddress"
             type="email"
             v-model="email"
             :disabled="true"
@@ -20,12 +20,12 @@
           />
 
           <div class="code-field">
-            <label for="code" class="field-label">Código de verificación</label>
+            <label for="code" class="field-label">{{ t.verificationCode }}</label>
             <input
               id="code"
               type="tel"
               v-model="code"
-              placeholder="123456"
+              :placeholder="t.codePlaceholder"
               maxlength="6"
               class="code-input"
               :class="{ 'input-error': codeError }"
@@ -34,12 +34,12 @@
               required
             />
             <p v-if="codeError" class="error-message">{{ codeError }}</p>
-            <p class="field-hint">Ingresa el código de 6 dígitos que recibiste por correo</p>
+            <p class="field-hint">{{ t.enterSixDigitCode }}</p>
           </div>
 
           <InputField
             id="newPassword"
-            label="Nueva contraseña"
+            :label="t.newPasswordLabel"
             type="password"
             v-model="newPassword"
             placeholder="••••••••"
@@ -50,7 +50,7 @@
 
           <InputField
             id="confirmPassword"
-            label="Confirmar nueva contraseña"
+            :label="t.confirmNewPassword"
             type="password"
             v-model="confirmPassword"
             placeholder="••••••••"
@@ -63,7 +63,7 @@
             <svg class="warning-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
             </svg>
-            <p>Te quedan {{ attemptsLeft }} intentos. Después tendrás que solicitar un nuevo código.</p>
+            <p>{{ t.attemptsLeftPrefix }} {{ attemptsLeft }} {{ t.attemptsLeftSuffix }}</p>
           </div>
 
           <ButtonPrimary
@@ -71,8 +71,8 @@
             :disabled="!isFormValid || isSubmitting"
             class="submit-button"
           >
-            <span v-if="isSubmitting">Restableciendo...</span>
-            <span v-else>Restablecer contraseña</span>
+            <span v-if="isSubmitting">{{ t.resetting }}</span>
+            <span v-else>{{ t.resetPassword }}</span>
           </ButtonPrimary>
 
           <div class="form-actions">
@@ -82,15 +82,15 @@
               :disabled="isResending || resendCountdown > 0"
               class="resend-button"
             >
-              <span v-if="isResending">Reenviando...</span>
+              <span v-if="isResending">{{ t.resending }}</span>
               <span v-else-if="resendCountdown > 0">
-                Reenviar código en {{ resendCountdown }}s
+                {{ t.resendInPrefix }} {{ resendCountdown }}s
               </span>
-              <span v-else>Reenviar código</span>
+              <span v-else>{{ t.resendCode }}</span>
             </button>
 
             <router-link to="/login" class="back-link">
-              Volver al inicio de sesión
+              {{ t.backToLogin }}
             </router-link>
           </div>
         </form>
@@ -103,6 +103,7 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAlert } from '@/composables/useAlert';
+import { useLanguage } from '@/composables/useLanguage';
 import { requestPasswordCode, resetPasswordWithCode } from '@/services/passwordReset.service';
 import InputField from '@/components/ui/InputField.vue';
 import ButtonPrimary from '@/components/ui/ButtonPrimary.vue';
@@ -110,15 +111,27 @@ import ButtonPrimary from '@/components/ui/ButtonPrimary.vue';
 const route = useRoute();
 const router = useRouter();
 const { showSuccess, showError } = useAlert();
+const { t } = useLanguage();
 
 const email = ref('');
 const code = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
 
-const codeError = ref<string | undefined>(undefined);
-const passwordError = ref<string | undefined>(undefined);
-const confirmError = ref<string | undefined>(undefined);
+const codeErrorKey = ref<string | undefined>(undefined);
+const passwordErrorKey = ref<string | undefined>(undefined);
+const confirmErrorKey = ref<string | undefined>(undefined);
+
+// Computed que traduce las claves de error dinámicamente
+const codeError = computed(() => 
+  codeErrorKey.value ? (t.value as any)[codeErrorKey.value] : undefined
+);
+const passwordError = computed(() => 
+  passwordErrorKey.value ? (t.value as any)[passwordErrorKey.value] : undefined
+);
+const confirmError = computed(() => 
+  confirmErrorKey.value ? (t.value as any)[confirmErrorKey.value] : undefined
+);
 
 const isSubmitting = ref(false);
 const isResending = ref(false);
@@ -130,7 +143,7 @@ let countdownTimer: number | undefined;
 onMounted(() => {
   email.value = (route.query.email as string) || '';
   if (!email.value) {
-    showError('Error', 'Email no especificado');
+    showError(t.value.errorTitle, t.value.emailNotProvided);
     router.push({ name: 'password-forgot' });
   }
 });
@@ -144,12 +157,12 @@ onBeforeUnmount(() => {
 const handleCodeInput = () => {
   // Solo permitir dígitos y máximo 6 caracteres
   code.value = code.value.replace(/\D/g, '').slice(0, 6);
-  codeError.value = undefined;
+  codeErrorKey.value = undefined;
 };
 
 const validatePassword = () => {
   if (!newPassword.value) {
-    passwordError.value = 'La contraseña es requerida';
+    passwordErrorKey.value = 'fieldRequired';
     return false;
   }
   
@@ -160,40 +173,28 @@ const validatePassword = () => {
   const specialOk = /[^A-Za-z0-9]/.test(newPassword.value);
   
   if (!lengthOk) {
-    passwordError.value = 'La contraseña debe tener al menos 8 caracteres';
+    passwordErrorKey.value = 'passwordTooShort';
     return false;
   }
-  if (!uppercaseOk) {
-    passwordError.value = 'La contraseña debe contener al menos una letra mayúscula';
-    return false;
-  }
-  if (!lowercaseOk) {
-    passwordError.value = 'La contraseña debe contener al menos una letra minúscula';
-    return false;
-  }
-  if (!numberOk) {
-    passwordError.value = 'La contraseña debe contener al menos un número';
-    return false;
-  }
-  if (!specialOk) {
-    passwordError.value = 'La contraseña debe contener al menos un carácter especial';
+  if (!uppercaseOk || !lowercaseOk || !numberOk || !specialOk) {
+    passwordErrorKey.value = 'passwordRequirements';
     return false;
   }
   
-  passwordError.value = undefined;
+  passwordErrorKey.value = undefined;
   return true;
 };
 
 const validateConfirmPassword = () => {
   if (!confirmPassword.value) {
-    confirmError.value = 'Debes confirmar la contraseña';
+    confirmErrorKey.value = 'fieldRequired';
     return false;
   }
   if (confirmPassword.value !== newPassword.value) {
-    confirmError.value = 'Las contraseñas no coinciden';
+    confirmErrorKey.value = 'passwordsMismatch';
     return false;
   }
-  confirmError.value = undefined;
+  confirmErrorKey.value = undefined;
   return true;
 };
 
@@ -229,13 +230,13 @@ const handleSubmit = async () => {
   }
 
   if (code.value.length !== 6) {
-    codeError.value = 'El código debe tener 6 dígitos';
+    codeErrorKey.value = 'codeMustBeSixDigits';
     return;
   }
 
   try {
     isSubmitting.value = true;
-    codeError.value = undefined;
+    codeErrorKey.value = undefined;
 
     await resetPasswordWithCode({
       email: email.value.trim(),
@@ -244,8 +245,8 @@ const handleSubmit = async () => {
     });
 
     showSuccess(
-      '¡Contraseña actualizada!',
-      'Tu contraseña ha sido restablecida exitosamente. Ahora puedes iniciar sesión.'
+      t.value.passwordUpdatedTitle,
+      t.value.passwordUpdatedDesc
     );
 
     // Redirigir al login después de 2 segundos
@@ -259,16 +260,17 @@ const handleSubmit = async () => {
     
     if (attemptsLeft.value <= 0) {
       showError(
-        'Código inválido',
-        'Has excedido el número de intentos. Solicita un nuevo código.'
+        t.value.invalidCodeTitle,
+        t.value.attemptsExceededDesc
       );
       setTimeout(() => {
         router.push({ name: 'password-forgot' });
       }, 3000);
     } else {
-      const errorMessage = error?.message || 'Código inválido o expirado';
-      codeError.value = errorMessage;
-      showError('Error', errorMessage);
+      // Si hay un mensaje de error del servidor, usar la clave genérica
+      codeErrorKey.value = 'invalidOrExpiredCode';
+      const errorMessage = error?.message || t.value.invalidOrExpiredCode;
+      showError(t.value.errorTitle, errorMessage);
     }
   } finally {
     isSubmitting.value = false;
@@ -281,14 +283,14 @@ const requestNewCode = async () => {
     await requestPasswordCode(email.value.trim());
     
     showSuccess(
-      'Código reenviado',
-      'Se ha enviado un nuevo código a tu correo electrónico.'
+      t.value.codeResentTitle,
+      t.value.codeResentDesc
     );
 
     // Resetear intentos y código
     attemptsLeft.value = 3;
     code.value = '';
-    codeError.value = undefined;
+    codeErrorKey.value = undefined;
 
     // Iniciar countdown de 60 segundos
     resendCountdown.value = 60;
@@ -301,7 +303,7 @@ const requestNewCode = async () => {
       }
     }, 1000);
   } catch (error: any) {
-    showError('Error', 'No se pudo reenviar el código. Intenta nuevamente.');
+    showError(t.value.errorTitle, t.value.resendCodeError);
   } finally {
     isResending.value = false;
   }

@@ -100,11 +100,17 @@ const loginData = reactive({
   rememberUser: false,
 });
 
-// Estado de validación
-const errors = reactive({
+// Estado de validación (almacena claves de traducción)
+const errorKeys = reactive({
   email: undefined as string | undefined,
   password: undefined as string | undefined,
 });
+
+// Computed que traduce las claves de error dinámicamente
+const errors = computed(() => ({
+  email: errorKeys.email ? (t.value as any)[errorKeys.email] : undefined,
+  password: errorKeys.password ? (t.value as any)[errorKeys.password] : undefined,
+}));
 
 const isSubmitting = ref(false);
 
@@ -141,32 +147,32 @@ const isFormValid = computed(() => {
   return !isLocked.value &&
          loginData.email.trim() &&
          loginData.password.trim() &&
-         Object.values(errors).every(error => !error);
+         Object.values(errorKeys).every(error => !error);
 });
 
-// Validar campos individuales
+// Validar campos individuales (almacena claves, no textos)
 const validateField = (field: keyof typeof loginData, value: string | boolean) => {
   switch (field) {
     case 'email':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.email = t.value.fieldRequired;
+        errorKeys.email = 'fieldRequired';
       } else if (typeof value === 'string') {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value.trim())) {
-          errors.email = t.value.invalidEmail;
+          errorKeys.email = 'invalidEmail';
         } else {
-          errors.email = undefined;
+          errorKeys.email = undefined;
         }
       } else {
-        errors.email = undefined;
+        errorKeys.email = undefined;
       }
       break;
     case 'password':
       if (!value || (typeof value === 'string' && !value.trim())) {
-        errors.password = t.value.fieldRequired;
+        errorKeys.password = 'fieldRequired';
       } else {
         // En este formulario específico no validamos longitud mínima
-        errors.password = undefined;
+        errorKeys.password = undefined;
       }
       break;
     case 'rememberUser':

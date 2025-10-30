@@ -36,7 +36,7 @@ import ProfileHeader from '../components/profile/ProfileHeader.vue';
 import ProfileForm from '../components/profile/ProfileForm.vue';
 
 const { showSuccess, showError } = useAlert();
-const { t, currentLanguage } = useLanguage();
+const { t } = useLanguage();
 
 // Estado del usuario
 const userData = reactive<any>({
@@ -83,7 +83,7 @@ const loadUserData = () => {
 // Manejar edición de foto
 const handleEditPhoto = () => {
   // Implementar lógica de cambio de foto
-  showSuccess(t.value.infoTitle, currentLanguage.value === 'es' ? 'La edición de foto estará disponible próximamente' : 'Photo editing will be available soon');
+  showSuccess(t.value.infoTitle, t.value.photoEditSoon);
 };
 
 // Actualizar datos del usuario
@@ -122,7 +122,7 @@ const handleSaveChanges = async () => {
   try {
     const storedUser = localStorage.getItem('user');
     if (!storedUser) {
-      showError('Error', 'No se encontró la información del usuario');
+  showError(t.value.errorTitle, t.value.noUserInfoFound);
       return;
     }
 
@@ -149,13 +149,13 @@ const handleSaveChanges = async () => {
       localStorage.setItem('user', JSON.stringify(updatedUser));
       
       isEditing.value = false;
-      showSuccess('¡Perfil actualizado!', 'Tus datos se han guardado correctamente');
+      showSuccess(t.value.successTitle, t.value.profileUpdated);
     } else {
-      showError('Error', 'No se pudo actualizar el perfil. Intenta nuevamente.');
+      showError(t.value.errorTitle, t.value.profileUpdateError);
     }
   } catch (error) {
     console.error('Error al guardar cambios:', error);
-    showError('Error', 'Ocurrió un error al actualizar el perfil. Por favor, intenta nuevamente.');
+    showError(t.value.errorTitle, t.value.profileUpdateError);
   }
 };
 
@@ -174,7 +174,7 @@ const validateField = (field: string, value: string) => {
   switch (field) {
     case 'nombre':
       if (!value || !value.trim()) {
-        errors.nombre = 'El nombre es requerido';
+        errors.nombre = t.value.fieldRequired;
       } else {
         errors.nombre = '';
       }
@@ -182,7 +182,7 @@ const validateField = (field: string, value: string) => {
       
     case 'apellido':
       if (!value || !value.trim()) {
-        errors.apellido = 'El apellido es requerido';
+        errors.apellido = t.value.fieldRequired;
       } else {
         errors.apellido = '';
       }
@@ -190,9 +190,9 @@ const validateField = (field: string, value: string) => {
       
     case 'email':
       if (!value || !value.trim()) {
-        errors.email = 'El correo electrónico es requerido';
+        errors.email = t.value.fieldRequired;
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) {
-        errors.email = 'El formato del correo no es válido';
+        errors.email = t.value.invalidEmail;
       } else {
         errors.email = '';
       }
@@ -200,11 +200,11 @@ const validateField = (field: string, value: string) => {
       
     case 'telefono':
       if (!value || !value.trim()) {
-        errors.telefono = 'El teléfono es requerido';
+        errors.telefono = t.value.fieldRequired;
       } else if (!/^\d+$/.test(value.trim())) {
-        errors.telefono = 'El teléfono debe contener solo números';
+        errors.telefono = t.value.phoneDigitsOnly;
       } else if (value.trim().length !== 10) {
-        errors.telefono = 'El teléfono debe tener exactamente 10 dígitos';
+        errors.telefono = t.value.phoneExact10;
       } else {
         errors.telefono = '';
       }
@@ -212,7 +212,7 @@ const validateField = (field: string, value: string) => {
       
     case 'institucion_educativa':
       if (!value || !value.trim()) {
-        errors.institucion_educativa = 'La institución educativa es requerida';
+        errors.institucion_educativa = t.value.fieldRequired;
       } else {
         errors.institucion_educativa = '';
       }

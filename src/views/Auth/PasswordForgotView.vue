@@ -3,19 +3,19 @@
     <div class="auth-container">
       <div class="auth-card">
         <div class="auth-header">
-          <h1 class="auth-title">Recuperar contraseña</h1>
+          <h1 class="auth-title">{{ t.forgotTitle }}</h1>
           <p class="auth-subtitle">
-            Ingresa tu correo electrónico y te enviaremos un código de 6 dígitos para restablecer tu contraseña.
+            {{ t.forgotSubtitle }}
           </p>
         </div>
 
         <form @submit.prevent="handleSubmit" class="auth-form">
           <InputField
             id="email"
-            label="Correo electrónico"
+            :label="t.emailAddress"
             type="email"
             v-model="email"
-            placeholder="correo@ejemplo.com"
+            :placeholder="t.emailPlaceholder"
             :error="emailError"
             :disabled="isSubmitting"
             required
@@ -25,7 +25,7 @@
             <svg class="info-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
             </svg>
-            <p>El código expirará en 15 minutos. Si no ves el correo, revisa tu carpeta de spam.</p>
+            <p>{{ t.codeExpiresInfo }}</p>
           </div>
 
           <ButtonPrimary
@@ -33,8 +33,8 @@
             :disabled="!isFormValid || isSubmitting"
             class="submit-button"
           >
-            <span v-if="isSubmitting">Enviando código...</span>
-            <span v-else>Enviar código</span>
+            <span v-if="isSubmitting">{{ t.sendingCode }}</span>
+            <span v-else>{{ t.sendCode }}</span>
           </ButtonPrimary>
 
           <div class="back-to-login">
@@ -42,7 +42,7 @@
               <svg class="back-icon" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
               </svg>
-              Volver al inicio de sesión
+              {{ t.backToLogin }}
             </router-link>
           </div>
         </form>
@@ -55,17 +55,24 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAlert } from '@/composables/useAlert';
+import { useLanguage } from '@/composables/useLanguage';
 import { requestPasswordCode } from '@/services/passwordReset.service';
 import InputField from '@/components/ui/InputField.vue';
 import ButtonPrimary from '@/components/ui/ButtonPrimary.vue';
 
 const router = useRouter();
 const { showSuccess, showError } = useAlert();
+const { t } = useLanguage();
 
 const email = ref('');
-const emailError = ref<string | undefined>(undefined);
+const emailErrorKey = ref<string | undefined>(undefined);
 const isSubmitting = ref(false);
 const emailSent = ref(false);
+
+// Computed que traduce la clave de error dinámicamente
+const emailError = computed(() => 
+  emailErrorKey.value ? (t.value as any)[emailErrorKey.value] : undefined
+);
 
 const isFormValid = computed(() => {
   if (!email.value.trim()) return false;
@@ -75,20 +82,20 @@ const isFormValid = computed(() => {
 
 const handleSubmit = async () => {
   if (!isFormValid.value) {
-    emailError.value = 'Por favor ingresa un correo electrónico válido';
+    emailErrorKey.value = email.value.trim() === '' ? 'fieldRequired' : 'invalidEmail';
     return;
   }
 
   try {
     isSubmitting.value = true;
-    emailError.value = undefined;
+    emailErrorKey.value = undefined;
     
     await requestPasswordCode(email.value.trim());
     
     emailSent.value = true;
     showSuccess(
-      'Código enviado',
-      'Si el correo existe en nuestro sistema, recibirás un código de 6 dígitos. Revisa también tu carpeta de spam.'
+      t.value.codeSentTitle,
+      t.value.codeSentDesc
     );
 
     // Redirigir a la pantalla de ingreso de código
@@ -101,8 +108,8 @@ const handleSubmit = async () => {
   } catch (error: any) {
     console.error('Error al solicitar código:', error);
     showError(
-      'Error',
-      error?.message || 'No se pudo enviar el código. Intenta nuevamente.'
+      t.value.errorTitle,
+      error?.message || t.value.codeSendError
     );
   } finally {
     isSubmitting.value = false;

@@ -10,7 +10,7 @@
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
         </svg>
       </div>
-      <span v-if="esNuevo" class="badge-nuevo">Nuevo</span>
+  <span v-if="esNuevo" class="badge-nuevo">{{ t.newBadge }}</span>
     </div>
 
     <!-- Cuerpo de la card -->
@@ -31,7 +31,7 @@
       <div class="card-tags">
         <span class="tag tag-categoria">{{ proyecto.categoria }}</span>
         <span v-if="proyecto.cupo_maximo" class="tag tag-cupos">
-          {{ proyecto.cupo_maximo }} cupos
+          {{ proyecto.cupo_maximo }} {{ t.slots }}
         </span>
       </div>
 
@@ -41,13 +41,13 @@
           <svg class="meta-icon" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
           </svg>
-          <span>Inicio: {{ fechaFormateada }}</span>
+          <span>{{ t.startDateLabel }}: {{ fechaFormateada }}</span>
         </div>
         <div class="meta-item">
           <svg class="meta-icon" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
           </svg>
-          <span>Fin: {{ fechaFinFormateada }}</span>
+          <span>{{ t.endDateLabel }}: {{ fechaFinFormateada }}</span>
         </div>
       </div>
     </div>
@@ -58,13 +58,13 @@
         class="btn-secundario"
         @click="verDetalles"
       >
-        Ver Detalles
+        {{ t.viewDetails }}
       </button>
       <button 
         class="btn-primario"
         @click="inscribirse"
       >
-        Inscribirse
+        {{ t.apply }}
       </button>
     </div>
   </article>
@@ -74,6 +74,7 @@
 import { computed, ref, onMounted } from 'vue';
 import type { Proyecto } from '../../types/proyecto';
 import { SUPABASE_URL, SUPABASE_HEADERS } from '../../config/supabase';
+import { useLanguage } from '@/composables/useLanguage';
 
 // Props
 const props = defineProps<{
@@ -92,6 +93,8 @@ const emit = defineEmits<{
  * y si no existe, consultamos la BD por id_organizacion.
  */
 const nombreOrganizacion = ref<string>('');
+const { t, currentLanguage } = useLanguage();
+const locale = computed(() => currentLanguage.value === 'en' ? 'en-US' : 'es-ES');
 
 const inicializarNombreOrganizacion = async () => {
   // 1) Si viene embebido en el proyecto
@@ -105,7 +108,7 @@ const inicializarNombreOrganizacion = async () => {
   // 2) Si no, intentar buscar por id_organizacion
   const orgId = props.proyecto.id_organizacion;
   if (!orgId) {
-    nombreOrganizacion.value = 'Organización';
+    nombreOrganizacion.value = t.value.organization;
     return;
   }
 
@@ -165,7 +168,7 @@ const descripcionCorta = computed(() => {
 const fechaFormateada = computed(() => {
   if (!props.proyecto.fecha_inicio) return '-';
   const fecha = new Date(props.proyecto.fecha_inicio);
-  return fecha.toLocaleDateString('es-ES', {
+  return fecha.toLocaleDateString(locale.value, {
     day: '2-digit',
     month: 'long',
     year: 'numeric'
@@ -178,7 +181,7 @@ const fechaFormateada = computed(() => {
 const fechaFinFormateada = computed(() => {
   if (!props.proyecto.fecha_fin) return '-';
   const fecha = new Date(props.proyecto.fecha_fin);
-  return fecha.toLocaleDateString('es-ES', {
+  return fecha.toLocaleDateString(locale.value, {
     day: '2-digit',
     month: 'long',
     year: 'numeric'

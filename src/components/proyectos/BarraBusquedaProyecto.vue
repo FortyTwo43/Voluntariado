@@ -2,8 +2,8 @@
   <div class="barra-busqueda">
     <!-- Título y Subtítulo -->
     <div class="header-seccion">
-      <h1 class="titulo-principal">Explora las oportunidades de voluntariado</h1>
-      <p class="subtitulo">Encuentra el proyecto perfecto para ti y empieza a marcar la diferencia hoy.</p>
+      <h1 class="titulo-principal">{{ t.exploreProjects }}</h1>
+      <p class="subtitulo">{{ t.projectsSubtitle }}</p>
     </div>
 
     <!-- Buscador -->
@@ -15,7 +15,7 @@
         type="text"
         v-model="searchQuery"
         @input="emitSearch"
-        placeholder="Buscar proyectos, organizaciones, etc."
+        :placeholder="t.searchPlaceholder"
         class="search-input"
       />
     </div>
@@ -28,55 +28,55 @@
           :class="['tab-btn', { 'active': selectedTab === 'nuevos' }]"
           @click="selectTab('nuevos')"
         >
-          Nuevos
+          {{ t.newestTab }}
         </button>
         <button
           :class="['tab-btn', { 'active': selectedTab === 'populares' }]"
           @click="selectTab('populares')"
         >
-          Más Populares
+          {{ t.mostPopularTab }}
         </button>
       </div>
 
       <!-- Filtros principales -->
       <div class="filter-group">
-        <label class="filter-label">Categoría</label>
+        <label class="filter-label">{{ t.category }}</label>
         <select v-model="selectedCategoria" @change="emitFilters" class="filter-select">
-          <option value="">Todas</option>
-          <option value="social">Social</option>
-          <option value="educativo">Educativo</option>
-          <option value="ambiental">Ambiental</option>
+          <option value="">{{ t.all }}</option>
+          <option value="social">{{ t.categorySocial }}</option>
+          <option value="educativo">{{ t.categoryEducational }}</option>
+          <option value="ambiental">{{ t.categoryEnvironmental }}</option>
         </select>
       </div>
 
       <div class="filter-group">
-        <label class="filter-label">Duración</label>
+        <label class="filter-label">{{ t.duration }}</label>
         <select v-model="selectedDuracion" @change="emitFilters" class="filter-select">
-          <option value="">Todas</option>
-          <option value="1-mes">1 mes</option>
-          <option value="2-3-meses">2-3 meses</option>
-          <option value="mas-3-meses">Más de 3 meses</option>
+          <option value="">{{ t.all }}</option>
+          <option value="1-mes">{{ t.durationOneMonth }}</option>
+          <option value="2-3-meses">{{ t.durationTwoToThreeMonths }}</option>
+          <option value="mas-3-meses">{{ t.durationMoreThanThreeMonths }}</option>
         </select>
       </div>
 
       <div class="filter-group">
-        <label class="filter-label">Cupo Máximo</label>
+        <label class="filter-label">{{ t.maxCapacity }}</label>
         <select v-model="selectedCupo" @change="emitFilters" class="filter-select">
-          <option value="">Todos</option>
+          <option value="">{{ t.all }}</option>
           <option value="1-25">1-25</option>
           <option value="26-50">26-50</option>
           <option value="51-100">51-100</option>
-          <option value="mas-100">Más de 100</option>
+          <option value="mas-100">{{ t.moreThan100 }}</option>
         </select>
       </div>
 
       <div class="filter-group">
-        <label class="filter-label">Fecha Inicio</label>
+        <label class="filter-label">{{ t.startDate }}</label>
         <select v-model="selectedFechaInicio" @change="emitFilters" class="filter-select">
-          <option value="">Todas</option>
-          <option value="esta-semana">Esta semana</option>
-          <option value="este-mes">Este mes</option>
-          <option value="proximo-mes">Próximo mes</option>
+          <option value="">{{ t.all }}</option>
+          <option value="esta-semana">{{ t.thisWeek }}</option>
+          <option value="este-mes">{{ t.thisMonth }}</option>
+          <option value="proximo-mes">{{ t.nextMonth }}</option>
         </select>
       </div>
     </div>
@@ -85,6 +85,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useLanguage } from '@/composables/useLanguage';
 
 // Props y emits
 const emit = defineEmits<{
@@ -105,6 +106,7 @@ const selectedCategoria = ref('');
 const selectedDuracion = ref('');
 const selectedCupo = ref('');
 const selectedFechaInicio = ref('');
+const { t } = useLanguage();
 
 /**
  * Emite el valor del buscador
