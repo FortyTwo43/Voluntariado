@@ -7,9 +7,9 @@
 // 3. Crea un template con las variables: to_email, code, app_name, expires_minutes
 // 4. Copia tus claves aquí
 
-export const EMAILJS_SERVICE_ID = 'service_v1aje5e'; // Ej: 'service_abc123'
-export const EMAILJS_TEMPLATE_ID = 'template_5jb4b7s'; // Ej: 'template_xyz789'
-export const EMAILJS_PUBLIC_KEY = 'dwxJg735YTgRClZ5I'; // Ej: 'user_def456'
+export const EMAILJS_SERVICE_ID: string = 'service_v1aje5e'; // Ej: 'service_abc123'
+export const EMAILJS_TEMPLATE_ID: string = 'template_5jb4b7s'; // Ej: 'template_xyz789'
+export const EMAILJS_PUBLIC_KEY: string = 'dwxJg735YTgRClZ5I'; // Ej: 'user_def456'
 
 // Ejemplo de template en EmailJS:
 /*
