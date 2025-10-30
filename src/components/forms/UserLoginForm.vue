@@ -13,6 +13,7 @@
         v-model="loginData.email"
         :placeholder="t.emailPlaceholder"
         :error="errors.email"
+        :disabled="isLocked || isSubmitting"
         required
       />
 
@@ -23,6 +24,7 @@
         v-model="loginData.password"
         :placeholder="t.passwordPlaceholder"
         :error="errors.password"
+        :disabled="isLocked || isSubmitting"
         required
       />
 
@@ -35,14 +37,14 @@
           />
           <span class="checkbox-text">{{ t.rememberMe }}</span>
         </label>
-        <router-link to="/forgot-password" class="forgot-password-link">
+        <router-link to="/recuperar" class="forgot-password-link">
           {{ t.forgotPassword }}
         </router-link>
       </div>
 
       <ButtonPrimary
         type="submit"
-        :disabled="!isFormValid || isSubmitting"
+        :disabled="!isFormValid || isSubmitting || isLocked"
         variant="primary"
         class="submit-button"
       >
@@ -50,22 +52,40 @@
         <span v-else>{{ t.loginButton }}</span>
       </ButtonPrimary>
 
+      <!-- Indicador de intentos (aparece desde el primer fallo, se oculta cuando hay bloqueo) -->
+      <p
+        v-if="failedAttempts > 0 && !isLocked"
+        class="attempts-hint"
+        role="status"
+        aria-live="polite"
+      >
+        Intento {{ failedAttempts }} de 3. Tras 3 intentos fallidos, el acceso se bloqueará por 15 s.
+      </p>
+
       <div class="register-section">
         <p class="register-question">{{ t.noAccount }}</p>
         <router-link to="/registro-voluntario" class="register-link">
           {{ t.registerHere }}
         </router-link>
       </div>
+      
+      <!-- Bloqueo por intentos: contador -->
+      <div v-if="isLocked" class="lockout-banner" role="status" aria-live="polite">
+        <svg class="lock-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm3 8H9V7a3 3 0 116 0v3z" />
+        </svg>
+        <span>Demasiados intentos fallidos. Vuelve a intentarlo en {{ lockRemaining }} s.</span>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, watch } from 'vue';
+import { reactive, ref, computed, watch, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAlert } from '../../composables/useAlert';
 import { useLanguage } from '../../composables/useLanguage';
-import { autenticarUsuario, type LoginCredentials } from '../../services/authService';
+import { autenticarUsuario, type LoginCredentials, persistUserSession } from '../../services/authService';
 import InputField from '../ui/InputField.vue';
 import ButtonPrimary from '../ui/ButtonPrimary.vue';
 
@@ -88,9 +108,38 @@ const errors = reactive({
 
 const isSubmitting = ref(false);
 
+// Estado de bloqueo por intentos fallidos
+const failedAttempts = ref(0);
+const isLocked = ref(false);
+const lockRemaining = ref(0); // segundos
+let lockTimer: number | undefined;
+
+const clearLockTimer = () => {
+  if (lockTimer) {
+    clearInterval(lockTimer);
+    lockTimer = undefined;
+  }
+};
+
+const startLockout = (seconds = 15) => {
+  isLocked.value = true;
+  lockRemaining.value = seconds;
+  showError('Demasiados intentos', `Has superado el número de intentos. Inténtalo nuevamente en ${seconds} segundos.`);
+  clearLockTimer();
+  lockTimer = window.setInterval(() => {
+    lockRemaining.value -= 1;
+    if (lockRemaining.value <= 0) {
+      clearLockTimer();
+      isLocked.value = false;
+      failedAttempts.value = 0;
+    }
+  }, 1000);
+};
+
 // Validación del formulario
 const isFormValid = computed(() => {
-  return loginData.email.trim() &&
+  return !isLocked.value &&
+         loginData.email.trim() &&
          loginData.password.trim() &&
          Object.values(errors).every(error => !error);
 });
@@ -115,13 +164,8 @@ const validateField = (field: keyof typeof loginData, value: string | boolean) =
     case 'password':
       if (!value || (typeof value === 'string' && !value.trim())) {
         errors.password = t.value.fieldRequired;
-      } else if (typeof value === 'string') {
-        if (value.length < 8) {
-          errors.password = t.value.passwordTooShort;
-        } else {
-          errors.password = undefined;
-        }
       } else {
+        // En este formulario específico no validamos longitud mínima
         errors.password = undefined;
       }
       break;
@@ -134,6 +178,9 @@ const validateField = (field: keyof typeof loginData, value: string | boolean) =
 
 // Manejar envío del formulario
 const handleSubmit = async () => {
+  if (isLocked.value) {
+    return;
+  }
   if (!isFormValid.value) {
     return;
   }
@@ -150,8 +197,9 @@ const handleSubmit = async () => {
     const resultado = await autenticarUsuario(credentials);
     
     if (resultado.success && resultado.user) {
-      // Guardar información del usuario en localStorage
-      localStorage.setItem('user', JSON.stringify(resultado.user));
+  failedAttempts.value = 0;
+  // Persistir sesión con TTL y compatibilidad
+  persistUserSession(resultado.user, loginData.rememberUser);
 
       // Guardar email en localStorage si se marcó "Recordar usuario"
       if (loginData.rememberUser) {
@@ -160,25 +208,41 @@ const handleSubmit = async () => {
         localStorage.removeItem('rememberedEmail');
       }
 
-      // Mensaje de éxito genérico
-      showSuccess(t.value.loginSuccess, `${t.value.welcome} ${resultado.user.nombre}`);
+      // Mensaje de éxito
+      showSuccess(
+        '¡Inicio de sesión exitoso!', 
+        `Bienvenido/a ${resultado.user.nombre}`
+      );
 
       // Flujo de navegación según tipo de usuario
       if (resultado.user.tipo === 'organizacion') {
         // Redirigir a proyectos para organizaciones
         setTimeout(() => {
           router.push('/proyectos');
-        }, 800);
-      } else {
-        // Voluntario: mantener en la vista actual (no hay vistas para él todavía)
-        // Opcional: podemos limpiar el formulario o dejar un mensaje.
+        }, 1000);
+      } else if (resultado.user.tipo === 'voluntario') {
+        // Redirigir a explorar proyectos para voluntarios
+        setTimeout(() => {
+          router.push('/explorar-proyectos');
+        }, 1000);
       }
     } else {
-      showError('Error de autenticación', resultado.message);
+      // Mensaje de error específico
+      showError(
+        'Error de inicio de sesión', 
+        'El correo electrónico o la contraseña son incorrectos. Por favor, verifica tus credenciales e intenta nuevamente.'
+      );
+      failedAttempts.value += 1;
+      if (failedAttempts.value >= 3) {
+        startLockout(15);
+      }
     }
   } catch (error) {
     console.error('Error en el login:', error);
-    showError('Error inesperado', 'Por favor, verifica tu conexión e intenta nuevamente.');
+    showError(
+      'Error de conexión', 
+      'No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet e intenta nuevamente.'
+    );
   } finally {
     isSubmitting.value = false;
   }
@@ -204,6 +268,10 @@ watch(() => loginData.password, (value) => {
 
 // Cargar email recordado al montar
 loadRememberedEmail();
+
+onBeforeUnmount(() => {
+  clearLockTimer();
+});
 </script>
 
 <style scoped>
@@ -307,6 +375,32 @@ loadRememberedEmail();
 
 .register-link:hover {
   text-decoration: underline;
+}
+
+/* Lockout banner */
+.lockout-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background-color: #fff7ed; /* orange-50 */
+  border: 1px solid #fed7aa; /* orange-200 */
+  color: #9a3412; /* orange-800 */
+}
+
+.lock-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* Texto pequeño para intentos */
+.attempts-hint {
+  margin-top: 0.5rem;
+  font-size: 0.75rem; /* text-xs */
+  color: #6b7280; /* gray-500 */
 }
 
 @media (max-width: 640px) {

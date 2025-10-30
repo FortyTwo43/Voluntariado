@@ -90,7 +90,7 @@ const fields = computed(() => [
     key: 'telefono',
     label: 'Teléfono',
     type: 'tel',
-    placeholder: '+54 9 11 1234 5678'
+    placeholder: '0987654321'
   },
   {
     key: 'institucion_educativa',

@@ -47,6 +47,19 @@
             </svg>
             <span class="language-text">{{ currentLanguage.toUpperCase() }}</span>
           </button>
+
+          <!-- Profile Button -->
+          <button @click="goToProfile" class="profile-btn" aria-label="Ver perfil">
+            <svg class="profile-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+            </svg>
+            <span class="profile-text">Ver Perfil</span>
+          </button>
+
+          <!-- Logout Button -->
+          <button @click="handleLogout" class="logout-btn" aria-label="Cerrar sesión">
+            Cerrar sesión
+          </button>
         </nav>
       </div>
     </header>
@@ -91,8 +104,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
+import { useRouter } from 'vue-router'
 
 const { t, currentLanguage, changeLanguage } = useLanguage()
+const router = useRouter()
 
 // Dropdown state
 const infoDropdownOpen = ref(false)
@@ -113,6 +128,22 @@ const toggleInfoDropdown = () => {
 const toggleLanguage = () => {
   const newLang = currentLanguage.value === 'es' ? 'en' : 'es'
   changeLanguage(newLang)
+}
+
+// Logout handler
+import { clearUserSession } from '@/services/authService'
+const handleLogout = () => {
+  try {
+    clearUserSession()
+  } catch (e) {
+    // ignore storage errors
+  }
+  router.push('/')
+}
+
+// Profile handler
+const goToProfile = () => {
+  router.push('/profile')
 }
 </script>
 
@@ -350,6 +381,54 @@ const toggleLanguage = () => {
 }
 
 .language-text {
+  font-weight: 600;
+}
+
+/* Logout Button */
+.logout-btn {
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.375rem;
+  border: 1px solid #ef4444; /* red-500 */
+  background: rgba(239, 68, 68, 0.06);
+  color: #b91c1c; /* red-700 */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  transform: translateY(-1px);
+}
+
+/* Profile Button */
+.profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  background: rgba(16, 185, 129, 0.1); /* emerald */
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 0.375rem;
+  color: #059669; /* emerald-600 */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.profile-btn:hover {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
+}
+
+.profile-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.profile-text {
   font-weight: 600;
 }
 

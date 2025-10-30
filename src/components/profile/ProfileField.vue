@@ -42,7 +42,15 @@ const emit = defineEmits<{
 
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  emit('update', target.value);
+  let value = target.value;
+  
+  // Si es un campo de teléfono, filtrar solo números
+  if (props.fieldType === 'tel') {
+    value = value.replace(/\D/g, '');
+    target.value = value;
+  }
+  
+  emit('update', value);
 };
 
 const handleBlur = () => {
