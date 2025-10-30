@@ -13,8 +13,8 @@
             <img src="@/assets/voluntariado.png" alt="Logo Voluntariado" class="logo-image" />
           </div>
           <div class="logo-text-container">
-            <span class="logo-text">Youth Volunteering</span>
-            <span class="logo-subtitle">Platform</span>
+            <span class="logo-text">Plataforma Voluntariado Juvenil</span>
+            <span class="logo-subtitle">Plataforma</span>
           </div>
         </router-link>
         <nav class="header-nav">
