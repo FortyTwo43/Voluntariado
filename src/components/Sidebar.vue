@@ -6,7 +6,7 @@
     </div>
 
     <nav class="sidebar-nav">
-  <RouterLink to="/app" class="nav-item nav-item-active">
+      <RouterLink to="/app" class="nav-item nav-item-active">
         <span class="material-symbols-outlined">home</span>
         <span>{{ t.home }}</span>
       </RouterLink>

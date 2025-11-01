@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <UsuarioLayout>
     <div class="profile-page">
       <div class="profile-container">
         <h1 class="page-title">{{ t.myProfileTitle }}</h1>
@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-  </MainLayout>
+  </UsuarioLayout>
 </template>
 
 <script setup lang="ts">
@@ -31,7 +31,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { useAlert } from '../composables/useAlert';
 import { useLanguage } from '../composables/useLanguage';
 import { actualizarVoluntario } from '../services/authService';
-import MainLayout from '../layouts/MainLayout.vue';
+import UsuarioLayout from '../layouts/UsuarioLayout.vue';
 import ProfileHeader from '../components/profile/ProfileHeader.vue';
 import ProfileForm from '../components/profile/ProfileForm.vue';
 

@@ -51,7 +51,7 @@ const currentSection = computed(() => {
   padding: 0.75rem 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   position: sticky;
-  top: 4.5rem;
+  top: 5.5rem; /* Igual a la altura del header para evitar solapamiento */
   z-index: 90;
   backdrop-filter: blur(8px);
 }
@@ -117,7 +117,7 @@ const currentSection = computed(() => {
 @media (max-width: 768px) {
   .page-indicator {
     padding: 0.625rem 1rem;
-    top: 3.5rem;
+    top: 5.5rem; /* Mantener alineado con el header también en móvil */
   }
 
   .indicator-content > .material-symbols-outlined {

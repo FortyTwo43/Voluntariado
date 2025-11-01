@@ -20,8 +20,8 @@
       <!-- Header del sidebar -->
       <div class="sidebar-header">
         <div class="logo-sidebar">
-          <img src="@/assets/voluntariado.png" alt="Logo" class="logo-img" />
-          <span v-if="isExpanded" class="logo-title">{{ t.platformName }}</span>
+          <!-- <img src="@/assets/voluntariado.png" alt="Logo" class="logo-img" /> -->
+          <!-- <span v-if="isExpanded" class="logo-title">{{ t.platformName }}</span> -->
         </div>
       </div>
 
@@ -287,15 +287,15 @@ onUnmounted(() => {
 <style scoped>
 .sidebar-wrapper {
   position: fixed;
-  top: 0;
+  top: 5.5rem; /* Comienza después del header */
   left: 0;
   z-index: 95;
-  height: 100vh;
+  height: calc(100vh - 5.5rem); /* Ajusta la altura para que no cubra el header */
 }
 
 .sidebar-toggle {
   position: fixed;
-  top: 5rem;
+  top: 5.7rem; /* Ligeramente debajo del header */
   left: 1rem;
   width: 3rem;
   height: 3rem;
@@ -325,10 +325,10 @@ onUnmounted(() => {
 
 .sidebar {
   position: fixed;
-  top: 0;
+  top: 5.5rem; /* Comienza después del header */
   left: -280px;
   width: 280px;
-  height: 100vh;
+  height: calc(100vh - 5.5rem); /* Altura ajustada */
   background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
   color: white;
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
@@ -347,12 +347,14 @@ onUnmounted(() => {
 .sidebar-header {
   padding: 1.5rem 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 0rem;
 }
 
 .logo-sidebar {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  margin-bottom: 0.52rem;
 }
 
 .logo-img {
@@ -554,12 +556,12 @@ onUnmounted(() => {
 
 .sidebar-overlay {
   position: fixed;
-  top: 0;
+  top: 5.5rem; /* Comienza después del header */
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 5.5rem);
   background: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
+  z-index: 94; /* Debajo del sidebar */
 }
 
 /* Scrollbar styling */

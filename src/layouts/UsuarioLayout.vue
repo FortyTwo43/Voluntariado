@@ -1,9 +1,9 @@
 <template>
-  <div class="auth-layout">
+  <div class="proyecto-layout">
     <a href="#main-content" class="skip-link">Saltar al contenido</a>
     
     <!-- Header -->
-    <header class="auth-header">
+    <header class="proyecto-header">
       <div class="header-content">
         <router-link to="/" class="logo">
           <div class="logo-icon">
@@ -15,6 +15,15 @@
           </div>
         </router-link>
         <nav class="header-nav">
+          <!-- Botón de buscar proyectos -->
+          <button @click="goToProjects" class="nav-link nav-link-browse" :title="t.ctaBrowse">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <span class="nav-text">{{ t.ctaBrowse }}</span>
+          </button>
+          
           <!-- Language Toggle Button -->
           <button @click="toggleLanguage" class="language-toggle-btn" :title="currentLanguage === 'es' ? 'Switch to English' : 'Cambiar a Español'">
             <svg class="language-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -22,25 +31,48 @@
             </svg>
             <span class="language-text">{{ currentLanguage.toUpperCase() }}</span>
           </button>
-          
-          <router-link to="/login" class="nav-link nav-link-primary">{{ t.signIn }}</router-link>
-          <router-link to="/registro" class="nav-link nav-link-cta">{{ t.ctaRegister }}</router-link>
+
+          <!-- Profile Button (solo avatar circular) -->
+          <button @click="goToProfile" class="profile-btn" :aria-label="t.myProfile" :title="t.myProfile">
+            <div class="user-avatar">
+              <img 
+                v-if="userData?.foto_perfil" 
+                :src="userData.foto_perfil" 
+                :alt="`${t.photoOf} ${userData?.nombre}`"
+                class="avatar-image"
+              />
+              <div v-else class="avatar-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+            </div>
+          </button>
+
+          <!-- Logout Button -->
+          <button @click="handleLogout" class="logout-btn" :aria-label="t.logout">
+            <svg class="logout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span class="logout-text">{{ t.logout }}</span>
+          </button>
         </nav>
       </div>
     </header>
 
-    <!-- Indicador de página actual -->
-    <PageIndicator />
-
     <!-- Main Content -->
-    <main id="main-content" class="auth-main">
-      <div class="auth-container">
-        <slot />
-      </div>
+    <main id="main-content" class="proyecto-content">
+      <!-- Permite usar este layout como wrapper de vistas -->
+      <slot />
+      <!-- Permite usar este layout como layout de rutas con hijos -->
+      <router-view />
     </main>
 
-    <!-- Footer mejorado -->
-    <footer class="auth-footer">
+    <!-- Footer -->
+    <footer class="proyecto-footer">
       <div class="footer-content">
         <!-- Información Institucional -->
         <div class="footer-section">
@@ -171,20 +203,54 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
-import PageIndicator from '@/components/PageIndicator.vue'
+import { useRouter } from 'vue-router'
+import { clearUserSession } from '@/services/authService'
 
 const { t, currentLanguage, changeLanguage } = useLanguage()
+const router = useRouter()
+
+// User data for avatar
+const userData = ref<any>(null)
+
+onMounted(() => {
+  // Cargar datos del usuario desde localStorage
+  const storedUser = localStorage.getItem('user')
+  if (storedUser) {
+    userData.value = JSON.parse(storedUser)
+  }
+})
 
 // Language toggle
 const toggleLanguage = () => {
   const newLang = currentLanguage.value === 'es' ? 'en' : 'es'
   changeLanguage(newLang)
 }
+
+// Navigate to projects
+const goToProjects = () => {
+  router.push('/explorar-proyectos')
+}
+
+// Profile handler
+const goToProfile = () => {
+  router.push('/profile')
+}
+
+// Logout handler
+const handleLogout = () => {
+  try {
+    clearUserSession()
+  } catch (e) {
+    // ignore storage errors
+  }
+  router.push('/')
+}
 </script>
 
 <style scoped>
-.auth-layout {
+.proyecto-layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -196,7 +262,7 @@ const toggleLanguage = () => {
   position: relative;
 }
 
-.auth-layout::before {
+.proyecto-layout::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -205,9 +271,9 @@ const toggleLanguage = () => {
   z-index: 0;
 }
 
-.auth-header,
-.auth-main,
-.auth-footer {
+.proyecto-header,
+.proyecto-content,
+.proyecto-footer {
   position: relative;
   z-index: 1;
 }
@@ -234,7 +300,7 @@ const toggleLanguage = () => {
 }
 
 /* Header */
-.auth-header {
+.proyecto-header {
   padding: 1.25rem 2rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -320,6 +386,9 @@ const toggleLanguage = () => {
 }
 
 .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   color: white;
   text-decoration: none;
   font-weight: 500;
@@ -329,6 +398,7 @@ const toggleLanguage = () => {
   font-size: 0.9375rem;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
 }
 
 .nav-link:hover {
@@ -337,29 +407,20 @@ const toggleLanguage = () => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.nav-link-primary {
+.nav-link-browse {
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
   font-weight: 600;
 }
 
-.nav-link-primary:hover {
+.nav-link-browse:hover {
   background: rgba(255, 255, 255, 0.25);
 }
 
-.nav-link-cta {
-  background: white;
-  color: #667eea;
-  border: none;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.nav-link-cta:hover {
-  background: #f9fafb;
-  color: #5568d3;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.nav-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
 }
 
 /* Language Toggle Button */
@@ -393,22 +454,97 @@ const toggleLanguage = () => {
   font-weight: 600;
 }
 
-/* Main Content */
-.auth-main {
-  flex: 1;
+/* Profile Button - Solo avatar circular */
+.profile-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.profile-btn:hover {
+  transform: translateY(-2px);
+}
+
+.user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.profile-btn:hover .user-avatar {
+  border-width: 3px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #667eea;
+}
+
+.avatar-placeholder svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Logout Button */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.15);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.logout-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+}
+
+.logout-text {
+  font-weight: 600;
+}
+
+/* Main Content */
+.proyecto-content {
+  flex: 1;
   padding: 2rem 1rem;
   max-width: 100%;
 }
 
-.auth-container {
-  margin: 0 auto;
-}
-
 /* Footer */
-.auth-footer {
+.proyecto-footer {
   padding: 3rem 2rem 2rem;
   background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
   color: var(--color-text-light);
@@ -509,8 +645,14 @@ const toggleLanguage = () => {
 }
 
 /* Responsive */
+@media (max-width: 992px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
-  .auth-header {
+  .proyecto-header {
     padding: 1rem;
   }
   
@@ -534,17 +676,19 @@ const toggleLanguage = () => {
     padding: 0.5rem 0.75rem;
   }
   
-  .auth-main {
+  .nav-text {
+    display: none;
+  }
+  
+  .proyecto-content {
     padding: 1rem;
   }
   
-  .auth-footer {
-    padding: 1rem;
+  .proyecto-footer {
+    padding: 2rem 1rem;
   }
   
   .footer-content {
-    flex-direction: column;
-    text-align: center;
     grid-template-columns: 1fr;
     gap: 2rem;
   }
@@ -556,11 +700,28 @@ const toggleLanguage = () => {
   .social-links {
     justify-content: center;
   }
+
+  .logout-text {
+    display: none;
+  }
 }
 
-@media (max-width: 992px) {
-  .footer-content {
-    grid-template-columns: 1fr;
+@media (max-width: 640px) {
+  .header-nav {
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .language-toggle-btn {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .language-text {
+    display: none;
   }
 }
 
@@ -587,8 +748,9 @@ const toggleLanguage = () => {
     padding: 0.5rem 0.75rem;
   }
 
-  .language-text {
-    display: none;
+  .user-avatar {
+    width: 2rem;
+    height: 2rem;
   }
 }
 </style>

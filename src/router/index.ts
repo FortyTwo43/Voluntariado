@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { loadUserSession } from '@/services/authService'
 import PublicLayout from '@/layouts/PublicLayout.vue'
-import ProyectoLayout from '@/layouts/ProyectoLayout.vue'
+import UsuarioLayout from '@/layouts/UsuarioLayout.vue'
 import HomeLandingView from '@/views/HomeLandingView.vue'
 import TermsPoliciesView from '@/views/TermsPoliciesView.vue'
 import InstitutionalInfoView from '@/views/InstitutionalInfoView.vue'
@@ -24,10 +24,10 @@ const routes = [
       { path: 'restablecer', name: 'password-reset-otp', component: () => import('@/views/Auth/PasswordResetOtpView.vue') },
     ]
   },
-  // Rutas de Proyectos con ProyectoLayout
+  // Rutas de Proyectos con UsuarioLayout
   {
     path: '/explorar-proyectos',
-    component: ProyectoLayout,
+    component: UsuarioLayout,
     children: [
       {
         path: '',
@@ -39,7 +39,7 @@ const routes = [
   },
   {
     path: '/proyectos',
-    component: ProyectoLayout,
+    component: UsuarioLayout,
     children: [
       {
         path: '',

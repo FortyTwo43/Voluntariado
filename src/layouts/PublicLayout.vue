@@ -248,6 +248,7 @@ const toggleLanguage = () => {
 
 .header-content {
   max-width: 1200px;
+  max-height: 3rem;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;

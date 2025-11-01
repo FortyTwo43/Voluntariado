@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router';
 const proyectosRoutes: RouteRecordRaw[] = [
   {
     path: '/proyectos',
-    component: () => import('../../layouts/ProyectoLayout.vue'),
+    component: () => import('../../layouts/UsuarioLayout.vue'),
     children: [
       {
         path: '',
