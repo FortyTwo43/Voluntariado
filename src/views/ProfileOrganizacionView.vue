@@ -2,7 +2,7 @@
   <UsuarioLayout>
     <div class="profile-page">
       <div class="profile-container">
-        <h1 class="page-title">{{ t.myProfileTitle }}</h1>
+        <!-- <h1 class="page-title">{{ t.myProfileTitle }}</h1> -->
         
         <div class="profile-card">
           <ProfileHeader 
@@ -221,7 +221,7 @@ const validateUserData = (): Record<string, string> => {
 
 <style scoped>
 .profile-page {
-  padding: 2rem 1rem;
+  padding: 0rem 1rem;
 }
 
 .profile-container {

@@ -53,21 +53,24 @@ const { t } = useLanguage();
 
 <style scoped>
 .profile-header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
   margin-bottom: 2rem;
 }
 
 .profile-photo-container {
   position: relative;
   display: inline-block;
-  margin-bottom: 1rem;
+  margin: 0;
+  flex-shrink: 0;
 }
 
 .profile-photo {
   position: relative;
   width: 120px;
   height: 120px;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .profile-image,
@@ -121,7 +124,8 @@ const { t } = useLanguage();
 }
 
 .profile-info {
-  text-align: center;
+  text-align: left;
+  flex: 1;
 }
 
 .profile-name {
@@ -139,6 +143,9 @@ const { t } = useLanguage();
 }
 
 @media (max-width: 640px) {
+  .profile-header {
+    gap: 1rem;
+  }
   .profile-photo {
     width: 100px;
     height: 100px;
@@ -160,6 +167,9 @@ const { t } = useLanguage();
 }
 
 @media (max-width: 320px) {
+  .profile-header {
+    gap: 0.75rem;
+  }
   .profile-photo {
     width: 80px;
     height: 80px;
