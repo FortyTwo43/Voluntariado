@@ -323,7 +323,7 @@ onMounted(() => {
     const raw = localStorage.getItem('user');
     if (raw) {
       const user = JSON.parse(raw);
-      if (user?.tipo === 'organizacion') {
+      if (user?.rol === 'organizacion') {
         const orgId = user.id || user.id_organizacion;
         if (orgId) {
           formData.id_organizacion = orgId;

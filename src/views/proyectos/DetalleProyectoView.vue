@@ -164,7 +164,7 @@ const cargarProyecto = async () => {
       const raw = localStorage.getItem('user');
       if (raw) {
         const user = JSON.parse(raw);
-        if (user?.tipo === 'organizacion') {
+        if (user?.rol === 'organizacion') {
           orgId = user.id || user.id_organizacion || null;
         }
       }

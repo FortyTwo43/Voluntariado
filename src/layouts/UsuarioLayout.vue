@@ -235,7 +235,12 @@ const goToProjects = () => {
 
 // Profile handler
 const goToProfile = () => {
-  router.push('/profile')
+  // Detectar el rol del usuario y redirigir a la vista correspondiente
+  if (userData.value?.rol === 'organizacion') {
+    router.push('/profile-organization')
+  } else {
+    router.push('/profile')
+  }
 }
 
 // Logout handler

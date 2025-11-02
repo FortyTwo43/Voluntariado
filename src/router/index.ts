@@ -93,6 +93,12 @@ const routes = [
     name: "UserProfile",
     component: () => import('@/views/ProfileView.vue'),
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/profile-organization",
+    name: "UserProfileOrganization",
+    component: () => import('@/views/ProfileOrganizacionView.vue'),
+    meta: { requiresAuth: true },
   }
 ]
 

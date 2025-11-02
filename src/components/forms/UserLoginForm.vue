@@ -220,13 +220,13 @@ const handleSubmit = async () => {
         `Bienvenido/a ${resultado.user.nombre}`
       );
 
-      // Flujo de navegación según tipo de usuario
-      if (resultado.user.tipo === 'organizacion') {
+      // Flujo de navegación según rol de usuario
+      if (resultado.user.rol === 'organizacion') {
         // Redirigir a proyectos para organizaciones
         setTimeout(() => {
           router.push('/proyectos');
         }, 1000);
-      } else if (resultado.user.tipo === 'voluntario') {
+      } else if (resultado.user.rol === 'voluntario') {
         // Redirigir a explorar proyectos para voluntarios
         setTimeout(() => {
           router.push('/explorar-proyectos');

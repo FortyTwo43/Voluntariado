@@ -48,6 +48,32 @@ export async function actualizarVoluntario(id: string, datos: Partial<IVoluntari
   }
 }
 
+export async function actualizarOrganizacion(id: string, datos: Partial<{ nombre: string; tipo: string; direccion: string; email: string }>): Promise<boolean> {
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/organizaciones?id_organizacion=eq.${id}`;
+    
+    // Remover campos que no deben actualizarse (contrasena, estado_validacion, id)
+    const { ...datosActualizar } = datos;
+    
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: SUPABASE_HEADERS,
+      body: JSON.stringify(datosActualizar),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
+      throw new Error('Error al actualizar la organización');
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error al actualizar organización:', error);
+    throw error;
+  }
+}
+
 export async function verificarCorreoExistente(email: string): Promise<boolean> {
   try {
     const url = `${SUPABASE_URL}/rest/v1/voluntarios?email=eq.${encodeURIComponent(email)}&select=email`;
@@ -200,10 +226,15 @@ export interface LoginResponse {
     id: string;
     email: string;
     nombre: string;
+    rol: 'voluntario' | 'organizacion'; // Indica si es voluntario u organización
+    // Campos específicos de voluntario
     apellido?: string;
     telefono?: string;
     institucion_educativa?: string;
-    tipo: 'voluntario' | 'organizacion';
+    // Campos específicos de organización
+    tipo?: string; // Tipo de organización (Educativo, ONG, etc.)
+    direccion?: string;
+    estado_validacion?: boolean;
   };
 }
 
@@ -248,10 +279,10 @@ export async function autenticarVoluntario(credentials: LoginCredentials): Promi
         id: voluntario.id,
         email: voluntario.email,
         nombre: voluntario.nombre,
+        rol: 'voluntario',
         apellido: voluntario.apellido,
         telefono: voluntario.telefono,
-        institucion_educativa: voluntario.institucion_educativa,
-        tipo: 'voluntario'
+        institucion_educativa: voluntario.institucion_educativa
       }
     };
   } catch (error) {
@@ -266,7 +297,7 @@ export async function autenticarVoluntario(credentials: LoginCredentials): Promi
 // Función para autenticar organizaciones
 export async function autenticarOrganizacion(credentials: LoginCredentials): Promise<LoginResponse> {
   try {
-    const select = 'id:id_organizacion,nombre,email,contrasena';
+    const select = 'id:id_organizacion,nombre,tipo,direccion,email,estado_validacion,contrasena';
     const url = `${SUPABASE_URL}/rest/v1/organizaciones?email=eq.${encodeURIComponent(credentials.email)}&select=${encodeURIComponent(select)}`;
     
     const response = await fetch(url, {
@@ -304,7 +335,10 @@ export async function autenticarOrganizacion(credentials: LoginCredentials): Pro
         id: organizacion.id,
         email: organizacion.email,
         nombre: organizacion.nombre,
-        tipo: 'organizacion'
+        rol: 'organizacion',
+        tipo: organizacion.tipo,
+        direccion: organizacion.direccion,
+        estado_validacion: organizacion.estado_validacion
       }
     };
   } catch (error) {
@@ -346,10 +380,15 @@ export type BasicUser = {
   id: string;
   email: string;
   nombre: string;
+  rol: 'voluntario' | 'organizacion'; // Indica si es voluntario u organización
+  // Campos específicos de voluntario
   apellido?: string;
   telefono?: string;
   institucion_educativa?: string;
-  tipo: 'voluntario' | 'organizacion';
+  // Campos específicos de organización
+  tipo?: string; // Tipo de organización (Educativo, ONG, etc.)
+  direccion?: string;
+  estado_validacion?: boolean;
 };
 
 const SESSION_STORAGE_KEY = 'user_session';

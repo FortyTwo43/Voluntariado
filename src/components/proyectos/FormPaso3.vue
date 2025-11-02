@@ -153,7 +153,7 @@ onMounted(() => {
       const raw = localStorage.getItem('user');
       if (raw) {
         const user = JSON.parse(raw);
-        if (user?.tipo === 'organizacion' && user?.id) {
+        if (user?.rol === 'organizacion' && user?.id) {
           datosLocales.id_organizacion = String(user.id);
         }
       }
