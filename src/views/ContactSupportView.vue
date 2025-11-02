@@ -26,9 +26,9 @@
 
       <div class="card info">
         <h2>{{ t.contactInfo }}</h2>
-        <p>email@example.com</p>
-        <p>+34 600 000 000</p>
-        <p>Madrid, España</p>
+        <p>soporte@voluntariado.ec</p>
+        <p>+593 084 621 428</p>
+        <p>Manabi, Ecuador</p>
       </div>
     </div>
   </section>
