@@ -57,7 +57,7 @@
               <div class="project-meta">
                 <span class="meta-item">
                   <span class="material-symbols-outlined">location_on</span>
-                  Madrid
+                  Manabi
                 </span>
                 <span class="meta-item">
                   <span class="material-symbols-outlined">calendar_today</span>
