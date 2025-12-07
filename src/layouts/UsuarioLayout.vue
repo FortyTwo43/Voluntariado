@@ -306,7 +306,7 @@ const handleLogout = () => {
 
 /* Header */
 .proyecto-header {
-  padding: 1.25rem 2rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem) clamp(1rem, 5vw, 2rem);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: sticky;
@@ -316,22 +316,23 @@ const handleLogout = () => {
 
 .header-content {
   max-width: 1200px;
-  max-height: 3rem;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 2rem;
+  gap: clamp(0.75rem, 3vw, 2rem);
+  flex-wrap: wrap;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: clamp(0.5rem, 2vw, 1rem);
   text-decoration: none;
   transition: all 0.3s ease;
-  padding: 0.5rem;
+  padding: clamp(0.25rem, 1vw, 0.5rem);
   border-radius: 12px;
+  min-width: fit-content;
 }
 
 .logo:hover {
@@ -340,8 +341,8 @@ const handleLogout = () => {
 }
 
 .logo-icon {
-  width: 3rem;
-  height: 3rem;
+  width: clamp(2.5rem, 8vw, 3rem);
+  height: clamp(2.5rem, 8vw, 3rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -349,6 +350,7 @@ const handleLogout = () => {
   border-radius: 12px;
   padding: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
 }
 
 .logo-image {
@@ -358,26 +360,28 @@ const handleLogout = () => {
 }
 
 .logo-icon .material-symbols-outlined {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
 }
 
 .logo-text-container {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
+  min-width: 0;
 }
 
 .logo-text {
-  font-size: 1.5rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.5rem);
   font-weight: 700;
   color: white;
   line-height: 1.2;
   letter-spacing: -0.02em;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  word-wrap: break-word;
 }
 
 .logo-subtitle {
-  font-size: 0.875rem;
+  font-size: clamp(0.65rem, 1.5vw, 0.875rem);
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.05em;
@@ -387,23 +391,27 @@ const handleLogout = () => {
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: clamp(0.5rem, 2vw, 0.75rem);
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: clamp(0.375rem, 1.5vw, 0.5rem);
   color: white;
   text-decoration: none;
   font-weight: 500;
-  padding: 0.625rem 1.25rem;
+  padding: clamp(0.5rem, 1.5vw, 0.625rem) clamp(0.75rem, 2vw, 1.25rem);
   border-radius: 8px;
   transition: all 0.2s ease;
-  font-size: 0.9375rem;
+  font-size: clamp(0.75rem, 2vw, 0.9375rem);
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .nav-link:hover {
@@ -423,8 +431,8 @@ const handleLogout = () => {
 }
 
 .nav-icon {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: clamp(0.9rem, 2vw, 1.125rem);
+  height: clamp(0.9rem, 2vw, 1.125rem);
   flex-shrink: 0;
 }
 
@@ -432,8 +440,8 @@ const handleLogout = () => {
 .language-toggle-btn {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.625rem 1rem;
+  gap: clamp(0.25rem, 1vw, 0.375rem);
+  padding: clamp(0.5rem, 1.5vw, 0.625rem) clamp(0.65rem, 2vw, 1rem);
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
@@ -441,7 +449,9 @@ const handleLogout = () => {
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.875rem);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .language-toggle-btn:hover {
@@ -451,8 +461,9 @@ const handleLogout = () => {
 }
 
 .language-icon {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: clamp(0.9rem, 2vw, 1.125rem);
+  height: clamp(0.9rem, 2vw, 1.125rem);
+  flex-shrink: 0;
 }
 
 .language-text {
@@ -473,13 +484,14 @@ const handleLogout = () => {
 }
 
 .user-avatar {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: clamp(2rem, 6vw, 2.5rem);
+  height: clamp(2rem, 6vw, 2.5rem);
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .profile-btn:hover .user-avatar {
@@ -512,8 +524,8 @@ const handleLogout = () => {
 .logout-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1rem;
+  gap: clamp(0.375rem, 1.5vw, 0.5rem);
+  padding: clamp(0.5rem, 1.5vw, 0.625rem) clamp(0.65rem, 2vw, 1rem);
   border-radius: 8px;
   border: 1px solid rgba(239, 68, 68, 0.3);
   background: rgba(239, 68, 68, 0.15);
@@ -521,7 +533,9 @@ const handleLogout = () => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 0.875rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.875rem);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .logout-btn:hover {
@@ -532,8 +546,8 @@ const handleLogout = () => {
 }
 
 .logout-icon {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: clamp(0.9rem, 2vw, 1.125rem);
+  height: clamp(0.9rem, 2vw, 1.125rem);
   flex-shrink: 0;
 }
 
@@ -650,6 +664,21 @@ const handleLogout = () => {
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .header-content {
+    gap: clamp(0.5rem, 2vw, 1.5rem);
+  }
+
+  .logo-text {
+    font-size: clamp(0.85rem, 2vw, 1.25rem);
+  }
+
+  .nav-link {
+    padding: clamp(0.45rem, 1.5vw, 0.6rem) clamp(0.6rem, 1.5vw, 1rem);
+    font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  }
+}
+
 @media (max-width: 992px) {
   .footer-content {
     grid-template-columns: 1fr;
@@ -658,27 +687,39 @@ const handleLogout = () => {
 
 @media (max-width: 768px) {
   .proyecto-header {
-    padding: 1rem;
+    padding: clamp(0.6rem, 2vw, 1rem) clamp(0.75rem, 3vw, 1.5rem);
   }
   
   .header-content {
     flex-direction: column;
-    gap: 1rem;
+    gap: clamp(0.5rem, 2vw, 1rem);
+    justify-content: center;
+  }
+
+  .logo {
+    width: 100%;
+    justify-content: center;
+    gap: clamp(0.5rem, 2vw, 0.75rem);
   }
 
   .logo-text {
-    font-size: 1rem;
+    font-size: clamp(0.85rem, 3vw, 1.1rem);
+  }
+
+  .logo-subtitle {
+    font-size: clamp(0.6rem, 1.5vw, 0.8rem);
   }
   
   .header-nav {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
+    gap: clamp(0.4rem, 1.5vw, 0.6rem);
   }
 
   .nav-link {
-    font-size: 0.875rem;
-    padding: 0.5rem 0.75rem;
+    font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+    padding: clamp(0.4rem, 1vw, 0.55rem) clamp(0.6rem, 1.5vw, 0.9rem);
   }
   
   .nav-text {
@@ -709,6 +750,11 @@ const handleLogout = () => {
   .logout-text {
     display: none;
   }
+
+  .language-toggle-btn {
+    font-size: clamp(0.6rem, 1.5vw, 0.75rem);
+    padding: clamp(0.4rem, 1vw, 0.55rem) clamp(0.6rem, 1.5vw, 0.8rem);
+  }
 }
 
 @media (max-width: 640px) {
@@ -717,12 +763,12 @@ const handleLogout = () => {
   }
 
   .nav-link {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
+    padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
+    font-size: clamp(0.65rem, 1.5vw, 0.85rem);
   }
 
   .language-toggle-btn {
-    padding: 0.5rem 0.75rem;
+    padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
   }
 
   .language-text {
@@ -736,8 +782,8 @@ const handleLogout = () => {
   }
 
   .logo-icon {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: clamp(2rem, 8vw, 2.5rem);
+    height: clamp(2rem, 8vw, 2.5rem);
   }
 
   .header-nav {
@@ -745,17 +791,17 @@ const handleLogout = () => {
   }
 
   .nav-link {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
+    padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
+    font-size: clamp(0.65rem, 1.5vw, 0.85rem);
   }
 
   .language-toggle-btn {
-    padding: 0.5rem 0.75rem;
+    padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
   }
 
   .user-avatar {
-    width: 2rem;
-    height: 2rem;
+    width: clamp(1.75rem, 6vw, 2rem);
+    height: clamp(1.75rem, 6vw, 2rem);
   }
 }
 </style>

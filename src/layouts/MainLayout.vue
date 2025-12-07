@@ -82,7 +82,7 @@ const toggleLanguage = () => {
 .navbar {
   background: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 1rem;
+  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 3vw, 1rem);
   position: sticky;
   top: 0px;
   z-index: 50;
@@ -94,41 +94,48 @@ const toggleLanguage = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  flex-wrap: wrap;
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: clamp(0.5rem, 2vw, 0.75rem);
+  min-width: fit-content;
 }
 
 .logo {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: clamp(2.5rem, 8vw, 3.5rem);
+  height: clamp(2.5rem, 8vw, 3.5rem);
   object-fit: contain;
   margin-bottom: -1%;
   margin-top: -1%;
+  flex-shrink: 0;
 }
 
 .brand-text {
-  font-size: 1.25rem;
+  font-size: clamp(0.875rem, 2.5vw, 1.25rem);
   font-weight: 700;
   color: #1f2937;
+  word-wrap: break-word;
 }
 
 .navbar-nav {
   display: flex;
-  gap: 2rem;
-
+  gap: clamp(0.75rem, 3vw, 2rem);
+  flex-wrap: wrap;
 }
 
 .nav-link {
   color: #6b7280;
   text-decoration: none;
   font-weight: 500;
-  padding: 0.5rem 0;
+  padding: clamp(0.375rem, 1vw, 0.5rem) 0;
   transition: color 0.2s;
   position: relative;
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -154,15 +161,16 @@ const toggleLanguage = () => {
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  flex-wrap: wrap;
 }
 
 /* Language Toggle Button */
 .language-toggle-btn {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.5rem 0.875rem;
+  gap: clamp(0.25rem, 1vw, 0.375rem);
+  padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.6rem, 2vw, 0.875rem);
   background: rgba(79, 70, 229, 0.1);
   border: 1px solid rgba(79, 70, 229, 0.2);
   border-radius: 0.375rem;
@@ -170,7 +178,9 @@ const toggleLanguage = () => {
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .language-toggle-btn:hover {
@@ -180,8 +190,9 @@ const toggleLanguage = () => {
 }
 
 .language-icon {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: clamp(0.9rem, 2vw, 1.125rem);
+  height: clamp(0.9rem, 2vw, 1.125rem);
+  flex-shrink: 0;
 }
 
 .language-text {
@@ -194,11 +205,12 @@ const toggleLanguage = () => {
 }
 
 .user-avatar {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: clamp(2rem, 6vw, 2.5rem);
+  height: clamp(2rem, 6vw, 2.5rem);
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid #e5e7eb;
+  flex-shrink: 0;
 }
 
 .avatar-image {
@@ -218,56 +230,99 @@ const toggleLanguage = () => {
 }
 
 .avatar-placeholder svg {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: clamp(1rem, 2vw, 1.25rem);
+  height: clamp(1rem, 2vw, 1.25rem);
 }
 
 .main-content {
   min-height: calc(100vh - 80px);
 }
 
+@media (max-width: 1024px) {
+  .navbar-content {
+    gap: clamp(0.5rem, 2vw, 1rem);
+  }
+
+  .navbar-nav {
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  .brand-text {
+    font-size: clamp(0.875rem, 2vw, 1.1rem);
+  }
+}
+
 @media (max-width: 768px) {
   .navbar {
-    padding: 1rem;
+    padding: clamp(0.75rem, 2vw, 1rem);
   }
   
   .navbar-content {
     flex-direction: column;
-    gap: 1rem;
+    gap: clamp(0.75rem, 2vw, 1rem);
+    justify-content: center;
+  }
+
+  .navbar-brand {
+    width: 100%;
+    justify-content: center;
   }
   
   .navbar-nav {
-    gap: 1.5rem;
+    width: 100%;
+    justify-content: center;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
   }
   
   .brand-text {
-    font-size: 1rem;
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+  }
+
+  .navbar-actions {
+    width: 100%;
+    justify-content: center;
   }
 }
 
 @media (max-width: 640px) {
   .navbar-nav {
-    gap: 1rem;
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+    flex-wrap: wrap;
   }
   
   .nav-link {
-    font-size: 0.875rem;
+    font-size: clamp(0.8rem, 2vw, 0.875rem);
+  }
+
+  .language-text {
+    display: none;
   }
 }
 
-@media (max-width: 320px) {
-  .navbar {
-    padding: 0.75rem;
+@media (max-width: 480px) {
+  .brand-text {
+    display: none;
   }
-  
+
+  .logo {
+    width: clamp(2rem, 8vw, 2.5rem);
+    height: clamp(2rem, 8vw, 2.5rem);
+  }
+
   .navbar-nav {
     flex-direction: column;
     gap: 0.5rem;
     text-align: center;
+    width: 100%;
   }
   
   .brand-text {
-    font-size: 0.875rem;
+    font-size: clamp(0.75rem, 2vw, 0.875rem);
+  }
+
+  .user-avatar {
+    width: clamp(1.75rem, 6vw, 2rem);
+    height: clamp(1.75rem, 6vw, 2rem);
   }
 }
 </style>

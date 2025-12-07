@@ -55,8 +55,9 @@ const { t } = useLanguage();
 .profile-header {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  margin-bottom: 2rem;
+  gap: clamp(0.75rem, 3vw, 1.25rem);
+  margin-bottom: clamp(1rem, 3vw, 2rem);
+  flex-wrap: wrap;
 }
 
 .profile-photo-container {
@@ -68,8 +69,8 @@ const { t } = useLanguage();
 
 .profile-photo {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: clamp(80px, 20vw, 120px);
+  height: clamp(80px, 20vw, 120px);
   margin: 0;
 }
 
@@ -99,8 +100,8 @@ const { t } = useLanguage();
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 36px;
-  height: 36px;
+  width: clamp(28px, 7vw, 36px);
+  height: clamp(28px, 7vw, 36px);
   background: #4f46e5;
   border: none;
   border-radius: 50%;
@@ -119,68 +120,75 @@ const { t } = useLanguage();
 }
 
 .edit-photo-btn svg {
-  width: 18px;
-  height: 18px;
+  width: clamp(14px, 3.5vw, 18px);
+  height: clamp(14px, 3.5vw, 18px);
 }
 
 .profile-info {
   text-align: left;
   flex: 1;
+  min-width: 0;
 }
 
 .profile-name {
-  font-size: 1.875rem;
+  font-size: clamp(1.25rem, 4vw, 1.875rem);
   font-weight: 700;
   color: #1f2937;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 clamp(0.25rem, 1vw, 0.5rem) 0;
+  word-wrap: break-word;
 }
 
 .profile-role {
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
   color: #6b7280;
   margin: 0;
   font-weight: 500;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .profile-header {
-    gap: 1rem;
+    flex-direction: column;
+    text-align: center;
+    gap: clamp(0.75rem, 2vw, 1rem);
   }
-  .profile-photo {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .profile-name {
-    font-size: 1.5rem;
-  }
-  
-  .edit-photo-btn {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .edit-photo-btn svg {
-    width: 16px;
-    height: 16px;
+
+  .profile-info {
+    text-align: center;
+    width: 100%;
   }
 }
 
-@media (max-width: 320px) {
+@media (max-width: 640px) {
   .profile-header {
-    gap: 0.75rem;
-  }
-  .profile-photo {
-    width: 80px;
-    height: 80px;
+    gap: clamp(0.5rem, 1.5vw, 1rem);
   }
   
   .profile-name {
-    font-size: 1.25rem;
+    font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+  }
+  
+  .edit-photo-btn {
+    width: clamp(26px, 6.5vw, 32px);
+    height: clamp(26px, 6.5vw, 32px);
+  }
+  
+  .edit-photo-btn svg {
+    width: clamp(13px, 3.25vw, 16px);
+    height: clamp(13px, 3.25vw, 16px);
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-header {
+    gap: clamp(0.5rem, 1.5vw, 0.75rem);
+  }
+  
+  .profile-name {
+    font-size: clamp(1rem, 3vw, 1.25rem);
   }
   
   .profile-role {
-    font-size: 0.875rem;
+    font-size: clamp(0.8rem, 2vw, 0.875rem);
   }
 }
 </style>

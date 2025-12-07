@@ -535,6 +535,12 @@ const toggleLanguage = () => {
   }
 }
 
+@media (max-width: 992px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .auth-header {
     padding: clamp(0.6rem, 2vw, 1rem) clamp(0.75rem, 3vw, 1.5rem);
@@ -601,11 +607,31 @@ const toggleLanguage = () => {
   }
 }
 
+@media (max-width: 480px) {
+  .logo-text-container {
+    display: none;
+  }
 
+  .logo-icon {
+    width: clamp(2rem, 8vw, 2.5rem);
+    height: clamp(2rem, 8vw, 2.5rem);
+  }
 
-@media (max-width: 992px) {
-  .footer-content {
-    grid-template-columns: 1fr;
+  .header-nav {
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
+    font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+  }
+
+  .language-toggle-btn {
+    padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
+  }
+
+  .language-text {
+    display: none;
   }
 }
 </style>

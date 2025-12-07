@@ -295,28 +295,28 @@ onUnmounted(() => {
 
 .sidebar-toggle {
   position: fixed;
-  top: 5.7rem; /* Ligeramente debajo del header */
+  top: calc(5.5rem + 1rem); /* Separado del header con 1rem de margen */
   left: 1rem;
   width: 3rem;
   height: 3rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: white;
+  color: #667eea;
+  border: 2px solid #e5e7eb;
   border-radius: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   z-index: 96;
-  backdrop-filter: blur(10px);
 }
 
 .sidebar-toggle:hover {
-  background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
-  transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: #f3f4f6;
+  border-color: #667eea;
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.25);
 }
 
 .sidebar-toggle .material-symbols-outlined {
