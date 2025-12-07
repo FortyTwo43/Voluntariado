@@ -421,20 +421,232 @@ const inscribirse = () => {
   box-shadow: 0 4px 12px rgba(121, 201, 158, 0.4);
 }
 
-/* Responsive */
-@media (max-width: 640px) {
+.card-header {
+  height: clamp(140px, 30vw, 180px);
+}
+
+.icon-proyecto {
+  width: clamp(3rem, 8vw, 5rem);
+  height: clamp(3rem, 8vw, 5rem);
+}
+
+.card-body {
+  padding: clamp(1rem, 3vw, 1.5rem);
+  gap: clamp(0.75rem, 1.5vw, 1rem);
+}
+
+.card-titulo {
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  min-height: clamp(2.2rem, 5vw, 2.8rem);
+}
+
+.card-organizacion {
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  gap: clamp(0.375rem, 0.5vw, 0.5rem);
+}
+
+.icon-org {
+  width: clamp(0.8rem, 2vw, 1rem);
+  height: clamp(0.8rem, 2vw, 1rem);
+}
+
+.card-descripcion {
+  font-size: clamp(0.8rem, 1.5vw, 0.9375rem);
+  line-height: clamp(1.4, 1.6, 1.8);
+}
+
+.tag {
+  padding: clamp(0.3rem, 0.5vw, 0.375rem) clamp(0.7rem, 1.5vw, 0.875rem);
+  font-size: clamp(0.7rem, 1.2vw, 0.8125rem);
+}
+
+.meta-item {
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  gap: clamp(0.375rem, 0.5vw, 0.5rem);
+}
+
+.meta-icon {
+  width: clamp(0.8rem, 1.5vw, 1rem);
+  height: clamp(0.8rem, 1.5vw, 1rem);
+}
+
+.badge-nuevo {
+  top: clamp(0.75rem, 2vw, 1rem);
+  right: clamp(0.75rem, 2vw, 1rem);
+  padding: clamp(0.3rem, 0.5vw, 0.375rem) clamp(0.6rem, 1vw, 0.875rem);
+  font-size: clamp(0.6rem, 1vw, 0.75rem);
+}
+
+.card-footer {
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+  gap: clamp(0.5rem, 1vw, 0.75rem);
+}
+
+.btn-secundario,
+.btn-primario {
+  padding: clamp(0.6rem, 1.5vw, 0.75rem) clamp(0.75rem, 1.5vw, 1rem);
+  font-size: clamp(0.8rem, 1.5vw, 0.9375rem);
+}
+
+/* Tablet optimized */
+@media (max-width: 1024px) {
+  .card-header {
+    height: 160px;
+  }
+
+  .icon-proyecto {
+    width: 4.25rem;
+    height: 4.25rem;
+  }
+
   .card-body {
     padding: 1.25rem;
+    gap: 0.875rem;
+  }
+
+  .card-titulo {
+    font-size: 1.125rem;
+  }
+}
+
+/* Mobile optimized */
+@media (max-width: 768px) {
+  .proyecto-card {
+    border-radius: 10px;
+  }
+
+  .card-header {
+    height: 150px;
+  }
+
+  .icon-proyecto {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .card-titulo {
+    font-size: 1.125rem;
+    min-height: 2.4rem;
+  }
+
+  .card-organizacion {
+    font-size: 0.8rem;
+  }
+
+  .card-descripcion {
+    font-size: 0.875rem;
   }
 
   .card-footer {
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0.75rem 1rem;
   }
 
   .btn-secundario,
   .btn-primario {
     width: 100%;
+    padding: 0.65rem 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .card-header {
+    height: 140px;
+  }
+
+  .icon-proyecto {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .card-body {
+    padding: 0.875rem;
+    gap: 0.625rem;
+  }
+
+  .card-titulo {
+    font-size: 1rem;
+    min-height: 2.2rem;
+  }
+
+  .card-meta {
+    padding-top: 0.375rem;
+  }
+
+  .meta-item {
+    font-size: 0.75rem;
+  }
+
+  .tag {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.7rem;
+  }
+
+  .badge-nuevo {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .proyecto-card {
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+
+  .card-header {
+    height: 120px;
+  }
+
+  .icon-proyecto {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .card-body {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .card-titulo {
+    font-size: 0.95rem;
+    min-height: 2rem;
+  }
+
+  .card-organizacion {
+    font-size: 0.75rem;
+  }
+
+  .card-descripcion {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  .card-tags {
+    gap: 0.375rem;
+  }
+
+  .tag {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.65rem;
+  }
+
+  .card-footer {
+    padding: 0.625rem 0.75rem;
+    gap: 0.375rem;
+  }
+
+  .btn-secundario,
+  .btn-primario {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.75rem;
   }
 }
 </style>

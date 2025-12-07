@@ -400,33 +400,35 @@ watch(fechaSeleccionada, async (nueva) => {
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: clamp(1rem, 4vw, 2rem);
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  padding: 2rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  padding: clamp(1.5rem, 3vw, 2rem);
   background: white;
   border-radius: 8px;
   border: 2px solid #79C99E;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  gap: clamp(1rem, 2vw, 1.5rem);
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  flex-wrap: wrap;
 }
 
 .btn-volver {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  font-size: 0.95rem;
+  padding: clamp(0.65rem, 1.5vw, 0.75rem) clamp(1rem, 2vw, 1.25rem);
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
   font-weight: 700;
   color: #ffffff;
   background: #79C99E;
@@ -437,6 +439,7 @@ watch(fechaSeleccionada, async (nueva) => {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .btn-volver:hover {
@@ -450,8 +453,8 @@ watch(fechaSeleccionada, async (nueva) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.95rem;
+  padding: clamp(0.65rem, 1.5vw, 0.75rem) clamp(1.25rem, 2vw, 1.5rem);
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
   font-weight: 700;
   color: #ffffff;
   background: #4B0082;
@@ -474,21 +477,21 @@ watch(fechaSeleccionada, async (nueva) => {
 
 .icon-arrow-left,
 .icon-clock {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: clamp(0.95rem, 2vw, 1.125rem);
+  height: clamp(0.95rem, 2vw, 1.125rem);
 }
 
 .view-title {
-  font-size: 1.75rem;
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
   font-weight: 800;
   color: #4B0082;
-  margin: 0 0 0.5rem;
+  margin: 0 0 clamp(0.25rem, 0.5vw, 0.5rem);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .subtitulo {
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 2vw, 1rem);
   color: #5a5a5a;
   margin: 0;
 }
@@ -496,8 +499,8 @@ watch(fechaSeleccionada, async (nueva) => {
 /* Panel de selección */
 .panel-seleccion {
   display: grid;
-  grid-template-columns: 350px 1fr;
-  gap: 2rem;
+  grid-template-columns: clamp(280px, 30vw, 350px) 1fr;
+  gap: clamp(1.5rem, 3vw, 2rem);
   align-items: start;
 }
 
@@ -505,33 +508,33 @@ watch(fechaSeleccionada, async (nueva) => {
   background: white;
   border: 2px solid #79C99E;
   border-radius: 8px;
-  padding: 2rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .seccion-titulo {
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 2.5vw, 1.25rem);
   font-weight: 700;
   color: #4B0082;
-  margin: 0 0 1.5rem;
+  margin: 0 0 clamp(1rem, 2vw, 1.5rem);
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
 .form-label {
   display: block;
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
   font-weight: 600;
   color: #2E2E2E;
-  margin-bottom: 0.5rem;
+  margin-bottom: clamp(0.375rem, 0.5vw, 0.5rem);
 }
 
 .form-select {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
+  padding: clamp(0.6rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1rem);
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
   color: #2E2E2E;
   background: white;
   border: 2px solid #e5e7eb;
@@ -549,12 +552,12 @@ watch(fechaSeleccionada, async (nueva) => {
 .lista-fechas {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: clamp(0.5rem, 1vw, 0.75rem);
 }
 
 .btn-fecha {
-  padding: 0.875rem 1rem;
-  font-size: 0.95rem;
+  padding: clamp(0.7rem, 1.5vw, 0.875rem) clamp(0.75rem, 1.5vw, 1rem);
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
   font-weight: 600;
   color: #2E2E2E;
   background: white;
@@ -590,19 +593,20 @@ watch(fechaSeleccionada, async (nueva) => {
 
 .mensaje-vacio {
   text-align: center;
-  padding: 3rem;
+  padding: clamp(2rem, 5vw, 3rem);
   color: #9ca3af;
 }
 
 .icon-info {
-  width: 4rem;
-  height: 4rem;
-  margin: 0 auto 1rem;
+  width: clamp(2.5rem, 8vw, 4rem);
+  height: clamp(2.5rem, 8vw, 4rem);
+  margin: 0 auto clamp(0.75rem, 1.5vw, 1rem);
 }
 
 .mensaje-vacio p {
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
   color: #6b7280;
+  margin: 0;
 }
 
 .panel-asistencia {
@@ -610,26 +614,27 @@ watch(fechaSeleccionada, async (nueva) => {
 }
 
 .asistencia-header {
-  padding: 2rem 2rem 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2rem) clamp(1.5rem, 3vw, 2rem) clamp(1rem, 2vw, 1.5rem);
   border-bottom: 2px solid #e5e7eb;
 }
 
 .asistencia-titulo {
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 2.5vw, 1.25rem);
   font-weight: 700;
   color: #4B0082;
-  margin: 0 0 0.5rem;
+  margin: 0 0 clamp(0.25rem, 0.5vw, 0.5rem);
 }
 
 .asistencia-fecha {
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
   color: #6b7280;
   margin: 0;
 }
 
 /* Tabla de asistencia */
 .tabla-container {
-  padding: 1.5rem 2rem;
+  padding: clamp(1rem, 2vw, 1.5rem) clamp(1.5rem, 3vw, 2rem);
+  overflow-x: auto;
 }
 
 .tabla-asistencia {
@@ -643,9 +648,9 @@ watch(fechaSeleccionada, async (nueva) => {
 }
 
 .tabla-asistencia th {
-  padding: 1rem 1.5rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 1.5vw, 1.5rem);
   text-align: left;
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 1.2vw, 0.875rem);
   font-weight: 700;
   color: #6b7280;
   text-transform: uppercase;
@@ -657,39 +662,41 @@ watch(fechaSeleccionada, async (nueva) => {
 }
 
 .tabla-asistencia td {
-  padding: 1.25rem 1.5rem;
+  padding: clamp(1rem, 1.5vw, 1.25rem) clamp(1rem, 1.5vw, 1.5rem);
 }
 
 .celda-nombre {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
   font-weight: 600;
   color: #2E2E2E;
-  min-width: 200px;
+  min-width: 150px;
 }
 
 .celda-estado {
   display: flex;
-  gap: 1.5rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
   align-items: center;
-  min-width: 250px;
+  min-width: 200px;
+  flex-wrap: wrap;
 }
 
 .radio-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: clamp(0.375rem, 0.5vw, 0.5rem);
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .radio-input {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: clamp(1rem, 1.5vw, 1.125rem);
+  height: clamp(1rem, 1.5vw, 1.125rem);
   cursor: pointer;
   accent-color: #79C99E;
 }
 
 .radio-label {
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
   font-weight: 600;
   cursor: pointer;
 }
@@ -703,18 +710,19 @@ watch(fechaSeleccionada, async (nueva) => {
 }
 
 .celda-observaciones {
-  min-width: 250px;
+  min-width: 150px;
 }
 
 .input-observaciones {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
+  padding: clamp(0.6rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1rem);
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: #2E2E2E;
   background: #f9fafb;
   border: 2px solid #e5e7eb;
   border-radius: 6px;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .input-observaciones:focus {
@@ -732,15 +740,16 @@ watch(fechaSeleccionada, async (nueva) => {
 .acciones-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  padding: 1.5rem 2rem;
+  gap: clamp(0.75rem, 1.5vw, 1rem);
+  padding: clamp(1rem, 2vw, 1.5rem) clamp(1.5rem, 3vw, 2rem);
   border-top: 2px solid #e5e7eb;
+  flex-wrap: wrap;
 }
 
 .btn-secundario,
 .btn-primario {
-  padding: 0.875rem 1.75rem;
-  font-size: 1rem;
+  padding: clamp(0.7rem, 1.5vw, 0.875rem) clamp(1.25rem, 2vw, 1.75rem);
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
   font-weight: 700;
   border: none;
   border-radius: 6px;
@@ -748,6 +757,7 @@ watch(fechaSeleccionada, async (nueva) => {
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .btn-secundario {
@@ -775,6 +785,18 @@ watch(fechaSeleccionada, async (nueva) => {
 }
 
 /* Responsive */
+@media (max-width: 1200px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .btn-ver-horas {
+    align-self: flex-end;
+  }
+}
+
 @media (max-width: 1024px) {
   .panel-seleccion {
     grid-template-columns: 1fr;
@@ -783,46 +805,386 @@ watch(fechaSeleccionada, async (nueva) => {
   .seccion-izquierda {
     max-width: 100%;
   }
+
+  .tabla-asistencia {
+    min-width: 600px;
+  }
 }
 
 @media (max-width: 768px) {
-  .header-content {
-    flex-wrap: wrap;
+  .container {
+    padding: clamp(0.75rem, 3vw, 1rem);
+  }
+
+  .page-header {
+    padding: clamp(1rem, 2vw, 1.5rem);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
   }
 
   .header-left {
-    flex: 1;
-    min-width: 100%;
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .btn-ver-horas {
+  .btn-volver {
     width: 100%;
     justify-content: center;
-  }
-
-  .container {
-    padding: 1rem;
   }
 
   .view-title {
     font-size: 1.25rem;
   }
 
+  .btn-ver-horas {
+    width: 100%;
+    justify-content: center;
+    align-self: auto;
+  }
+
+  .panel-seleccion {
+    gap: 1.5rem;
+  }
+
+  .seccion-izquierda {
+    padding: 1.25rem;
+  }
+
+  .seccion-derecha {
+    min-height: 300px;
+  }
+
   .tabla-container {
     overflow-x: auto;
+    padding: 1rem;
   }
 
   .tabla-asistencia {
-    min-width: 700px;
+    min-width: 500px;
+    font-size: 0.85rem;
+  }
+
+  .tabla-asistencia th {
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .tabla-asistencia td {
+    padding: 0.875rem 1rem;
+  }
+
+  .celda-nombre {
+    min-width: 120px;
+    font-size: 0.9rem;
+  }
+
+  .celda-estado {
+    gap: 0.75rem;
+    min-width: 150px;
+  }
+
+  .radio-group {
+    gap: 0.375rem;
+  }
+
+  .radio-label {
+    font-size: 0.85rem;
+  }
+
+  .celda-observaciones {
+    min-width: 120px;
+  }
+
+  .input-observaciones {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
   }
 
   .acciones-footer {
     flex-direction: column;
+    padding: 1rem;
   }
 
   .btn-secundario,
   .btn-primario {
     width: 100%;
+  }
+
+  .asistencia-header {
+    padding: 1.25rem 1rem 1rem;
+  }
+
+  .asistencia-titulo {
+    font-size: 1.125rem;
+  }
+
+  .asistencia-fecha {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0.75rem;
+  }
+
+  .page-header {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .btn-volver,
+  .btn-ver-horas {
+    padding: 0.6rem 0.875rem;
+    font-size: 0.8rem;
+  }
+
+  .view-title {
+    font-size: 1.125rem;
+  }
+
+  .subtitulo {
+    font-size: 0.8rem;
+  }
+
+  .panel-seleccion {
+    gap: 1rem;
+  }
+
+  .seccion-izquierda {
+    padding: 1rem;
+  }
+
+  .seccion-titulo {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-label {
+    font-size: 0.8rem;
+  }
+
+  .form-select {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .btn-fecha {
+    font-size: 0.8rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .tabla-container {
+    padding: 0.875rem;
+  }
+
+  .tabla-asistencia {
+    min-width: 400px;
+    font-size: 0.75rem;
+  }
+
+  .tabla-asistencia th {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.65rem;
+  }
+
+  .tabla-asistencia td {
+    padding: 0.75rem 0.75rem;
+  }
+
+  .celda-nombre {
+    min-width: 100px;
+    font-size: 0.8rem;
+  }
+
+  .celda-estado {
+    gap: 0.5rem;
+    min-width: 120px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .radio-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .radio-label {
+    font-size: 0.75rem;
+  }
+
+  .input-observaciones {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+
+  .acciones-footer {
+    padding: 0.875rem;
+    gap: 0.5rem;
+  }
+
+  .btn-secundario,
+  .btn-primario {
+    font-size: 0.75rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .mensaje-vacio {
+    padding: 2rem 1rem;
+  }
+
+  .icon-info {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .mensaje-vacio p {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .page-header {
+    padding: 0.75rem;
+    gap: 0.5rem;
+    flex-direction: column;
+  }
+
+  .header-left {
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .btn-volver {
+    font-size: 0.7rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .view-title {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .subtitulo {
+    font-size: 0.7rem;
+  }
+
+  .btn-ver-horas {
+    font-size: 0.7rem;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+  }
+
+  .panel-seleccion {
+    gap: 0.75rem;
+  }
+
+  .seccion-izquierda {
+    padding: 0.875rem;
+  }
+
+  .seccion-titulo {
+    font-size: 0.95rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.875rem;
+  }
+
+  .form-label {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .form-select {
+    font-size: 0.75rem;
+    padding: 0.45rem 0.6rem;
+  }
+
+  .lista-fechas {
+    gap: 0.4rem;
+  }
+
+  .btn-fecha {
+    font-size: 0.75rem;
+    padding: 0.6rem 0.7rem;
+  }
+
+  .seccion-derecha {
+    min-height: 250px;
+  }
+
+  .tabla-container {
+    padding: 0.75rem;
+  }
+
+  .tabla-asistencia {
+    min-width: 100%;
+    font-size: 0.7rem;
+  }
+
+  .tabla-asistencia th {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.6rem;
+  }
+
+  .tabla-asistencia td {
+    padding: 0.6rem 0.6rem;
+  }
+
+  .celda-nombre {
+    min-width: 80px;
+    font-size: 0.75rem;
+  }
+
+  .celda-estado {
+    gap: 0.375rem;
+    min-width: 100px;
+  }
+
+  .radio-input {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  .radio-label {
+    font-size: 0.7rem;
+  }
+
+  .input-observaciones {
+    font-size: 0.7rem;
+    padding: 0.4rem;
+  }
+
+  .acciones-footer {
+    padding: 0.75rem;
+    gap: 0.375rem;
+  }
+
+  .btn-secundario,
+  .btn-primario {
+    font-size: 0.7rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  .asistencia-header {
+    padding: 1rem 0.75rem 0.75rem;
+  }
+
+  .asistencia-titulo {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .asistencia-fecha {
+    font-size: 0.75rem;
   }
 }
 </style>

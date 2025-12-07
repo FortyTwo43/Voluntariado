@@ -201,9 +201,36 @@ const obtenerNombrePaso = (paso: number): string => {
   height: 1.5rem;
 }
 
-@media (max-width: 768px) {
+.paso-circulo {
+  width: clamp(2rem, 6vw, 3rem);
+  height: clamp(2rem, 6vw, 3rem);
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
+}
+
+.paso-label {
+  font-size: clamp(0.625rem, 1.5vw, 0.875rem);
+}
+
+.paso-texto {
+  font-size: clamp(0.75rem, 2vw, 1rem);
+}
+
+.paso-numero {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  padding: clamp(0.15rem, 0.5vw, 0.25rem) clamp(0.4rem, 1vw, 0.75rem);
+}
+
+.pasos-indicadores {
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+.barra-progreso {
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+@media (max-width: 1024px) {
   .pasos-indicadores {
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .paso-circulo {
@@ -219,10 +246,59 @@ const obtenerNombrePaso = (paso: number): string => {
   .paso-texto {
     font-size: 0.875rem;
   }
+}
+
+@media (max-width: 768px) {
+  .pasos-indicadores {
+    gap: 0.5rem;
+  }
+
+  .paso-circulo {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.875rem;
+  }
+
+  .paso-label {
+    font-size: 0.625rem;
+  }
+
+  .paso-texto {
+    font-size: 0.75rem;
+  }
 
   .paso-numero {
-    font-size: 1.25rem;
-    padding: 0.2rem 0.6rem;
+    font-size: 1rem;
+    padding: 0.15rem 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pasos-indicadores {
+    gap: 0.375rem;
+  }
+
+  .paso-circulo {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+  }
+
+  .paso-label {
+    font-size: 0.5rem;
+  }
+
+  .paso-texto {
+    font-size: 0.625rem;
+  }
+
+  .paso-numero {
+    font-size: 0.875rem;
+    padding: 0.1rem 0.3rem;
+  }
+
+  .barra-progreso {
+    margin-bottom: 1rem;
   }
 }
 </style>

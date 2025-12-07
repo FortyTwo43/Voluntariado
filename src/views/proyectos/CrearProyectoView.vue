@@ -343,25 +343,30 @@ onMounted(() => {
 .wizard-container {
   max-width: 950px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: clamp(1rem, 4vw, 2rem);
+  box-sizing: border-box;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   margin-bottom: 2rem;
-  padding: 2rem;
+  padding: clamp(1rem, 4vw, 2rem);
   background: white;
   border-radius: 8px;
   border: 2px solid #79C99E;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  flex-wrap: wrap;
 }
 
 .header-title-container {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .btn-back {
@@ -391,24 +396,25 @@ onMounted(() => {
 }
 
 .icon-project {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: clamp(1.75rem, 5vw, 2.5rem);
+  height: clamp(1.75rem, 5vw, 2.5rem);
   color: #4B0082;
   flex-shrink: 0;
 }
 
 .view-title {
-  font-size: 1.75rem;
+  font-size: clamp(1.125rem, 4vw, 1.75rem);
   font-weight: 800;
   color: #4B0082;
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  word-break: break-word;
 }
 
 .save-draft-button {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.95rem;
+  padding: 0.625rem 1.25rem;
+  font-size: clamp(0.8125rem, 2.5vw, 0.95rem);
   font-weight: 600;
   color: #ffffff;
   background: #79C99E;
@@ -420,6 +426,7 @@ onMounted(() => {
   letter-spacing: 0.5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .save-draft-button:hover {
@@ -432,20 +439,20 @@ onMounted(() => {
 .wizard-card {
   background: transparent;
   border-radius: 0;
-  padding: 2rem 0;
+  padding: clamp(1rem, 4vw, 2rem) 0;
   box-shadow: none;
   border: none;
   position: relative;
 }
 
 .wizard-title {
-  font-size: 2rem;
+  font-size: clamp(1.25rem, 5vw, 2rem);
   font-weight: 800;
   color: #4B0082;
   text-align: center;
-  margin: 0 0 2rem;
+  margin: 0 0 1.5rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .step-indicator {
@@ -494,32 +501,36 @@ onMounted(() => {
 }
 
 .form-content {
-  min-height: 400px;
-  margin-bottom: 2rem;
+  min-height: 300px;
+  margin-bottom: 1.5rem;
 }
 
 .wizard-actions {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
-  padding-top: 2rem;
-  margin-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
 }
 
 .btn-secondary,
 .btn-primary {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0.875rem 1.75rem;
-  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
   font-weight: 700;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .btn-secondary {
@@ -554,7 +565,7 @@ onMounted(() => {
 }
 
 .btn-create {
-  padding: 0.875rem 2rem;
+  padding: 0.75rem 1.5rem;
   background: #4B0082;
   border: none;
   color: #ffffff;
@@ -569,6 +580,7 @@ onMounted(() => {
 .icon-check {
   width: 1.25rem;
   height: 1.25rem;
+  flex-shrink: 0;
 }
 
 .spinner {
@@ -586,7 +598,7 @@ onMounted(() => {
 
 .error-message {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
   margin-top: 1.5rem;
   padding: 1rem;
@@ -594,7 +606,7 @@ onMounted(() => {
   border: 1px solid #fecaca;
   border-radius: 8px;
   color: #dc2626;
-  font-size: 0.95rem;
+  font-size: clamp(0.875rem, 2.5vw, 0.95rem);
 }
 
 .icon-error {
@@ -603,41 +615,127 @@ onMounted(() => {
   flex-shrink: 0;
 }
 
+/* ==================== RESPONSIVE ==================== */
+
+/* Tablet */
 @media (max-width: 768px) {
-  .crear-proyecto-view {
-    padding: 1rem 0.5rem;
+  .wizard-container {
+    padding: 1rem;
   }
 
-  .view-header {
-    margin-bottom: 1rem;
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1rem;
   }
 
   .header-title-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    justify-content: flex-start;
   }
 
-  .view-title {
-    font-size: 1.5rem;
+  .save-draft-button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
   }
 
   .wizard-card {
-    padding: 1.5rem;
-    border-radius: 12px;
+    padding: 1rem 0;
   }
 
   .wizard-title {
-    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-content {
+    min-height: 250px;
   }
 
   .wizard-actions {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-secondary,
+  .btn-primary {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .btn-secondary {
+    order: 2;
   }
 
   .btn-primary {
-    margin-left: 0;
-    width: 100%;
+    order: 1;
+  }
+}
+
+/* Móvil */
+@media (max-width: 480px) {
+  .wizard-container {
+    padding: 0.75rem;
+  }
+
+  .page-header {
+    padding: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
+  .btn-back {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .btn-back svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .icon-project {
+    display: none;
+  }
+
+  .view-title {
+    font-size: 1rem;
+    letter-spacing: 0;
+  }
+
+  .save-draft-button {
+    padding: 0.625rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .wizard-title {
+    font-size: 1.125rem;
+    letter-spacing: 0;
+  }
+
+  .form-content {
+    min-height: 200px;
+  }
+
+  .wizard-actions {
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+
+  .btn-secondary,
+  .btn-primary {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    letter-spacing: 0;
+  }
+
+  .error-message {
+    padding: 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .icon-error {
+    width: 1.25rem;
+    height: 1.25rem;
   }
 }
 </style>

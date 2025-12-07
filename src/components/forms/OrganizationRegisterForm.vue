@@ -321,28 +321,29 @@ watch(() => organizacion.aceptaTerminos, (value) => {
 <style scoped>
 .organization-register-form {
   background: white;
-  padding: 1.25rem;
+  padding: clamp(1rem, 4vw, 2rem);
   border-radius: 1rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  width: min(96vw, 1100px);
+  width: 100%;
   max-width: 1100px;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 
 .form-header {
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-title {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
   font-weight: 700;
   color: #1f2937;
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.5rem 0;
 }
 
 .form-subtitle {
-  font-size: 0.95rem;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
   color: #6b7280;
   margin: 0;
 }
@@ -350,18 +351,18 @@ watch(() => organizacion.aceptaTerminos, (value) => {
 .form {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.45rem 2rem;
+  gap: 1rem 1.5rem;
   align-items: start;
 }
 
 .form-group {
-  margin-bottom: 10;
-  width: 103%;
+  margin-bottom: 0;
+  width: 100%;
 }
 
-.nombre{
-  width: 103%;
-  grid-column: span 3;
+.nombre {
+  width: 100%;
+  grid-column: 1 / -1;
 }
 
 .form-label {
@@ -381,6 +382,7 @@ watch(() => organizacion.aceptaTerminos, (value) => {
   transition: border-color 0.2s, box-shadow 0.2s;
   background-color: #f9fafb;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .form-select:focus {
@@ -394,7 +396,7 @@ watch(() => organizacion.aceptaTerminos, (value) => {
 }
 
 .terms-section {
-  margin: 0.2rem 0;
+  margin: 0.5rem 0;
 }
 
 .checkbox-label {
@@ -408,8 +410,8 @@ watch(() => organizacion.aceptaTerminos, (value) => {
 
 .checkbox {
   margin: 0;
-  width: 1rem;
-  height: 1rem;
+  width: 1.125rem;
+  height: 1.125rem;
   accent-color: #4f46e5;
   flex-shrink: 0;
   margin-top: 0.125rem;
@@ -464,32 +466,84 @@ watch(() => organizacion.aceptaTerminos, (value) => {
   font-size: 0.75rem;
 }
 
-@media (max-width: 1024px) {
-  .form { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 640px) {
-  .organization-register-form { padding: 1rem; }
-  .form { grid-template-columns: 1fr; gap: 0.5rem 0.5rem; }
-  .form-title { font-size: 1.25rem; }
-}
-
-/* When using three columns, some elements should still span 2 cols */
-.three-col .span-2 {
-  grid-column: span 2;
-}
-
 /* Helpers for grid layout */
-.grid-form .full {
+.full {
   grid-column: 1 / -1;
   width: 100%;
 }
 
-.form-select,
-.checkbox-label,
-.submit-button.full,
-.login-section.full {
-  width: 100%;
+/* Tablet: 2 columnas */
+@media (max-width: 1024px) {
+  .form {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 1.25rem;
+  }
+
+  .nombre {
+    grid-column: 1 / -1;
+  }
 }
 
+/* Móvil: 1 columna */
+@media (max-width: 640px) {
+  .organization-register-form {
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .form {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .form-header {
+    margin-bottom: 1rem;
+  }
+
+  .form-title {
+    font-size: 1.25rem;
+  }
+
+  .form-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .form-select {
+    padding: 0.625rem;
+    font-size: 0.9375rem;
+  }
+
+  .checkbox-label {
+    font-size: 0.8125rem;
+  }
+
+  .login-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 400px) {
+  .organization-register-form {
+    padding: 0.75rem;
+  }
+
+  .form {
+    gap: 0.75rem;
+  }
+
+  .form-title {
+    font-size: 1.125rem;
+  }
+
+  .checkbox-label {
+    gap: 0.5rem;
+  }
+
+  .checkbox {
+    width: 1rem;
+    height: 1rem;
+  }
+}
 </style>

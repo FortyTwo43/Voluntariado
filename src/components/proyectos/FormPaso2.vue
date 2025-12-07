@@ -188,32 +188,34 @@ onMounted(() => {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .form-title {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
   font-weight: 600;
   color: #1a1a1a;
   margin-bottom: 1rem;
 }
 
 .form-group {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .form-label {
   display: block;
-  font-size: 0.95rem;
+  font-size: clamp(0.875rem, 2.5vw, 0.95rem);
   font-weight: 500;
   color: #374151;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.5rem;
 }
 
 .form-input,
 .form-textarea,
 .form-select {
   width: 100%;
-  padding: 0.6rem 0.875rem;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
   color: #1a1a1a;
   background-color: #ffffff;
@@ -222,11 +224,12 @@ onMounted(() => {
   transition: all 0.2s ease;
   outline: none;
   font-family: inherit;
+  box-sizing: border-box;
 }
 
 .form-textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 100px;
 }
 
 .form-input:focus,
@@ -246,31 +249,31 @@ onMounted(() => {
 }
 
 .helper-text {
-  margin-top: 0.35rem;
-  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-size: clamp(0.8rem, 2.5vw, 0.875rem);
   color: #6b7280;
 }
 
 .form-row {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .form-group-half {
-  flex: 1;
   margin-bottom: 0;
 }
 
 .validation-message {
-  margin-top: 0.35rem;
-  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-size: clamp(0.8rem, 2.5vw, 0.875rem);
 }
 
 .message-success,
 .message-error {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
 }
 
@@ -289,13 +292,47 @@ onMounted(() => {
   flex-shrink: 0;
 }
 
-@media (max-width: 640px) {
-  .form-row {
-    flex-direction: column;
+/* Tablet */
+@media (max-width: 768px) {
+  .form-paso {
+    padding: 0 0.75rem;
   }
-  
+}
+
+/* Móvil */
+@media (max-width: 640px) {
+  .form-paso {
+    padding: 0 0.5rem;
+  }
+
+  .form-title {
+    text-align: center;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
   .form-group-half {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    padding: 0.875rem 0.75rem;
+  }
+
+  .form-textarea {
+    min-height: 120px;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 400px) {
+  .form-paso {
+    padding: 0;
   }
 }
 </style>

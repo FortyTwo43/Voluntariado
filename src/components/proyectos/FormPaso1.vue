@@ -138,10 +138,12 @@ onMounted(() => {
   width: 100%;
   max-width: 850px;
   margin: 0 auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .form-title {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
   font-weight: 800;
   color: #4B0082;
   margin-bottom: 1rem;
@@ -155,7 +157,7 @@ onMounted(() => {
 
 .form-label {
   display: block;
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
   font-weight: 700;
   color: #2E2E2E;
   margin-bottom: 0.5rem;
@@ -165,7 +167,7 @@ onMounted(() => {
 
 .form-input {
   width: 100%;
-  padding: 0.625rem 0.875rem;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
   color: #2E2E2E;
   background-color: rgba(255, 255, 255, 0.95);
@@ -175,6 +177,7 @@ onMounted(() => {
   transition: all 0.2s ease;
   outline: none;
   font-weight: 500;
+  box-sizing: border-box;
 }
 
 .form-input:focus {
@@ -193,14 +196,14 @@ onMounted(() => {
 }
 
 .validation-message {
-  margin-top: 0.4rem;
-  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-size: clamp(0.8rem, 2.5vw, 0.875rem);
 }
 
 .message-success,
 .message-error {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
   padding: 0.25rem 0;
   border-radius: 0;
@@ -227,7 +230,7 @@ onMounted(() => {
 }
 
 .button-container {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   display: flex;
   justify-content: flex-end;
 }
@@ -238,18 +241,18 @@ onMounted(() => {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
   font-weight: 700;
   color: white;
   background: #79C99E;
   border: none;
   border-radius: 4px;
-  border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
 }
 
 .btn-next:hover:not(:disabled) {
@@ -274,5 +277,45 @@ onMounted(() => {
 .icon-arrow-right {
   width: 1.25rem;
   height: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .form-paso {
+    padding: 0 0.5rem;
+  }
+
+  .form-title {
+    text-align: center;
+  }
+
+  .form-input {
+    padding: 0.875rem 0.75rem;
+    font-size: 1rem;
+  }
+
+  .button-container {
+    justify-content: stretch;
+  }
+
+  .btn-next {
+    width: 100%;
+    padding: 0.875rem 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .form-paso {
+    padding: 0;
+  }
+
+  .form-label {
+    letter-spacing: 0;
+  }
+
+  .btn-next {
+    letter-spacing: 0;
+  }
 }
 </style>

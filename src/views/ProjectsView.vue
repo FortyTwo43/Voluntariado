@@ -244,6 +244,8 @@ const isNewProject = (fechaInicio: string | undefined) => {
 .projects-view {
   max-width: 80rem;
   margin: 0 auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .projects-header {
@@ -251,13 +253,14 @@ const isNewProject = (fechaInicio: string | undefined) => {
 }
 
 .page-title {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .page-subtitle {
   color: var(--color-text-secondary);
+  font-size: clamp(0.875rem, 3vw, 1rem);
 }
 
 /* Loading, Error & Empty States */
@@ -269,12 +272,12 @@ const isNewProject = (fechaInicio: string | undefined) => {
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  padding: 4rem 2rem;
+  padding: 3rem 1.5rem;
   text-align: center;
 }
 
 .loading-icon {
-  font-size: 4rem;
+  font-size: clamp(2.5rem, 8vw, 4rem);
   color: var(--color-primary);
   animation: spin 1s linear infinite;
 }
@@ -285,23 +288,23 @@ const isNewProject = (fechaInicio: string | undefined) => {
 }
 
 .error-icon {
-  font-size: 4rem;
+  font-size: clamp(2.5rem, 8vw, 4rem);
   color: #ef4444;
 }
 
 .error-state p {
   color: #991b1b;
   font-weight: 500;
-  font-size: 1.125rem;
+  font-size: 1rem;
 }
 
 .empty-icon {
-  font-size: 4rem;
+  font-size: clamp(2.5rem, 8vw, 4rem);
   color: var(--color-text-secondary);
 }
 
 .empty-state h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.125rem, 4vw, 1.5rem);
   font-weight: 600;
   margin: 0;
 }
@@ -311,16 +314,16 @@ const isNewProject = (fechaInicio: string | undefined) => {
   margin: 0;
 }
 
+/* Filters Section */
 .filters-section {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
 }
 
 .filter-group {
-  flex: 1;
-  min-width: 200px;
+  width: 100%;
 }
 
 .filter-group label {
@@ -328,6 +331,7 @@ const isNewProject = (fechaInicio: string | undefined) => {
   align-items: center;
   gap: 0.5rem;
   position: relative;
+  width: 100%;
 }
 
 .filter-group label .material-symbols-outlined {
@@ -339,24 +343,29 @@ const isNewProject = (fechaInicio: string | undefined) => {
 
 .filter-input {
   width: 100%;
-  padding: 0.5rem 1rem 0.5rem 2.5rem;
+  padding: 0.625rem 1rem 0.625rem 2.5rem;
   border-radius: 0.5rem;
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);
+  font-size: 0.9375rem;
+  box-sizing: border-box;
 }
 
 .filter-select {
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.625rem 1rem;
   border-radius: 0.5rem;
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);
   cursor: pointer;
+  font-size: 0.9375rem;
+  box-sizing: border-box;
 }
 
+/* Projects Grid */
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -509,12 +518,14 @@ const isNewProject = (fechaInicio: string | undefined) => {
   background-color: var(--color-primary-dark);
 }
 
+/* Pagination */
 .pagination {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.75rem;
   padding: 2rem 0;
+  flex-wrap: wrap;
 }
 
 .pagination-btn {
@@ -523,6 +534,8 @@ const isNewProject = (fechaInicio: string | undefined) => {
   background-color: var(--color-surface);
   border-radius: 0.375rem;
   font-weight: 500;
+  font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -537,7 +550,9 @@ const isNewProject = (fechaInicio: string | undefined) => {
 .pagination-numbers {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .pagination-number {
@@ -546,6 +561,7 @@ const isNewProject = (fechaInicio: string | undefined) => {
   background-color: var(--color-surface);
   border-radius: 0.375rem;
   min-width: 2.5rem;
+  font-size: 0.875rem;
 }
 
 .pagination-number:hover {
@@ -556,5 +572,107 @@ const isNewProject = (fechaInicio: string | undefined) => {
   background-color: var(--color-primary);
   color: white;
   border-color: var(--color-primary);
+}
+
+/* Tablet: 2 columnas */
+@media (max-width: 1024px) {
+  .projects-view {
+    padding: 0 1rem;
+  }
+
+  .filters-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filter-group:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+/* Móvil: 1 columna */
+@media (max-width: 640px) {
+  .projects-view {
+    padding: 0 0.75rem;
+  }
+
+  .projects-header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .filters-section {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .filter-input,
+  .filter-select {
+    padding: 0.75rem 1rem;
+    padding-left: 2.5rem;
+    font-size: 1rem;
+  }
+
+  .filter-select {
+    padding-left: 1rem;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .loading-state,
+  .error-state,
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+
+  .pagination {
+    gap: 0.5rem;
+    padding: 1.5rem 0;
+  }
+
+  .pagination-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .pagination-numbers {
+    gap: 0.25rem;
+  }
+
+  .pagination-number {
+    padding: 0.4rem 0.6rem;
+    min-width: 2rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 400px) {
+  .projects-view {
+    padding: 0 0.5rem;
+  }
+
+  .page-title {
+    font-size: 1.375rem;
+  }
+
+  .pagination-btn {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .pagination-number {
+    padding: 0.35rem 0.5rem;
+    min-width: 1.75rem;
+    font-size: 0.75rem;
+  }
 }
 </style>

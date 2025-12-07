@@ -168,30 +168,32 @@ onMounted(() => {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .form-title {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
   font-weight: 600;
   color: #1a1a1a;
   margin-bottom: 1rem;
 }
 
 .form-group {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .form-label {
   display: block;
-  font-size: 0.95rem;
+  font-size: clamp(0.875rem, 2.5vw, 0.95rem);
   font-weight: 500;
   color: #374151;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.5rem;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.6rem 0.875rem;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
   color: #1a1a1a;
   background-color: #ffffff;
@@ -199,6 +201,7 @@ onMounted(() => {
   border-radius: 8px;
   transition: all 0.2s ease;
   outline: none;
+  box-sizing: border-box;
 }
 
 .form-input:focus {
@@ -215,20 +218,20 @@ onMounted(() => {
 }
 
 .helper-text {
-  margin-top: 0.35rem;
-  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-size: clamp(0.8rem, 2.5vw, 0.875rem);
   color: #6b7280;
 }
 
 .validation-message {
-  margin-top: 0.35rem;
-  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-size: clamp(0.8rem, 2.5vw, 0.875rem);
 }
 
 .message-success,
 .message-error {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
 }
 
@@ -249,8 +252,8 @@ onMounted(() => {
 
 /* Estilos del resumen */
 .project-summary {
-  margin-top: 1rem;
-  padding: 1rem;
+  margin-top: 1.5rem;
+  padding: clamp(0.875rem, 3vw, 1.25rem);
   background-color: #f9fafb;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -260,18 +263,20 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
 .summary-title {
-  font-size: 1.125rem;
+  font-size: clamp(1rem, 3vw, 1.125rem);
   font-weight: 600;
   color: #1a1a1a;
 }
 
 .edit-button {
   padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  font-size: clamp(0.8rem, 2.5vw, 0.875rem);
   font-weight: 500;
   color: #3b82f6;
   background: white;
@@ -279,6 +284,7 @@ onMounted(() => {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .edit-button:hover {
@@ -295,8 +301,9 @@ onMounted(() => {
 .summary-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0.375rem 0;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.5rem 0;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -307,11 +314,68 @@ onMounted(() => {
 .summary-label {
   font-weight: 500;
   color: #6b7280;
+  font-size: clamp(0.8125rem, 2.5vw, 0.875rem);
+  flex-shrink: 0;
 }
 
 .summary-value {
   font-weight: 600;
   color: #1a1a1a;
   text-align: right;
+  font-size: clamp(0.8125rem, 2.5vw, 0.875rem);
+  word-break: break-word;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .form-paso {
+    padding: 0 0.75rem;
+  }
+}
+
+/* Móvil */
+@media (max-width: 640px) {
+  .form-paso {
+    padding: 0 0.5rem;
+  }
+
+  .form-title {
+    text-align: center;
+  }
+
+  .form-input {
+    padding: 0.875rem 0.75rem;
+  }
+
+  .summary-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .edit-button {
+    width: 100%;
+  }
+
+  .summary-item {
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: stretch;
+  }
+
+  .summary-value {
+    text-align: left;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 400px) {
+  .form-paso {
+    padding: 0;
+  }
+
+  .project-summary {
+    padding: 0.75rem;
+  }
 }
 </style>

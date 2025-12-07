@@ -100,7 +100,7 @@
               <th>Voluntario</th>
               <th>Proyecto</th>
               <th>Fecha</th>
-              <th>Horas</th>
+              <th>Hrs</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -110,32 +110,38 @@
               v-for="registro in registros" 
               :key="registro.id"
               class="fila-registro"
+              :data-voluntario="registro.voluntario"
+              :data-proyecto="registro.proyecto"
+              :data-fecha="registro.fecha"
+              :data-horas="registro.horas"
+              :data-estado="registro.estado"
             >
               <!-- Voluntario -->
-              <td class="celda-voluntario">{{ registro.voluntario }}</td>
+              <td class="celda-voluntario" data-label="Voluntario">{{ registro.voluntario }}</td>
 
               <!-- Proyecto -->
-              <td class="celda-proyecto">{{ registro.proyecto }}</td>
+              <td class="celda-proyecto" data-label="Proyecto">{{ registro.proyecto }}</td>
 
               <!-- Fecha -->
-              <td class="celda-fecha">{{ registro.fecha }}</td>
+              <td class="celda-fecha" data-label="Fecha">{{ registro.fecha }}</td>
 
               <!-- Horas -->
-              <td class="celda-horas">{{ registro.horas }}</td>
+              <td class="celda-horas" data-label="Hrs">{{ registro.horas }}</td>
 
               <!-- Estado -->
-              <td class="celda-estado">
+              <td class="celda-estado" data-label="Estado">
                 <span :class="['badge-estado', `estado-${registro.estado.toLowerCase()}`]">
-                  {{ registro.estado }}
+                  {{ registro.estado.substring(0, 3) }}
                 </span>
               </td>
 
               <!-- Acciones -->
-              <td class="celda-acciones">
+              <td class="celda-acciones" data-label="Acciones">
                 <button 
                   class="btn-icono"
                   @click="verDetalle(registro.id)"
                   title="Ver detalle"
+                  aria-label="Ver"
                 >
                   <svg viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -146,6 +152,7 @@
                   class="btn-icono"
                   @click="editar(registro.id)"
                   title="Editar"
+                  aria-label="Editar"
                 >
                   <svg viewBox="0 0 20 20" fill="currentColor">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -155,6 +162,7 @@
                   class="btn-icono"
                   @click="eliminar(registro.id)"
                   title="Eliminar"
+                  aria-label="Eliminar"
                 >
                   <svg viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
@@ -275,33 +283,38 @@ const eliminar = (id: string) => {
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: clamp(1rem, 4vw, 2rem);
+  box-sizing: border-box;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1.5rem;
   margin-bottom: 2rem;
-  padding: 2rem;
+  padding: clamp(1rem, 4vw, 2rem);
   background: white;
   border-radius: 8px;
   border: 2px solid #79C99E;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  flex-wrap: wrap;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .btn-volver {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  font-size: clamp(0.8125rem, 2.5vw, 0.95rem);
   font-weight: 700;
   color: #ffffff;
   background: #79C99E;
@@ -312,6 +325,7 @@ const eliminar = (id: string) => {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .btn-volver:hover {
@@ -322,8 +336,8 @@ const eliminar = (id: string) => {
 }
 
 .btn-log-hours {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.95rem;
+  padding: 0.75rem 1.25rem;
+  font-size: clamp(0.8125rem, 2.5vw, 0.95rem);
   font-weight: 700;
   color: #ffffff;
   background: #4B0082;
@@ -345,21 +359,22 @@ const eliminar = (id: string) => {
 }
 
 .icon-arrow-left {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 .view-title {
-  font-size: 1.75rem;
+  font-size: clamp(1.125rem, 4vw, 1.75rem);
   font-weight: 800;
   color: #4B0082;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.25rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  word-break: break-word;
 }
 
 .subtitulo {
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
   color: #5a5a5a;
   margin: 0;
 }
@@ -367,7 +382,7 @@ const eliminar = (id: string) => {
 /* Estadísticas */
 .estadisticas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -376,23 +391,25 @@ const eliminar = (id: string) => {
   background: white;
   border: 2px solid #79C99E;
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
 }
 
 .stat-label {
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
   font-weight: 600;
   color: #6b7280;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .stat-valor {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
   font-weight: 800;
   color: #4B0082;
+  word-break: break-word;
 }
 
 /* Barra de controles */
@@ -400,7 +417,7 @@ const eliminar = (id: string) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   margin-bottom: 2rem;
   flex-wrap: wrap;
 }
@@ -408,8 +425,8 @@ const eliminar = (id: string) => {
 .busqueda-container {
   position: relative;
   flex: 1;
+  min-width: 200px;
   max-width: 400px;
-  min-width: 250px;
 }
 
 .icon-search {
@@ -420,17 +437,19 @@ const eliminar = (id: string) => {
   width: 1.25rem;
   height: 1.25rem;
   color: #9ca3af;
+  pointer-events: none;
 }
 
 .input-busqueda {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 3rem;
-  font-size: 0.95rem;
+  font-size: clamp(0.875rem, 2.5vw, 0.95rem);
   color: #2E2E2E;
   background: white;
   border: 2px solid #e5e7eb;
   border-radius: 6px;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .input-busqueda:focus {
@@ -441,19 +460,21 @@ const eliminar = (id: string) => {
 
 .filtros-container {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
 .select-filtro {
   padding: 0.75rem 1rem;
-  font-size: 0.95rem;
+  font-size: clamp(0.875rem, 2.5vw, 0.95rem);
   color: #2E2E2E;
   background: white;
   border: 2px solid #e5e7eb;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-sizing: border-box;
+  min-width: 100px;
 }
 
 .select-filtro:focus {
@@ -465,9 +486,10 @@ const eliminar = (id: string) => {
 .btn-exportar {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  font-size: clamp(0.8125rem, 2.5vw, 0.95rem);
   font-weight: 700;
   color: #ffffff;
   background: #4B0082;
@@ -477,6 +499,7 @@ const eliminar = (id: string) => {
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .btn-exportar:hover {
@@ -487,8 +510,8 @@ const eliminar = (id: string) => {
 }
 
 .icon-export {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 /* Tabla */
@@ -511,13 +534,14 @@ const eliminar = (id: string) => {
 }
 
 .tabla-horas th {
-  padding: 1rem 1.5rem;
+  padding: 1rem 1rem;
   text-align: left;
-  font-size: 0.875rem;
+  font-size: clamp(0.8rem, 2.5vw, 0.875rem);
   font-weight: 700;
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .tabla-horas tbody tr {
@@ -530,33 +554,42 @@ const eliminar = (id: string) => {
 }
 
 .tabla-horas td {
-  padding: 1.25rem 1.5rem;
-  font-size: 0.95rem;
+  padding: 1rem;
+  font-size: clamp(0.8125rem, 2.5vw, 0.95rem);
   color: #2E2E2E;
 }
 
 .celda-voluntario,
 .celda-proyecto {
   font-weight: 600;
+  min-width: clamp(120px, 20vw, 150px);
 }
 
 .celda-fecha {
   color: #6b7280;
+  min-width: clamp(90px, 15vw, 110px);
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
 }
 
 .celda-horas {
   font-weight: 700;
   color: #4B0082;
+  text-align: center;
+  min-width: clamp(50px, 10vw, 70px);
 }
 
 /* Badge de Estado */
 .badge-estado {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border-radius: 6px;
+  padding: clamp(0.3rem, 0.5vw, 0.375rem) clamp(0.5rem, 1vw, 0.75rem);
+  font-size: clamp(0.7rem, 1.5vw, 0.875rem);
+  font-weight: 700;
+  border-radius: 4px;
   text-align: center;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  min-width: 50px;
 }
 
 .estado-aprobado {
@@ -577,32 +610,38 @@ const eliminar = (id: string) => {
 /* Acciones */
 .celda-acciones {
   display: flex;
-  gap: 0.5rem;
+  gap: clamp(0.25rem, 0.5vw, 0.375rem);
+  flex-wrap: nowrap;
+  justify-content: center;
+  min-width: 90px;
 }
 
 .btn-icono {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: clamp(1.75rem, 4vw, 2rem);
+  height: clamp(1.75rem, 4vw, 2rem);
   color: #6b7280;
   background: white;
   border: 2px solid #e5e7eb;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0;
+  padding: 0;
 }
 
 .btn-icono:hover {
   background: #79C99E;
   border-color: #79C99E;
   color: white;
+  transform: translateY(-2px);
 }
 
 .btn-icono svg {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: clamp(0.8rem, 1.5vw, 1rem);
+  height: clamp(0.8rem, 1.5vw, 1rem);
 }
 
 /* Paginación */
@@ -610,23 +649,27 @@ const eliminar = (id: string) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: 1rem;
   border-top: 2px solid #e5e7eb;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .paginacion-info {
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
   color: #6b7280;
 }
 
 .paginacion-controles {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .btn-pagina {
   padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
   font-weight: 600;
   color: #6b7280;
   background: white;
@@ -634,7 +677,8 @@ const eliminar = (id: string) => {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 2.5rem;
+  min-width: 2.25rem;
+  white-space: nowrap;
 }
 
 .btn-pagina:hover:not(:disabled) {
@@ -653,8 +697,66 @@ const eliminar = (id: string) => {
   cursor: not-allowed;
 }
 
-/* Responsive */
+/* ==================== RESPONSIVE ==================== */
+
+/* Tablet grande */
+@media (max-width: 1200px) {
+  .estadisticas-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tabla-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabla-horas {
+    min-width: 900px;
+  }
+
+  .celda-voluntario,
+  .celda-proyecto {
+    min-width: 120px;
+  }
+
+  .badge-estado {
+    min-width: 45px;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .btn-icono {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+}
+
+/* Tablet */
 @media (max-width: 1024px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .header-left {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn-volver {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-log-hours {
+    width: 100%;
+    justify-content: center;
+  }
+
   .barra-controles {
     flex-direction: column;
     align-items: stretch;
@@ -678,39 +780,212 @@ const eliminar = (id: string) => {
   }
 
   .tabla-horas {
-    min-width: 900px;
+    min-width: 800px;
+  }
+
+  .celda-voluntario,
+  .celda-proyecto {
+    min-width: 110px;
+  }
+
+  .badge-estado {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .btn-icono {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .btn-icono svg {
+    width: 0.875rem;
+    height: 0.875rem;
   }
 }
 
+/* Móvil */
 @media (max-width: 768px) {
-  .header-content {
-    flex-wrap: wrap;
-  }
-
-  .header-left {
-    flex: 1;
-    min-width: 100%;
-  }
-
-  .btn-log-hours {
-    width: 100%;
-  }
-
   .container {
+    padding: 0.75rem;
+  }
+
+  .page-header {
     padding: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .view-title {
     font-size: 1.25rem;
   }
 
+  .subtitulo {
+    font-size: 0.875rem;
+  }
+
   .estadisticas-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-label {
+    font-size: 0.8125rem;
+  }
+
+  .stat-valor {
+    font-size: 1.5rem;
+  }
+
+  .barra-controles {
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .input-busqueda,
+  .select-filtro,
+  .btn-exportar {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.9375rem;
+  }
+
+  .input-busqueda {
+    padding-left: 2.5rem;
+  }
+
+  .select-filtro {
+    flex: 1;
+  }
+
+  .btn-exportar {
+    flex: 1;
+  }
+
+  /* Mantener tabla con scroll horizontal */
+  .tabla-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabla-horas {
+    min-width: 600px;
   }
 
   .paginacion {
     flex-direction: column;
-    gap: 1rem;
+    text-align: center;
+    padding: 1rem 0.5rem;
+  }
+
+  .paginacion-info {
+    width: 100%;
+  }
+
+  .paginacion-controles {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .page-header {
+    padding: 0.875rem;
+  }
+
+  .btn-volver,
+  .btn-log-hours {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
+  }
+
+  .btn-volver svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .view-title {
+    font-size: 1.125rem;
+  }
+
+  .estadisticas-grid {
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    padding: 0.875rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .stat-valor {
+    font-size: 1.25rem;
+  }
+
+  .barra-controles {
+    gap: 0.5rem;
+  }
+
+  .input-busqueda,
+  .select-filtro,
+  .btn-exportar {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .input-busqueda {
+    padding-left: 2.25rem;
+  }
+
+  .icon-search {
+    left: 0.75rem;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  /* Tabla con scroll horizontal */
+  .tabla-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabla-horas {
+    min-width: 550px;
+  }
+
+  .tabla-horas th,
+  .tabla-horas td {
+    padding: 0.75rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .btn-pagina {
+    padding: 0.4rem 0.625rem;
+    font-size: 0.75rem;
+    min-width: 2rem;
+  }
+
+  .paginacion {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .paginacion-info {
+    font-size: 0.75rem;
+  }
+
+  .paginacion-controles {
+    gap: 0.25rem;
   }
 }
 </style>

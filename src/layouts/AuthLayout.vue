@@ -235,7 +235,7 @@ const toggleLanguage = () => {
 
 /* Header */
 .auth-header {
-  padding: 1.25rem 2rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem) clamp(1rem, 5vw, 2rem);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: sticky;
@@ -245,22 +245,23 @@ const toggleLanguage = () => {
 
 .header-content {
   max-width: 1200px;
-  max-height: 3rem;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 2rem;
+  gap: clamp(0.75rem, 3vw, 2rem);
+  flex-wrap: wrap;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: clamp(0.5rem, 2vw, 1rem);
   text-decoration: none;
   transition: all 0.3s ease;
-  padding: 0.5rem;
+  padding: clamp(0.25rem, 1vw, 0.5rem);
   border-radius: 12px;
+  min-width: fit-content;
 }
 
 .logo:hover {
@@ -269,8 +270,8 @@ const toggleLanguage = () => {
 }
 
 .logo-icon {
-  width: 3rem;
-  height: 3rem;
+  width: clamp(2.5rem, 8vw, 3rem);
+  height: clamp(2.5rem, 8vw, 3rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -278,6 +279,7 @@ const toggleLanguage = () => {
   border-radius: 12px;
   padding: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
 }
 
 .logo-image {
@@ -287,26 +289,28 @@ const toggleLanguage = () => {
 }
 
 .logo-icon .material-symbols-outlined {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
 }
 
 .logo-text-container {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
+  min-width: 0;
 }
 
 .logo-text {
-  font-size: 1.5rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.5rem);
   font-weight: 700;
   color: white;
   line-height: 1.2;
   letter-spacing: -0.02em;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  word-wrap: break-word;
 }
 
 .logo-subtitle {
-  font-size: 0.875rem;
+  font-size: clamp(0.65rem, 1.5vw, 0.875rem);
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.05em;
@@ -316,19 +320,23 @@ const toggleLanguage = () => {
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: clamp(0.5rem, 2vw, 0.75rem);
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .nav-link {
   color: white;
   text-decoration: none;
   font-weight: 500;
-  padding: 0.625rem 1.25rem;
+  padding: clamp(0.5rem, 1.5vw, 0.625rem) clamp(0.75rem, 2vw, 1.25rem);
   border-radius: 8px;
   transition: all 0.2s ease;
-  font-size: 0.9375rem;
+  font-size: clamp(0.75rem, 2vw, 0.9375rem);
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .nav-link:hover {
@@ -366,8 +374,8 @@ const toggleLanguage = () => {
 .language-toggle-btn {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.625rem 1rem;
+  gap: clamp(0.25rem, 1vw, 0.375rem);
+  padding: clamp(0.5rem, 1.5vw, 0.625rem) clamp(0.65rem, 2vw, 1rem);
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
@@ -375,7 +383,9 @@ const toggleLanguage = () => {
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.875rem);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .language-toggle-btn:hover {
@@ -385,8 +395,9 @@ const toggleLanguage = () => {
 }
 
 .language-icon {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: clamp(0.9rem, 2vw, 1.125rem);
+  height: clamp(0.9rem, 2vw, 1.125rem);
+  flex-shrink: 0;
 }
 
 .language-text {
@@ -509,29 +520,61 @@ const toggleLanguage = () => {
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .header-content {
+    gap: clamp(0.5rem, 2vw, 1.5rem);
+  }
+
+  .logo-text {
+    font-size: clamp(0.85rem, 2vw, 1.25rem);
+  }
+
+  .nav-link {
+    padding: clamp(0.45rem, 1.5vw, 0.6rem) clamp(0.6rem, 1.5vw, 1rem);
+    font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  }
+}
+
 @media (max-width: 768px) {
   .auth-header {
-    padding: 1rem;
+    padding: clamp(0.6rem, 2vw, 1rem) clamp(0.75rem, 3vw, 1.5rem);
   }
   
   .header-content {
     flex-direction: column;
-    gap: 1rem;
+    gap: clamp(0.5rem, 2vw, 1rem);
+    justify-content: center;
+  }
+
+  .logo {
+    width: 100%;
+    justify-content: center;
+    gap: clamp(0.5rem, 2vw, 0.75rem);
   }
 
   .logo-text {
-    font-size: 1rem;
+    font-size: clamp(0.85rem, 3vw, 1.1rem);
+  }
+
+  .logo-subtitle {
+    font-size: clamp(0.6rem, 1.5vw, 0.8rem);
   }
   
   .header-nav {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
+    gap: clamp(0.4rem, 1.5vw, 0.6rem);
   }
 
   .nav-link {
-    font-size: 0.875rem;
-    padding: 0.5rem 0.75rem;
+    font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+    padding: clamp(0.4rem, 1vw, 0.55rem) clamp(0.6rem, 1.5vw, 0.9rem);
+  }
+
+  .language-toggle-btn {
+    font-size: clamp(0.6rem, 1.5vw, 0.75rem);
+    padding: clamp(0.4rem, 1vw, 0.55rem) clamp(0.6rem, 1.5vw, 0.8rem);
   }
   
   .auth-main {
@@ -558,37 +601,11 @@ const toggleLanguage = () => {
   }
 }
 
+
+
 @media (max-width: 992px) {
   .footer-content {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .logo-text-container {
-    display: none;
-  }
-
-  .logo-icon {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-
-  .header-nav {
-    gap: 0.5rem;
-  }
-
-  .nav-link {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
-  }
-
-  .language-toggle-btn {
-    padding: 0.5rem 0.75rem;
-  }
-
-  .language-text {
-    display: none;
   }
 }
 </style>
