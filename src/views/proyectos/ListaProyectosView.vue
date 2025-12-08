@@ -94,6 +94,7 @@
               <th>Nombre del Proyecto</th>
               <th>Estado</th>
               <th>Voluntarios</th>
+              <th>Gestión</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -133,6 +134,30 @@
                   <div class="avatar"></div>
                 </div>
                 <span class="voluntarios-texto">15 / {{ proyecto.cupo_maximo }} Inscritos</span>
+              </td>
+
+              <!-- Gestión -->
+              <td class="celda-gestion">
+                <button 
+                  class="btn-gestion btn-editar"
+                  @click="abrirModalEditar(proyecto)"
+                  title="Editar Proyecto"
+                >
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                  Editar
+                </button>
+                <button 
+                  class="btn-gestion btn-historial"
+                  @click="abrirModalHistorial(proyecto)"
+                  title="Ver Historial de Cambios"
+                >
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                  </svg>
+                  Historial
+                </button>
               </td>
 
               <!-- Acciones -->
@@ -175,6 +200,19 @@
         </div>
       </div>
     </div>
+
+    <!-- Modales -->
+    <ModalEditarProyecto
+      v-model="mostrarModalEditar"
+      :proyecto="proyectoSeleccionado"
+      @guardado="handleProyectoEditado"
+    />
+
+    <ModalHistorialProyecto
+      v-model="mostrarModalHistorial"
+      :id-proyecto="proyectoSeleccionado?.id || null"
+      :nombre-proyecto="proyectoSeleccionado?.nombre || ''"
+    />
   </div>
 </template>
 
@@ -183,6 +221,8 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import type { Proyecto } from '../../types/proyecto';
 import { ProyectosService } from '../../services/proyectos.service';
+import ModalEditarProyecto from '../../components/proyectos/ModalEditarProyecto.vue';
+import ModalHistorialProyecto from '../../components/proyectos/ModalHistorialProyecto.vue';
 
 const router = useRouter();
 
@@ -195,6 +235,11 @@ const error = ref('');
 const busqueda = ref('');
 const filtroEstado = ref('');
 const ordenamiento = ref('');
+
+// Modales
+const mostrarModalEditar = ref(false);
+const mostrarModalHistorial = ref(false);
+const proyectoSeleccionado = ref<Proyecto | null>(null);
 
 /**
  * Carga los proyectos desde el servicio
@@ -268,6 +313,30 @@ const verVoluntarios = (id: string) => {
  */
 const verAsistencia = (id: string) => {
   router.push({ name: 'proyectos-asistencia', params: { id } });
+};
+
+/**
+ * Abre el modal de edición con el proyecto seleccionado
+ */
+const abrirModalEditar = (proyecto: Proyecto) => {
+  proyectoSeleccionado.value = proyecto;
+  mostrarModalEditar.value = true;
+};
+
+/**
+ * Abre el modal de historial con el proyecto seleccionado
+ */
+const abrirModalHistorial = (proyecto: Proyecto) => {
+  proyectoSeleccionado.value = proyecto;
+  mostrarModalHistorial.value = true;
+};
+
+/**
+ * Maneja cuando se guarda un proyecto editado
+ */
+const handleProyectoEditado = async () => {
+  // Recargar la lista de proyectos
+  await cargarProyectos();
 };
 
 // Cargar proyectos al montar
@@ -668,6 +737,54 @@ onMounted(() => {
 /* Celda de Acciones */
 .celda-acciones {
   min-width: 200px;
+}
+
+/* Celda de Gestión */
+.celda-gestion {
+  min-width: 180px;
+}
+
+.btn-gestion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  margin-right: 0.375rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-gestion svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.btn-editar {
+  background: #79C99E;
+  color: white;
+}
+
+.btn-editar:hover {
+  background: #6ab88c;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(121, 201, 158, 0.3);
+}
+
+.btn-historial {
+  background: #4B0082;
+  color: white;
+}
+
+.btn-historial:hover {
+  background: #3a0066;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(75, 0, 130, 0.3);
 }
 
 .btn-accion {
