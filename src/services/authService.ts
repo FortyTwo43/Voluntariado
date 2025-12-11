@@ -226,7 +226,7 @@ export interface LoginResponse {
     id: string;
     email: string;
     nombre: string;
-    rol: 'voluntario' | 'organizacion'; // Indica si es voluntario u organización
+    rol: 'voluntario' | 'organizacion' | 'administrador'; // Indica el tipo de usuario
     // Campos específicos de voluntario
     apellido?: string;
     telefono?: string;
@@ -350,9 +350,75 @@ export async function autenticarOrganizacion(credentials: LoginCredentials): Pro
   }
 }
 
-// Función principal de autenticación que intenta ambos tipos
+// Función para autenticar administradores
+export async function autenticarAdministrador(credentials: LoginCredentials): Promise<LoginResponse> {
+  try {
+    const select = 'id:id_admin,nombre,email,contrasena';
+    const url = `${SUPABASE_URL}/rest/v1/administradores?email=eq.${encodeURIComponent(credentials.email)}&select=${encodeURIComponent(select)}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: SUPABASE_HEADERS,
+    });
+
+    if (!response.ok) {
+      // Obtener más información del error
+      const errorText = await response.text();
+      console.error('Error en respuesta de administradores:', response.status, errorText);
+      // Si es 404 o 400, probablemente la tabla no existe o hay un problema con la consulta
+      if (response.status === 404 || response.status === 400) {
+        // Retornar como si no se encontró, para que continúe con otros tipos de usuario
+        return {
+          success: false,
+          message: 'Credenciales incorrectas'
+        };
+      }
+      throw new Error(`Error al verificar credenciales: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    if (data.length === 0) {
+      return {
+        success: false,
+        message: 'Credenciales incorrectas'
+      };
+    }
+
+    const administrador = data[0];
+    
+    // Verificar contraseña (en un caso real, esto sería con hash)
+    if (administrador.contrasena !== credentials.password) {
+      return {
+        success: false,
+        message: 'Credenciales incorrectas'
+      };
+    }
+
+    return {
+      success: true,
+      message: 'Inicio de sesión exitoso',
+      user: {
+        id: administrador.id || administrador.id_admin, // Usar id renombrado o el original
+        email: administrador.email,
+        nombre: administrador.nombre,
+        rol: 'administrador'
+      }
+    };
+  } catch (error) {
+    console.error('Error al autenticar administrador:', error);
+    // Si hay un error de conexión o la tabla no existe, retornar como fallo silencioso
+    // para que continúe intentando con otros tipos de usuario
+    return {
+      success: false,
+      message: 'Credenciales incorrectas'
+    };
+  }
+}
+
+// Función principal de autenticación que intenta voluntarios y organizaciones (NO administradores)
 export async function autenticarUsuario(credentials: LoginCredentials): Promise<LoginResponse> {
-  // Primero intentar como voluntario
+  // Intentar como voluntario
   const resultadoVoluntario = await autenticarVoluntario(credentials);
   if (resultadoVoluntario.success) {
     return resultadoVoluntario;
@@ -380,7 +446,7 @@ export type BasicUser = {
   id: string;
   email: string;
   nombre: string;
-  rol: 'voluntario' | 'organizacion'; // Indica si es voluntario u organización
+  rol: 'voluntario' | 'organizacion' | 'administrador'; // Indica el tipo de usuario
   // Campos específicos de voluntario
   apellido?: string;
   telefono?: string;
