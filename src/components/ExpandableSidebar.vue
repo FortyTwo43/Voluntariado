@@ -261,16 +261,25 @@ const toggleScreenReader = () => {
 
   speechSynthesis = window.speechSynthesis
 
-  if (screenReaderActive.value) {
-    // Desactivar modo de lectura
+  // Verificar el estado actual ANTES de hacer cualquier cambio
+  const estadoActual = screenReaderActive.value
+  
+  // Si está activo (true), desactivarlo
+  if (estadoActual === true) {
     deactivateScreenReaderMode()
-  } else {
-    // Activar modo de lectura por selección
+  } 
+  // Si está inactivo (false), activarlo
+  else {
     activateScreenReaderMode()
   }
 }
 
 const activateScreenReaderMode = () => {
+  // Verificar que no esté ya activo para evitar duplicados
+  if (screenReaderActive.value) {
+    return
+  }
+  
   screenReaderActive.value = true
   // Agregar listener para leer texto seleccionado al hacer doble clic
   document.addEventListener('dblclick', readSelectedText)
@@ -280,6 +289,11 @@ const activateScreenReaderMode = () => {
 }
 
 const deactivateScreenReaderMode = () => {
+  // Verificar que esté activo antes de desactivar
+  if (!screenReaderActive.value) {
+    return
+  }
+  
   screenReaderActive.value = false
   stopScreenReader()
   document.removeEventListener('dblclick', readSelectedText)
