@@ -15,6 +15,21 @@ export class HorariosService {
     }
     return res.json();
   }
+
+  /**
+   * Obtiene el primer horario de un proyecto específico
+   * @param idProyecto - UUID del proyecto
+   * @returns Promesa con el horario del proyecto o null si no existe
+   */
+  static async obtenerHorarioPorProyecto(idProyecto: string): Promise<IHorario | null> {
+    try {
+      const horarios = await this.obtenerHorariosPorProyecto(idProyecto);
+      return horarios.length > 0 ? horarios[0]! : null;
+    } catch (error) {
+      console.error('Error en obtenerHorarioPorProyecto:', error);
+      throw error;
+    }
+  }
 }
 
 export default HorariosService;

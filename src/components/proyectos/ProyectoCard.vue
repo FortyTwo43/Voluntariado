@@ -60,12 +60,21 @@
       >
         {{ t.viewDetails }}
       </button>
-      <button 
-        class="btn-primario"
-        @click="inscribirse"
-      >
-        {{ t.apply }}
-      </button>
+
+      <!-- Si el usuario ya está inscripto mostramos estado, sino el botón para postularse -->
+      <template v-if="!props.estaInscripto">
+        <button 
+          class="btn-primario"
+          @click="inscribirse"
+        >
+          {{ t.apply }}
+        </button>
+      </template>
+      <template v-else>
+        <button class="btn-primario" disabled>
+          {{ t.applicationSent }}
+        </button>
+      </template>
     </div>
   </article>
 </template>
@@ -80,6 +89,7 @@ import { useLanguage } from '@/composables/useLanguage';
 const props = defineProps<{
   proyecto: Proyecto;
   showActions?: boolean;
+  estaInscripto?: boolean;
 }>();
 
 // Emits
@@ -414,11 +424,26 @@ const inscribirse = () => {
   border: 2px solid #79C99E;
 }
 
+.btn-primario:disabled {
+  background: #d1d5db;
+  border-color: #d1d5db;
+  cursor: not-allowed;
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+}
+
 .btn-primario:hover {
   background: #5fb386;
   border-color: #5fb386;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(121, 201, 158, 0.4);
+}
+
+.btn-primario:disabled:hover {
+  transform: none;
+  box-shadow: none;
+  background: #d1d5db;
+  border-color: #d1d5db;
 }
 
 .card-header {

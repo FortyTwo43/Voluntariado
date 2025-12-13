@@ -111,6 +111,7 @@ const translations = {
     flexible: 'Flexible',
     viewMore: 'Ver más',
     apply: 'Postularme',
+    applicationSent: 'Inscripción enviada',
     previous: 'Anterior',
     next: 'Siguiente',
     
@@ -369,6 +370,15 @@ const translations = {
     noVolunteers: 'Aún no hay voluntarios inscritos',
     viewAttendance: 'Ver Asistencia',
     viewHours: 'Ver Horas',
+    attendanceTitle: 'Mis Asistencias',
+    attendanceSubtitle: 'Historial de asistencias e inasistencias',
+    exportPdf: 'Exportar PDF',
+    filterProject: 'Filtrar por proyecto',
+    filterDay: 'Filtrar por día',
+    filterWeek: 'Filtrar por semanas',
+    presence: 'Asistencia',
+    absence: 'Inasistencia',
+    noAttendances: 'No hay registros de asistencia',
     
     // Validation errors
     fieldRequired: 'Este campo es requerido',
@@ -629,6 +639,7 @@ const translations = {
     flexible: 'Flexible',
     viewMore: 'View more',
     apply: 'Apply',
+    applicationSent: 'Application submitted',
     previous: 'Previous',
     next: 'Next',
     
@@ -835,6 +846,15 @@ const translations = {
     noVolunteers: 'No volunteers enrolled yet',
     viewAttendance: 'View Attendance',
     viewHours: 'View Hours',
+    attendanceTitle: 'My Attendances',
+    attendanceSubtitle: 'Attendance and absence history',
+    exportPdf: 'Export PDF',
+    filterProject: 'Filter by project',
+    filterDay: 'Filter by day',
+    filterWeek: 'Filter by weeks',
+    presence: 'Presence',
+    absence: 'Absence',
+    noAttendances: 'No attendance records',
     
     // Validation errors
     fieldRequired: 'This field is required',

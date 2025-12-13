@@ -6,7 +6,7 @@ export class AsistenciasService {
 
   static async obtenerAsistencias(idHora: string, idsVoluntarios: string[]): Promise<IAsistencia[]> {
     if (!idHora || idsVoluntarios.length === 0) return [];
-    const select = 'id_asistencia,id_hora,id_voluntario,presencia,actividad_realizada';
+    const select = 'id_asistencia,id_hora,id_voluntario,presencia,actividad_realizada,fecha';
     const inList = idsVoluntarios.map((id) => `"${id}"`).join(',');
     const url = `${this.BASE_URL}?id_hora=eq.${idHora}&id_voluntario=in.(${inList})&select=${encodeURIComponent(select)}`;
 
@@ -16,6 +16,48 @@ export class AsistenciasService {
       throw new Error(err.message || 'Error al obtener asistencias');
     }
     return res.json();
+  }
+
+  /**
+   * Obtiene todas las asistencias de un voluntario en un proyecto específico
+   */
+  static async obtenerAsistenciasPorVoluntario(
+    idVoluntario: string, 
+    idProyecto?: string
+  ): Promise<IAsistencia[]> {
+    const select = 'id_asistencia,id_hora,id_voluntario,id_proyecto,presencia,actividad_realizada,fecha';
+    let url = `${this.BASE_URL}?id_voluntario=eq.${idVoluntario}&select=${encodeURIComponent(select)}`;
+    
+    if (idProyecto) {
+      url += `&id_proyecto=eq.${idProyecto}`;
+    }
+
+    const res = await fetch(url, { headers: SUPABASE_HEADERS });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Error al obtener asistencias del voluntario');
+    }
+    return res.json();
+  }
+
+  /**
+   * Calcula las estadísticas de asistencia de un voluntario en un proyecto
+   */
+  static async calcularEstadisticasAsistencia(
+    idVoluntario: string,
+    idProyecto: string
+  ): Promise<{ asistencias: number; totalSesiones: number; porcentaje: number }> {
+    const asistencias = await this.obtenerAsistenciasPorVoluntario(idVoluntario, idProyecto);
+    
+    const asistenciasPresentes = asistencias.filter(a => a.presencia === true).length;
+    const totalSesiones = asistencias.length;
+    const porcentaje = totalSesiones > 0 ? Math.round((asistenciasPresentes / totalSesiones) * 100) : 0;
+
+    return {
+      asistencias: asistenciasPresentes,
+      totalSesiones,
+      porcentaje
+    };
   }
 
   static async crearAsistencia(data: Omit<IAsistencia, 'id_asistencia'>): Promise<IAsistencia> {

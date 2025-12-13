@@ -1,5 +1,5 @@
 <template>
-  <UsuarioLayout>
+  <component :is="layoutComponent">
     <div class="profile-page">
       <div class="profile-container">
         <!-- <h1 class="page-title">{{ t.myProfileTitle }}</h1> -->
@@ -23,15 +23,16 @@
         </div>
       </div>
     </div>
-  </UsuarioLayout>
+  </component>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import { useAlert } from '../composables/useAlert';
 import { useLanguage } from '../composables/useLanguage';
 import { actualizarVoluntario } from '../services/authService';
 import UsuarioLayout from '../layouts/UsuarioLayout.vue';
+import VoluntarioLayout from '../layouts/VoluntarioLayout.vue';
 import ProfileHeader from '../components/profile/ProfileHeader.vue';
 import ProfileForm from '../components/profile/ProfileForm.vue';
 
@@ -46,6 +47,16 @@ const userData = reactive<any>({
   telefono: '',
   institucion_educativa: '',
   contrasena: ''
+});
+
+// Determinar el layout según el rol del usuario
+const layoutComponent = computed(() => {
+  const storedUser = localStorage.getItem('user');
+  if (storedUser) {
+    const user = JSON.parse(storedUser);
+    return user.rol === 'voluntario' ? VoluntarioLayout : UsuarioLayout;
+  }
+  return UsuarioLayout;
 });
 
 // Estado de edición

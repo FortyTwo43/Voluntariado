@@ -369,7 +369,7 @@ onUnmounted(() => {
 
 .sidebar-toggle {
   position: fixed;
-  top: calc(5.5rem + 1rem); /* Separado del header con 1rem de margen */
+  top: calc(5.5rem + 1rem);
   left: 1rem;
   width: 3rem;
   height: 3rem;
@@ -383,7 +383,7 @@ onUnmounted(() => {
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
-  z-index: 96;
+  z-index: 95;
 }
 
 .sidebar-toggle:hover {

@@ -216,26 +216,7 @@ const nextPage = () => {
   }
 }
 
-// Utilidades
-const truncateText = (text: string | undefined, maxLength: number) => {
-  if (!text) return ''
-  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
-}
-
-const formatDate = (dateString: string | undefined) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })
-}
-
-const isNewProject = (fechaInicio: string | undefined) => {
-  if (!fechaInicio) return false
-  const fecha = new Date(fechaInicio)
-  const ahora = new Date()
-  const diff = ahora.getTime() - fecha.getTime()
-  const days = diff / (1000 * 3600 * 24)
-  return days <= 30 // Nuevo si tiene menos de 30 días
-}
+// (Se eliminaron utilidades no usadas: truncateText, formatDate, isNewProject)
 
 // Nota: esta vista pública es solo informativa; se eliminan acciones
 </script>

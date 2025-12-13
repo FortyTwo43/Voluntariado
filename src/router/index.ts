@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { loadUserSession } from '@/services/authService'
 import PublicLayout from '@/layouts/PublicLayout.vue'
 import UsuarioLayout from '@/layouts/UsuarioLayout.vue'
+import VoluntarioLayout from '@/layouts/VoluntarioLayout.vue'
 import HomeLandingView from '@/views/HomeLandingView.vue'
 import TermsPoliciesView from '@/views/TermsPoliciesView.vue'
 import InstitutionalInfoView from '@/views/InstitutionalInfoView.vue'
@@ -24,10 +25,10 @@ const routes = [
       { path: 'restablecer', name: 'password-reset-otp', component: () => import('@/views/Auth/PasswordResetOtpView.vue') },
     ]
   },
-  // Rutas de Proyectos con UsuarioLayout
+  // Rutas de Voluntarios con VoluntarioLayout
   {
     path: '/explorar-proyectos',
-    component: UsuarioLayout,
+    component: VoluntarioLayout,
     children: [
       {
         path: '',
@@ -35,8 +36,73 @@ const routes = [
         component: () => import('@/views/voluntarios/ExplorarProyectosView.vue'),
         meta: { title: 'Explorar Proyectos de Voluntariado', requiresAuth: true },
       },
+      {
+        path: ':id',
+        name: 'proyectos-detalle-publico',
+        component: () => import('@/views/voluntarios/DetalleProyectoView.vue'),
+        meta: { title: 'Detalle del Proyecto', requiresAuth: true },
+      },
+      {
+        path: ':idProyecto/historial-asistencias',
+        name: 'voluntario-historial-asistencias',
+        component: () => import('@/views/voluntarios/HistorialAsistenciasVoluntarioView.vue'),
+        meta: { title: 'Historial de Asistencias', requiresAuth: true },
+      },
     ],
   },
+  // Ruta Mis Proyectos para Voluntarios
+  {
+    path: '/mis-proyectos',
+    component: VoluntarioLayout,
+    children: [
+      {
+        path: '',
+        name: 'mis-proyectos',
+        component: () => import('@/views/voluntarios/MisProyectosView.vue'),
+        meta: { title: 'Mis Proyectos', requiresAuth: true },
+      },
+    ],
+  },
+  // Ruta Mis Asistencias para Voluntarios
+  {
+    path: '/mis-asistencias',
+    component: VoluntarioLayout,
+    children: [
+      {
+        path: '',
+        name: 'mis-asistencias',
+        component: () => import('@/views/voluntarios/VerAsistenciasView.vue'),
+        meta: { title: 'Mis Asistencias', requiresAuth: true },
+      },
+    ],
+  },
+  // Ruta Mis Inscripciones para Voluntarios
+  {
+    path: '/mis-inscripciones',
+    component: VoluntarioLayout,
+    children: [
+      {
+        path: '',
+        name: 'mis-inscripciones',
+        component: () => import('@/views/voluntarios/MisInscripcionesView.vue'),
+        meta: { title: 'Mis Inscripciones', requiresAuth: true },
+      },
+    ],
+  },
+  // Ruta Calendario para Voluntarios
+  {
+    path: '/calendario',
+    component: VoluntarioLayout,
+    children: [
+      {
+        path: '',
+        name: 'calendario',
+        component: () => import('@/views/voluntarios/CalendarioView.vue'),
+        meta: { title: 'Mi Calendario', requiresAuth: true },
+      },
+    ],
+  },
+  // Rutas de Proyectos de Organizaciones con UsuarioLayout
   {
     path: '/proyectos',
     component: UsuarioLayout,
@@ -56,7 +122,7 @@ const routes = [
       {
         path: ':id',
         name: 'proyectos-detalle',
-        component: () => import('@/views/proyectos/DetalleProyectoView.vue'),
+        component: () => import('@/views/voluntarios/DetalleProyectoView.vue'),
         meta: { title: 'Detalle del Proyecto', requiresAuth: true },
       },
       {
