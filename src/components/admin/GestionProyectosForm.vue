@@ -68,7 +68,7 @@
             <td class="celda-acciones">
               <select
                 v-model="estadosTemporales[proyecto.id]"
-                @change="cambiarEstado(proyecto.id, estadosTemporales[proyecto.id])"
+                @change="cambiarEstado(proyecto.id, estadosTemporales[proyecto.id] || 'activo')"
                 class="select-estado"
                 :disabled="procesando"
               >

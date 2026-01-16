@@ -1,27 +1,5 @@
 <template>
   <div class="admin-dashboard">
-    <!-- Header con información del usuario y botón de cerrar sesión -->
-    <div class="dashboard-header">
-      <div class="header-content">
-        <div class="header-info">
-          <h1 class="dashboard-title">Panel de Administración</h1>
-          <p class="dashboard-subtitle">Gestiona el sistema de voluntariado</p>
-          <p v-if="usuario" class="usuario-info">
-            <span class="usuario-label">Administrador:</span>
-            <span class="usuario-nombre">{{ usuario.nombre }}</span>
-          </p>
-        </div>
-        <button @click="handleLogout" class="btn-logout" title="Cerrar sesión">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
-          <span>Cerrar Sesión</span>
-        </button>
-      </div>
-    </div>
-
     <!-- Grid de secciones/formularios -->
     <div class="secciones-container">
       <div 
@@ -50,13 +28,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { loadUserSession, clearUserSession } from '../../services/authService';
-import type { BasicUser } from '../../services/authService';
 
 const router = useRouter();
-const usuario = ref<BasicUser | null>(null);
 
 // Secciones del dashboard
 const secciones = [
@@ -100,25 +74,6 @@ const secciones = [
 const navegarAFormulario = (ruta: string) => {
   router.push(ruta);
 };
-
-/**
- * Maneja el cierre de sesión
- */
-const handleLogout = () => {
-  if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-    try {
-      clearUserSession();
-    } catch (e) {
-      console.error('Error al cerrar sesión:', e);
-    }
-    router.push('/');
-  }
-};
-
-// Cargar información del usuario al montar
-onMounted(() => {
-  usuario.value = loadUserSession();
-});
 </script>
 
 <style scoped>
@@ -126,88 +81,6 @@ onMounted(() => {
   min-height: calc(100vh - 200px);
   padding: clamp(1rem, 4vw, 2rem);
   background: #f9fafb;
-}
-
-.dashboard-header {
-  margin-bottom: 2rem;
-  padding: 2rem;
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.header-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.dashboard-title {
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
-  font-weight: 800;
-  color: #1f2937;
-  margin: 0 0 0.5rem 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.dashboard-subtitle {
-  font-size: clamp(0.875rem, 2.5vw, 1.125rem);
-  color: #6b7280;
-  margin: 0 0 0.75rem 0;
-}
-
-.usuario-info {
-  font-size: 0.875rem;
-  color: #4b5563;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.usuario-label {
-  font-weight: 600;
-  color: #6b7280;
-}
-
-.usuario-nombre {
-  font-weight: 700;
-  color: #4f46e5;
-}
-
-.btn-logout {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: white;
-  background: #ef4444;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
-}
-
-.btn-logout:hover {
-  background: #dc2626;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
-}
-
-.btn-logout svg {
-  width: 1.25rem;
-  height: 1.25rem;
 }
 
 .secciones-container {
@@ -296,20 +169,6 @@ onMounted(() => {
 @media (max-width: 768px) {
   .admin-dashboard {
     padding: 1rem;
-  }
-
-  .dashboard-header {
-    padding: 1.5rem;
-  }
-
-  .header-content {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-logout {
-    width: 100%;
-    justify-content: center;
   }
 
   .secciones-container {

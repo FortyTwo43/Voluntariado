@@ -95,7 +95,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { AdminService } from '../../services/adminService';
-import { ProyectosService } from '../../services/proyectos.service';
 import { VoluntariosService } from '../../services/voluntarios.service';
 import { useAlert } from '../../composables/useAlert';
 import type { Proyecto } from '../../types/proyecto';

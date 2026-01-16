@@ -115,8 +115,8 @@ export class AdminService {
    * pero no realizará cambios en la base de datos
    */
   static async actualizarEstadoProyecto(
-    idProyecto: string,
-    estado: 'activo' | 'inactivo' | 'completado'
+    _idProyecto: string,
+    _estado: 'activo' | 'inactivo' | 'completado'
   ): Promise<void> {
     // La tabla proyectos no tiene columna estado, solo registramos el intento
     console.warn('La tabla proyectos no tiene columna estado. No se puede actualizar el estado.');

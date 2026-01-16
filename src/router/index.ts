@@ -3,6 +3,7 @@ import { loadUserSession } from '@/services/authService'
 import PublicLayout from '@/layouts/PublicLayout.vue'
 import UsuarioLayout from '@/layouts/UsuarioLayout.vue'
 import VoluntarioLayout from '@/layouts/VoluntarioLayout.vue'
+import AdminLayout from '@/layouts/AdminLayout.vue'
 import HomeLandingView from '@/views/HomeLandingView.vue'
 import TermsPoliciesView from '@/views/TermsPoliciesView.vue'
 import InstitutionalInfoView from '@/views/InstitutionalInfoView.vue'
@@ -171,36 +172,39 @@ const routes = [
     component: () => import('@/views/ProfileOrganizacionView.vue'),
     meta: { requiresAuth: true },
   },
+  // Rutas de Administrador con AdminLayout
   {
     path: "/admin",
-    name: "AdminDashboard",
-    component: () => import('@/views/admin/AdminDashboardView.vue'),
+    component: AdminLayout,
     meta: { requiresAuth: true, requiresAdmin: true },
+    children: [
+      {
+        path: "",
+        name: "AdminDashboard",
+        component: () => import('@/views/admin/AdminDashboardView.vue'),
+      },
+      {
+        path: "validacion-organizaciones",
+        name: "AdminValidacionOrganizaciones",
+        component: () => import('@/views/admin/ValidacionOrganizacionesView.vue'),
+      },
+      {
+        path: "gestion-proyectos",
+        name: "AdminGestionProyectos",
+        component: () => import('@/views/admin/GestionProyectosView.vue'),
+      },
+      {
+        path: "reportes-estadisticas",
+        name: "AdminReportesEstadisticas",
+        component: () => import('@/views/admin/ReportesEstadisticasView.vue'),
+      },
+      {
+        path: "eliminar-usuario-inactivo",
+        name: "AdminEliminarUsuarioInactivo",
+        component: () => import('@/views/admin/EliminarUsuarioInactivoView.vue'),
+      },
+    ],
   },
-  {
-    path: "/admin/validacion-organizaciones",
-    name: "AdminValidacionOrganizaciones",
-    component: () => import('@/views/admin/ValidacionOrganizacionesView.vue'),
-    meta: { requiresAuth: true, requiresAdmin: true },
-  },
-  {
-    path: "/admin/gestion-proyectos",
-    name: "AdminGestionProyectos",
-    component: () => import('@/views/admin/GestionProyectosView.vue'),
-    meta: { requiresAuth: true, requiresAdmin: true },
-  },
-  {
-    path: "/admin/reportes-estadisticas",
-    name: "AdminReportesEstadisticas",
-    component: () => import('@/views/admin/ReportesEstadisticasView.vue'),
-    meta: { requiresAuth: true, requiresAdmin: true },
-  },
-  {
-    path: "/admin/eliminar-usuario-inactivo",
-    name: "AdminEliminarUsuarioInactivo",
-    component: () => import('@/views/admin/EliminarUsuarioInactivoView.vue'),
-    meta: { requiresAuth: true, requiresAdmin: true },
-  }
 ]
 
 const router = createRouter({

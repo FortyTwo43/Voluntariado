@@ -473,6 +473,14 @@ const translations = {
     privacyPolicies: 'Políticas de Privacidad',
     cookiePolicy: 'Política de Cookies',
     dataSecurity: 'Seguridad de Datos',
+    footerInstitutional: 'Información Institucional',
+    footerAboutUs: 'Sobre Nosotros',
+    footerSupport: 'Soporte y Contacto',
+    footerContact: 'Contacto',
+    footerPolicies: 'Políticas y Términos',
+    footerTerms: 'Términos y Condiciones',
+    footerSocial: 'Redes Sociales',
+    footerCopyright: '© 2026 Plataforma de Voluntariado. Todos los derechos reservados.',
     
     // Common
     yes: 'Sí',
@@ -532,6 +540,13 @@ const translations = {
     // Profile - Header
     defaultRole: 'Usuario',
     photoOf: 'Foto de',
+    
+    // Admin
+    dashboard: 'Panel de Control',
+    validacionOrganizaciones: 'Validación de Organizaciones',
+    gestionProyectos: 'Gestión de Proyectos',
+    reportesEstadisticas: 'Reportes y Estadísticas',
+    eliminarUsuarioInactivo: 'Eliminar Usuario Inactivo',
   },
   en: {
     // Auth - Password recovery
@@ -949,6 +964,14 @@ const translations = {
     privacyPolicies: 'Privacy Policies',
     cookiePolicy: 'Cookie Policy',
     dataSecurity: 'Data Security',
+    footerInstitutional: 'Institutional Information',
+    footerAboutUs: 'About Us',
+    footerSupport: 'Support and Contact',
+    footerContact: 'Contact',
+    footerPolicies: 'Policies and Terms',
+    footerTerms: 'Terms and Conditions',
+    footerSocial: 'Social Networks',
+    footerCopyright: '© 2026 Volunteer Platform. All rights reserved.',
     
     // Common
     yes: 'Yes',
@@ -1008,6 +1031,13 @@ const translations = {
     // Profile - Header
     defaultRole: 'User',
     photoOf: 'Photo of',
+    
+    // Admin
+    dashboard: 'Dashboard',
+    validacionOrganizaciones: 'Organization Validation',
+    gestionProyectos: 'Project Management',
+    reportesEstadisticas: 'Reports and Statistics',
+    eliminarUsuarioInactivo: 'Remove Inactive User',
   }
 }
 
