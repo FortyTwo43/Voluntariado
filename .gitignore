@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+# Ignorar archivo de entorno local que puede contener credenciales
+.env

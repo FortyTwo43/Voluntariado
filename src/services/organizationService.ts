@@ -121,3 +121,27 @@ export async function validarCamposCompleto(organizacion: IOrganizacionRegistro)
 
   return errores;
 }
+
+/**
+ * Obtiene una organización por su ID
+ */
+export async function obtenerOrganizacionPorId(id: string): Promise<IOrganizacion | null> {
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/organizaciones?id_organizacion=eq.${encodeURIComponent(id)}&select=*`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: SUPABASE_HEADERS,
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener organización');
+    }
+
+    const data = await response.json();
+    return data.length > 0 ? data[0] : null;
+  } catch (error) {
+    console.error('Error al obtener organización:', error);
+    throw error;
+  }
+}

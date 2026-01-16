@@ -49,9 +49,10 @@ const currentSection = computed(() => {
   background: rgba(255, 255, 255, 0.95);
   border-bottom: 2px solid var(--color-secondary);
   padding: 0.75rem 2rem;
+  padding-left: 5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   position: sticky;
-  top: 5.5rem; /* Igual a la altura del header para evitar solapamiento */
+  top: 6.5rem;
   z-index: 90;
   backdrop-filter: blur(8px);
 }
@@ -117,7 +118,8 @@ const currentSection = computed(() => {
 @media (max-width: 768px) {
   .page-indicator {
     padding: 0.625rem 1rem;
-    top: 5.5rem; /* Mantener alineado con el header también en móvil */
+    padding-left: 4rem;
+    top: 5.5rem;
   }
 
   .indicator-content > .material-symbols-outlined {

@@ -6,7 +6,7 @@
       @update:filters="handleFilters"
     />
 
-    <!-- Estado de carga -->
+  <!-- Estado de carga -->
     <div v-if="cargando" class="estado-carga">
       <div class="spinner"></div>
       <p>{{ t.loadingProjects }}</p>
@@ -37,6 +37,8 @@
           v-for="proyecto in proyectosFiltrados"
           :key="proyecto.id"
           :proyecto="proyecto"
+          :show-actions="true"
+          :esta-inscripto="idsInscritos.has(proyecto.id)"
           @ver-detalles="verDetalles"
           @inscribirse="inscribirse"
         />
@@ -49,6 +51,8 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ProyectosService } from '../../services/proyectos.service';
+import InscripcionesService from '@/services/inscripciones.service';
+import type { IInscripcion } from '@/types/IInscripcion';
 import type { Proyecto } from '../../types/proyecto';
 import BarraBusquedaProyecto from '../../components/proyectos/BarraBusquedaProyecto.vue';
 import ProyectoCard from '../../components/proyectos/ProyectoCard.vue';
@@ -61,6 +65,7 @@ const { t } = useLanguage();
 const proyectos = ref<Proyecto[]>([]);
 const cargando = ref(false);
 const error = ref<string | null>(null);
+const idsInscritos = ref<Set<string>>(new Set());
 
 // Filtros
 const busqueda = ref('');
@@ -84,11 +89,27 @@ const cargarProyectos = async () => {
     const todosLosProyectos = await ProyectosService.obtenerProyectos();
     // Filtrar solo activos (opcional si la BD ya lo hace)
     proyectos.value = todosLosProyectos.filter(p => !p.estado || p.estado === 'activo');
+    // Cargar inscripciones del usuario para controlar botones
+    cargarInscripcionesVoluntario().catch(err => console.warn('Error cargando inscripciones', err));
   } catch (e) {
     console.error('Error al cargar proyectos:', e);
     error.value = t.value.projectsLoadError;
   } finally {
     cargando.value = false;
+  }
+};
+
+const cargarInscripcionesVoluntario = async () => {
+  try {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return;
+    const user = JSON.parse(userStr);
+    const idVol = user.id;
+    const inscripciones: IInscripcion[] = await InscripcionesService.obtenerInscripcionesPorVoluntario(idVol);
+    const ids = new Set(inscripciones.map(i => i.id_proyecto).filter(Boolean));
+    idsInscritos.value = ids;
+  } catch (e) {
+    console.warn('Error cargando inscripciones del voluntario', e);
   }
 };
 
@@ -212,7 +233,7 @@ const handleFilters = (nuevosFiltros: typeof filtros.value) => {
  * Ver detalles de un proyecto
  */
 const verDetalles = (id: string) => {
-  router.push({ name: 'proyectos-detalle', params: { id } });
+  router.push({ name: 'proyectos-detalle-publico', params: { id } });
 };
 
 /**

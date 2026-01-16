@@ -1,4 +1,4 @@
-export type EstadoInscripcion = 'activa' | 'completado' | 'cancelado';
+export type EstadoInscripcion = 'activa' | 'espera' | 'completado' | 'cancelado';
 
 export interface IInscripcion {
   id_inscripcion: string; // UUID

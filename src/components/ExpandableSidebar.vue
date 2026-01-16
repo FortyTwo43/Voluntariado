@@ -173,6 +173,11 @@ const isExpanded = ref(false)
 const accessibilityOpen = ref(false)
 const supportOpen = ref(false)
 const isMobile = ref(window.innerWidth < 768)
+const screenReaderActive = ref(false)
+
+// Lector de pantalla
+let speechSynthesis: SpeechSynthesis | null = null
+let currentUtterance: SpeechSynthesisUtterance | null = null
 
 // Computed
 const currentPageName = computed(() => {
@@ -247,7 +252,75 @@ const toggleHighContrast = () => {
 }
 
 const toggleScreenReader = () => {
-  alert('Función de lector de pantalla activada. Esta es una simulación.')
+  if (!('speechSynthesis' in window)) {
+    const message = t.value.screenReaderNotSupported || 'Tu navegador no soporta la funcionalidad de lector de pantalla.'
+    alert(message)
+    screenReaderActive.value = false
+    return
+  }
+
+  speechSynthesis = window.speechSynthesis
+
+  if (screenReaderActive.value) {
+    // Desactivar modo de lectura
+    deactivateScreenReaderMode()
+  } else {
+    // Activar modo de lectura por selección
+    activateScreenReaderMode()
+  }
+}
+
+const activateScreenReaderMode = () => {
+  screenReaderActive.value = true
+  // Agregar listener para leer texto seleccionado al hacer doble clic
+  document.addEventListener('dblclick', readSelectedText)
+  // Agregar indicador visual
+  document.body.style.cursor = 'text'
+  document.body.setAttribute('data-screen-reader-active', 'true')
+}
+
+const deactivateScreenReaderMode = () => {
+  screenReaderActive.value = false
+  stopScreenReader()
+  document.removeEventListener('dblclick', readSelectedText)
+  document.body.style.cursor = ''
+  document.body.removeAttribute('data-screen-reader-active')
+}
+
+const readSelectedText = () => {
+  const selection = window.getSelection()
+  if (!selection || selection.rangeCount === 0) return
+
+  const selectedText = selection.toString().trim()
+  if (!selectedText) return
+
+  if (!speechSynthesis) {
+    speechSynthesis = window.speechSynthesis
+  }
+
+  // Detener cualquier lectura anterior
+  speechSynthesis.cancel()
+
+  currentUtterance = new SpeechSynthesisUtterance(selectedText)
+  
+  // Configurar el idioma según el idioma actual
+  const currentLang = document.documentElement.lang || 'es-ES'
+  currentUtterance.lang = currentLang === 'es' ? 'es-ES' : 'en-US'
+  currentUtterance.rate = 0.9
+  currentUtterance.pitch = 1
+  currentUtterance.volume = 1
+
+  currentUtterance.onerror = () => {
+    // Manejo de errores silencioso
+  }
+
+  speechSynthesis.speak(currentUtterance)
+}
+
+const stopScreenReader = () => {
+  if (speechSynthesis) {
+    speechSynthesis.cancel()
+  }
 }
 
 // Keyboard shortcuts
@@ -281,6 +354,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyboard)
   window.removeEventListener('resize', handleResize)
+  deactivateScreenReaderMode()
 })
 </script>
 
@@ -295,7 +369,7 @@ onUnmounted(() => {
 
 .sidebar-toggle {
   position: fixed;
-  top: calc(5.5rem + 1rem); /* Separado del header con 1rem de margen */
+  top: calc(5.5rem + 1rem);
   left: 1rem;
   width: 3rem;
   height: 3rem;
@@ -309,7 +383,7 @@ onUnmounted(() => {
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
-  z-index: 96;
+  z-index: 95;
 }
 
 .sidebar-toggle:hover {
