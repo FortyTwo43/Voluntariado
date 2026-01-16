@@ -1,10 +1,10 @@
 export interface IOrganizacion {
-    id_organizacion: number;
+    id_organizacion: string; // UUID
     nombre: string;
     tipo: string;
     direccion: string;
     email: string;
-    estado_validacion: boolean;
+    estado_validacion: boolean | string; // Puede ser boolean o string ('pendiente' | 'cancelada' | 'aceptada')
     contrasena: string;
 }
 

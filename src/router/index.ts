@@ -145,6 +145,11 @@ const routes = [
     component: () => import('@/views/Auth/UserLoginView.vue'),
   },
   {
+    path: '/admin/login',
+    name: 'AdminLogin',
+    component: () => import('@/views/Auth/AdminLoginView.vue'),
+  },
+  {
     path: '/registro-voluntario',
     name: 'RegistroVoluntario',
     component: () => import('@/views/Auth/RegisterVolunteerView.vue'),
@@ -165,6 +170,36 @@ const routes = [
     name: "UserProfileOrganization",
     component: () => import('@/views/ProfileOrganizacionView.vue'),
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/admin",
+    name: "AdminDashboard",
+    component: () => import('@/views/admin/AdminDashboardView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/validacion-organizaciones",
+    name: "AdminValidacionOrganizaciones",
+    component: () => import('@/views/admin/ValidacionOrganizacionesView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/gestion-proyectos",
+    name: "AdminGestionProyectos",
+    component: () => import('@/views/admin/GestionProyectosView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/reportes-estadisticas",
+    name: "AdminReportesEstadisticas",
+    component: () => import('@/views/admin/ReportesEstadisticasView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/eliminar-usuario-inactivo",
+    name: "AdminEliminarUsuarioInactivo",
+    component: () => import('@/views/admin/EliminarUsuarioInactivoView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true },
   }
 ]
 
@@ -176,11 +211,21 @@ const router = createRouter({
 // Guard global para rutas protegidas
 router.beforeEach((to, _from, next) => {
   const requiresAuth = Boolean(to.meta && (to.meta as any).requiresAuth);
-  if (!requiresAuth) return next();
+  const requiresAdmin = Boolean(to.meta && (to.meta as any).requiresAdmin);
+  
+  if (!requiresAuth && !requiresAdmin) return next();
+  
   const user = loadUserSession();
   if (!user) {
     return next({ name: 'UserLogin', query: { redirect: to.fullPath } });
   }
+  
+  // Verificar si la ruta requiere ser administrador
+  if (requiresAdmin && user.rol !== 'administrador') {
+    // Redirigir a login si no es administrador
+    return next({ name: 'UserLogin', query: { redirect: to.fullPath } });
+  }
+  
   return next();
 });
 
